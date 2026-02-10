@@ -742,6 +742,262 @@
             background: rgba(255, 255, 255, 0.14);
         }
 
+        /* ===== PROFILE MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s, visibility 0.25s;
+            padding: 24px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 800px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .modal-rank {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            flex-shrink: 0;
+        }
+
+        .modal-addr {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all var(--transition);
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .modal-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-subtle);
+        }
+
+        .modal-stat {
+            background: var(--bg-surface);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .modal-stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .modal-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .modal-stat-value.orange {
+            color: #f59e0b;
+        }
+
+        .modal-stat-value.green {
+            color: var(--accent-green);
+        }
+
+        .modal-stat-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding: 20px 24px;
+            flex: 1;
+        }
+
+        .modal-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+        }
+
+        .lock-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            align-items: center;
+            transition: border-color var(--transition);
+        }
+
+        .lock-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .lock-card-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .lock-card-title {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .lock-card-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .lock-card-value.sm {
+            font-size: 15px;
+        }
+
+        .lock-card-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .lock-card-vote {
+            text-align: right;
+        }
+
+        .lock-card-vote .lock-card-value {
+            color: #f59e0b;
+        }
+
+        .lock-multiplier {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 10px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .modal-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .modal-link:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .modal-card {
+                max-height: 92vh;
+            }
+
+            .modal-stat-value {
+                font-size: 22px;
+            }
+
+            .lock-card {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .lock-card-vote {
+                text-align: left;
+            }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .metrics-strip {
@@ -1010,6 +1266,52 @@
         </footer>
     </div>
 
+    <!-- PROFILE MODAL -->
+    <div class="modal-overlay" id="profile-modal" onclick="if(event.target===this)closeProfile()">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <span class="modal-rank" id="pm-rank"></span>
+                    <span class="modal-addr" id="pm-addr"></span>
+                </div>
+                <button class="modal-close" onclick="closeProfile()" title="Close">✕</button>
+            </div>
+            <div class="modal-summary">
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Total Vote Weight</div>
+                    <div class="modal-stat-value orange" id="pm-vote"></div>
+                    <div class="modal-stat-sub">veDOLO</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Total DOLO Locked</div>
+                    <div class="modal-stat-value green" id="pm-dolo"></div>
+                    <div class="modal-stat-sub">DOLO</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section-title" id="pm-locks-title">Active Locks</div>
+                <div id="pm-locks"></div>
+            </div>
+            <div class="modal-links">
+                <a class="modal-link" id="pm-berascan" target="_blank">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                    View on BeraScan
+                </a>
+                <a class="modal-link" id="pm-copy" onclick="copyFromModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                    </svg>
+                    Copy Address
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="copy-toast">✅ Address copied!</div>
 
     <script>
@@ -1047,10 +1349,11 @@
 
             if (!HOLDER_DATA.length) {
                 document.getElementById('table-body').innerHTML =
-                    '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place vedolo_holders.json in the same directory.</td></tr>';
+                    '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place vedolo_holders.json in the same directory.</td></tr>';
                 return;
             }
             init();
+            checkHash();
         }
 
         function init() {
@@ -1181,8 +1484,7 @@
                 return `<tr>
             <td class="c-rank">${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}</td>
             <td class="c-addr">
-                <a href="https://berascan.com/address/${h.address}" target="_blank"
-                   onclick="copyAddr(event,'${h.address}')">${h.address}</a>
+                <a href="#address=${h.address}" onclick="event.preventDefault();showProfile('${h.address}')">${h.address}</a>
             </td>
             <td class="c-nft">
                 <div class="mini-bar">
@@ -1329,6 +1631,93 @@
         }
 
         function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+        // ===== PROFILE MODAL =====
+        let currentProfileAddr = null;
+
+        function showProfile(address) {
+            const holder = HOLDER_DATA.find(h => h.address.toLowerCase() === address.toLowerCase());
+            if (!holder) return;
+            currentProfileAddr = holder.address;
+
+            document.getElementById('pm-rank').textContent = `#${holder.rank}`;
+            document.getElementById('pm-addr').textContent = holder.address;
+
+            const totalVote = (holder.total_vote_weight || 0);
+            const totalDolo = (holder.total_dolo || 0);
+            document.getElementById('pm-vote').textContent = totalVote.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            document.getElementById('pm-dolo').textContent = totalDolo.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+            const details = holder.token_details || [];
+            document.getElementById('pm-locks-title').textContent = `Active Locks (${details.length})`;
+
+            const now = Date.now() / 1000;
+            document.getElementById('pm-locks').innerHTML = details
+                .sort((a, b) => (b.dolo || 0) - (a.dolo || 0))
+                .map(d => {
+                    const dolo = (d.dolo || 0);
+                    const vw = (d.vote_weight || 0);
+                    const mult = dolo > 0 ? (vw / dolo) : 0;
+                    const secsLeft = Math.max(0, (d.end || 0) - now);
+                    const daysLeft = Math.ceil(secsLeft / 86400);
+                    const maturity = d.end ? new Date(d.end * 1000).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'short', day: 'numeric'
+                    }) : '—';
+
+                    return `<div class="lock-card">
+                        <div>
+                            <div class="lock-card-title">Lock #${d.id}</div>
+                            <div class="lock-card-value">${dolo.toLocaleString('en-US', { maximumFractionDigits: 2 })}</div>
+                            <div class="lock-card-sub">DOLO</div>
+                        </div>
+                        <div>
+                            <div class="lock-card-label">Time Remaining</div>
+                            <div class="lock-card-value sm">${daysLeft > 0 ? daysLeft + ' days' : 'Expired'}</div>
+                            <div class="lock-card-sub">Matures on ${maturity}</div>
+                        </div>
+                        <div class="lock-card-vote">
+                            <div class="lock-card-label">Vote Weight</div>
+                            <div class="lock-card-value">${vw.toLocaleString('en-US', { maximumFractionDigits: 4 })}</div>
+                            <div class="lock-multiplier">${mult.toFixed(2)}x multiplier</div>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            document.getElementById('pm-berascan').href = `https://berascan.com/address/${holder.address}`;
+
+            document.getElementById('profile-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            history.replaceState(null, '', `#address=${holder.address}`);
+        }
+
+        function closeProfile() {
+            document.getElementById('profile-modal').classList.remove('active');
+            document.body.style.overflow = '';
+            currentProfileAddr = null;
+            history.replaceState(null, '', window.location.pathname);
+        }
+
+        function copyFromModal() {
+            if (!currentProfileAddr) return;
+            navigator.clipboard.writeText(currentProfileAddr);
+            const t = document.getElementById('copy-toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1500);
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeProfile();
+        });
+
+        function checkHash() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#address=')) {
+                const addr = hash.slice(9);
+                if (addr && HOLDER_DATA.length > 0) showProfile(addr);
+            }
+        }
+
+        window.addEventListener('hashchange', checkHash);
 
         loadData();
     </script>
