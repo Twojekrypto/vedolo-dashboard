@@ -194,7 +194,7 @@
         /* ===== METRIC STRIP ===== */
         .metrics-strip {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1px;
             background: var(--border-subtle);
             border-radius: var(--radius-lg);
@@ -212,12 +212,21 @@
             background: var(--bg-hover);
         }
 
+        /* 2 rows × 3 cols: top-left, top-right, bottom-left, bottom-right corners */
         .metric-cell:first-child {
-            border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+            border-radius: var(--radius-lg) 0 0 0;
+        }
+
+        .metric-cell:nth-child(3) {
+            border-radius: 0 var(--radius-lg) 0 0;
+        }
+
+        .metric-cell:nth-child(4) {
+            border-radius: 0 0 0 var(--radius-lg);
         }
 
         .metric-cell:last-child {
-            border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+            border-radius: 0 0 var(--radius-lg) 0;
         }
 
         .metric-label {
@@ -737,22 +746,6 @@
         @media (max-width: 1024px) {
             .metrics-strip {
                 grid-template-columns: repeat(3, 1fr);
-            }
-
-            .metric-cell:first-child {
-                border-radius: var(--radius-lg) 0 0 0;
-            }
-
-            .metric-cell:nth-child(3) {
-                border-radius: 0 var(--radius-lg) 0 0;
-            }
-
-            .metric-cell:nth-child(4) {
-                border-radius: 0 0 0 0;
-            }
-
-            .metric-cell:last-child {
-                border-radius: 0 0 var(--radius-lg) 0;
             }
         }
 
