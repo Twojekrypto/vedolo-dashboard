@@ -18,7 +18,7 @@ VEDOLO_CONTRACT = "0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4"
 RPC_URL = "https://berachain.drpc.org/"
 LOCKED_SELECTOR = "0xb45a3c0e"  # locked(uint256)
 TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-CONTRACT_DEPLOY_BLOCK = 4_990_000  # Contract deployed around block 5M
+CONTRACT_DEPLOY_BLOCK = 4_180_000  # First Transfer at block ~4,190,046
 BLOCK_CHUNK = 10_000  # Max per eth_getLogs call on free tier
 
 BATCH_SIZE = 3  # RPC batch size for locked() calls
