@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+    <title>veDOLO Holders — Berachain Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===== DESIGN TOKENS (Dolomite-inspired) ===== */
+        :root {
+            --bg-base: #090910;
+            --bg-surface: #111119;
+            --bg-card: #15151f;
+            --bg-card-alt: #1a1a26;
+            --bg-hover: #1e1e2c;
+            --bg-input: #12121c;
+
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(99, 102, 241, 0.5);
+
+            --text-primary: #f0f0f6;
+            --text-secondary: #8b8fa3;
+            --text-muted: #555770;
+
+            --accent-indigo: #6366f1;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #22d3ee;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            --accent-orange: #fb923c;
+
+            --gradient-brand: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+            --gradient-warm: linear-gradient(135deg, #fbbf24 0%, #fb7185 100%);
+            --gradient-success: linear-gradient(135deg, #34d399 0%, #22d3ee 100%);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border-subtle);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.5;
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-wrapper {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        /* ===== HEADER ===== */
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0 40px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .brand-text .sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .brand-text .sub .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+            }
+
+            50% {
+                opacity: 0.7;
+                box-shadow: 0 0 0 4px rgba(52, 211, 153, 0);
+            }
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: none;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-default);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: var(--bg-hover);
+        }
+
+        .btn-primary {
+            background: var(--accent-indigo);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5558e6;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ===== METRIC STRIP ===== */
+        .metrics-strip {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1px;
+            background: var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        .metric-cell {
+            background: var(--bg-card);
+            padding: 22px 24px;
+            transition: background var(--transition);
+        }
+
+        .metric-cell:hover {
+            background: var(--bg-hover);
+        }
+
+        .metric-cell:first-child {
+            border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+        }
+
+        .metric-cell:last-child {
+            border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .metric-value.accent-green {
+            color: var(--accent-green);
+        }
+
+        .metric-value.accent-amber {
+            color: var(--accent-amber);
+        }
+
+        /* ===== ANALYTICS GRID ===== */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-badge {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        /* Distribution bars */
+        .dist-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dist-item .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            min-width: 48px;
+            text-align: right;
+        }
+
+        .dist-item .track {
+            flex: 1;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .dist-item .fill {
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .dist-item .fill span {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+        }
+
+        /* Donut */
+        .donut-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+        }
+
+        .donut-svg {
+            width: 170px;
+            height: 170px;
+            transform: rotate(-90deg);
+        }
+
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .legend-swatch {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        /* ===== TABLE SECTION ===== */
+        .table-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input-wrapper input {
+            width: 100%;
+            padding: 10px 14px 10px 36px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-input-wrapper input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+        }
+
+        .filter-dropdown {
+            padding: 10px 32px 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23555770' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: all var(--transition);
+        }
+
+        .filter-dropdown:focus {
+            border-color: var(--border-focus);
+        }
+
+        .toolbar-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            padding: 0 8px;
+        }
+
+        /* Table */
+        .table-scroll {
+            overflow-x: auto;
+            max-height: 68vh;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        thead th {
+            background: var(--bg-surface);
+            padding: 11px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            user-select: none;
+            transition: color var(--transition);
+            white-space: nowrap;
+        }
+
+        thead th:hover {
+            color: var(--text-secondary);
+        }
+
+        thead th.sorted {
+            color: var(--accent-indigo);
+        }
+
+        thead th .arrow {
+            margin-left: 3px;
+            font-size: 9px;
+            opacity: 0.4;
+        }
+
+        thead th.sorted .arrow {
+            opacity: 1;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background var(--transition);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 10px 20px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        /* Column specific */
+        .c-rank {
+            width: 52px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-muted);
+        }
+
+        .rank-medal {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a2e;
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            color: #1a1a2e;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #d97706, #92400e);
+            color: #fef3c7;
+        }
+
+        .c-addr {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        .c-addr a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        .c-addr a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .c-nft {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .mini-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mini-bar-track {
+            width: 56px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .mini-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        .mini-bar-fill.purple {
+            background: var(--accent-indigo);
+        }
+
+        .mini-bar-fill.green {
+            background: var(--accent-green);
+        }
+
+        .c-dolo {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            color: var(--accent-green);
+        }
+
+        .c-tokens {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            max-width: 360px;
+        }
+
+        .tokens-truncated {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: default;
+            transition: color var(--transition);
+        }
+
+        .tokens-truncated:hover {
+            color: var(--text-secondary);
+        }
+
+        /* Pagination */
+        .table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+        }
+
+        .pg-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .pg-btn:hover:not(:disabled) {
+            border-color: var(--accent-indigo);
+            color: var(--text-primary);
+        }
+
+        .pg-btn.active {
+            background: var(--accent-indigo);
+            border-color: var(--accent-indigo);
+            color: white;
+        }
+
+        .pg-btn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        .pg-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 0 6px;
+        }
+
+        /* ===== FOOTER ===== */
+        .site-footer {
+            text-align: center;
+            padding: 32px 0 0;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .site-footer a {
+            color: var(--accent-indigo);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(16px);
+            background: var(--accent-indigo);
+            color: white;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .metrics-strip {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .metric-cell:first-child {
+                border-radius: var(--radius-lg) 0 0 0;
+            }
+
+            .metric-cell:nth-child(3) {
+                border-radius: 0 var(--radius-lg) 0 0;
+            }
+
+            .metric-cell:nth-child(4) {
+                border-radius: 0 0 0 0;
+            }
+
+            .metric-cell:last-child {
+                border-radius: 0 0 var(--radius-lg) 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 16px 14px 48px;
+            }
+
+            .site-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding-bottom: 24px;
+            }
+
+            .metrics-strip {
+                grid-template-columns: 1fr 1fr;
+                border-radius: var(--radius-md);
+            }
+
+            .metric-cell {
+                padding: 16px;
+            }
+
+            .metric-cell:first-child {
+                border-radius: var(--radius-md) 0 0 0;
+            }
+
+            .metric-cell:nth-child(2) {
+                border-radius: 0 var(--radius-md) 0 0;
+            }
+
+            .metric-cell:nth-child(3),
+            .metric-cell:nth-child(4) {
+                border-radius: 0;
+            }
+
+            .metric-cell:nth-child(5) {
+                border-radius: 0 0 var(--radius-md) var(--radius-md);
+                grid-column: 1 / -1;
+            }
+
+            .metric-value {
+                font-size: 22px;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-toolbar {
+                flex-wrap: wrap;
+            }
+
+            .donut-layout {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-text h1 {
+                font-size: 17px;
+            }
+
+            .metric-value {
+                font-size: 20px;
+            }
+
+            .metric-label {
+                font-size: 10px;
+            }
+
+            thead th,
+            tbody td {
+                padding: 9px 12px;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim {
+            animation: fadeUp 0.45s ease-out both;
+        }
+
+        .anim-d1 {
+            animation-delay: 0.05s;
+        }
+
+        .anim-d2 {
+            animation-delay: 0.1s;
+        }
+
+        .anim-d3 {
+            animation-delay: 0.15s;
+        }
+
+        .anim-d4 {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+
+        <!-- HEADER -->
+        <header class="site-header anim">
+            <div class="brand">
+                <div class="brand-icon"><img src="vedolo-logo.svg" alt="veDOLO"></div>
+                <div class="brand-text">
+                    <h1>veDOLO Holders</h1>
+                    <div class="sub">
+                        <span class="live-dot"></span>
+                        Berachain Mainnet · Live Data
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a class="btn btn-ghost" href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4"
+                    target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" />
+                        <path d="M14 4h6v6" />
+                        <path d="M20 4L10 14" />
+                    </svg>
+                    Contract
+                </a>
+                <button class="btn btn-primary" onclick="downloadCSV()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Export CSV
+                </button>
+            </div>
+        </header>
+
+        <!-- METRICS -->
+        <div class="metrics-strip anim anim-d1">
+            <div class="metric-cell">
+                <div class="metric-label">Unique Holders</div>
+                <div class="metric-value" id="m-holders">—</div>
+                <div class="metric-sub">active wallets</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">Active NFTs</div>
+                <div class="metric-value" id="m-active">—</div>
+                <div class="metric-sub">in circulation</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">Total Minted</div>
+                <div class="metric-value" id="m-minted">—</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">Burned</div>
+                <div class="metric-value" id="m-burned">—</div>
+                <div class="metric-sub" id="m-burn-pct"></div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">Locked DOLO</div>
+                <div class="metric-value accent-green" id="m-dolo">—</div>
+                <div class="metric-sub">total in lock</div>
+            </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="analytics-grid anim anim-d2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Holder Distribution</div>
+                    <div class="card-badge">by NFT count</div>
+                </div>
+                <div class="dist-stack" id="dist-bars"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">NFT Share by Wallet</div>
+                    <div class="card-badge">share %</div>
+                </div>
+                <div class="donut-layout">
+                    <svg class="donut-svg" viewBox="0 0 42 42" id="donut-chart"></svg>
+                    <div class="donut-legend" id="donut-legend"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-section anim anim-d3">
+            <div class="table-toolbar">
+                <div class="search-input-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="search" placeholder="Search address 0x… or token ID">
+                </div>
+                <select class="filter-dropdown" id="filter-nft">
+                    <option value="all">All</option>
+                    <option value="100+">100+ NFT</option>
+                    <option value="50-100">50–100 NFT</option>
+                    <option value="26-50">26–50 NFT</option>
+                    <option value="11-25">11–25 NFT</option>
+                    <option value="6-10">6–10 NFT</option>
+                    <option value="2-5">2–5 NFT</option>
+                    <option value="1">1 NFT</option>
+                </select>
+                <div class="toolbar-count" id="results-count"></div>
+            </div>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="c-rank sorted" data-sort="rank" onclick="sortTable('rank')">
+                                # <span class="arrow">▲</span>
+                            </th>
+                            <th data-sort="address" onclick="sortTable('address')">
+                                Address <span class="arrow">⇅</span>
+                            </th>
+                            <th data-sort="nft_count" onclick="sortTable('nft_count')">
+                                NFT <span class="arrow">⇅</span>
+                            </th>
+                            <th data-sort="total_dolo" onclick="sortTable('total_dolo')">
+                                DOLO 🔒 <span class="arrow">⇅</span>
+                            </th>
+                            <th>Token IDs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+            <div class="table-footer" id="pagination"></div>
+        </div>
+
+        <footer class="site-footer anim anim-d4">
+            Generated <span id="footer-date"></span> · Data from <a href="https://berascan.com"
+                target="_blank">BeraScan</a> ·
+            Contract <a href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4"
+                target="_blank">veDOLO</a>
+        </footer>
+    </div>
+
+    <div class="toast" id="copy-toast">✅ Address copied!</div>
+
+    <script>
+        // ===== DATA =====
+        let HOLDER_DATA = [];
+        const STATS = { total_minted: 23391, total_burned: 8606, active_nfts: 14785, unique_holders: 10979, total_locked_dolo: 0 };
+        const PER_PAGE = 50;
+        let currentPage = 1;
+        let filteredData = [];
+        let sortField = 'rank';
+        let sortAsc = true;
+
+        const DIST = [
+            { label: '1 NFT', min: 1, max: 1, color: '#6366f1' },
+            { label: '2–5', min: 2, max: 5, color: '#818cf8' },
+            { label: '6–10', min: 6, max: 10, color: '#22d3ee' },
+            { label: '11–25', min: 11, max: 25, color: '#34d399' },
+            { label: '26–50', min: 26, max: 50, color: '#fbbf24' },
+            { label: '51–100', min: 51, max: 100, color: '#fb923c' },
+            { label: '100+', min: 101, max: Infinity, color: '#fb7185' },
+        ];
+
+        // ===== LOAD =====
+        async function loadData() {
+            try {
+                const resp = await fetch('vedolo_holders.json');
+                if (resp.ok) {
+                    const data = await resp.json();
+                    HOLDER_DATA = data.holders;
+                    Object.assign(STATS, data.stats);
+                }
+            } catch (e) {
+                console.warn('Could not load JSON', e);
+            }
+
+            if (!HOLDER_DATA.length) {
+                document.getElementById('table-body').innerHTML =
+                    '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place vedolo_holders.json in the same directory.</td></tr>';
+                return;
+            }
+            init();
+        }
+
+        function init() {
+            // Metrics
+            anim('m-holders', STATS.unique_holders);
+            anim('m-active', STATS.active_nfts);
+            anim('m-minted', STATS.total_minted);
+            anim('m-burned', STATS.total_burned);
+            document.getElementById('m-burn-pct').textContent =
+                `${((STATS.total_burned / STATS.total_minted) * 100).toFixed(1)}% burned`;
+
+            if (STATS.total_locked_dolo) {
+                anim('m-dolo', Math.round(STATS.total_locked_dolo), true);
+            }
+
+            document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            renderDist();
+            renderDonut();
+
+            filteredData = [...HOLDER_DATA];
+            renderTable();
+            renderPagination();
+
+            document.getElementById('search').addEventListener('input', debounce(applyFilters, 200));
+            document.getElementById('filter-nft').addEventListener('change', applyFilters);
+        }
+
+        // ===== COUNTER ANIMATION =====
+        function anim(id, target, suffix) {
+            const el = document.getElementById(id);
+            const dur = 1000;
+            const start = performance.now();
+            const fmt = n => {
+                if (suffix && n >= 1e6) return (n / 1e6).toFixed(1).replace('.', ',') + 'M';
+                if (suffix && n >= 1e3) return Math.round(n / 1e3).toLocaleString('en-US') + 'K';
+                return n.toLocaleString('en-US');
+            };
+            (function tick(now) {
+                const p = Math.min((now - start) / dur, 1);
+                const e = 1 - Math.pow(1 - p, 3);
+                el.textContent = fmt(Math.floor(target * e));
+                if (p < 1) requestAnimationFrame(tick);
+            })(start);
+        }
+
+        // ===== CHARTS =====
+        function renderDist() {
+            const el = document.getElementById('dist-bars');
+            const counts = DIST.map(d => ({ ...d, count: HOLDER_DATA.filter(h => h.nft_count >= d.min && h.nft_count <= d.max).length }));
+            const mx = Math.max(...counts.map(c => c.count));
+            el.innerHTML = counts.map(d => `
+        <div class="dist-item">
+            <div class="label">${d.label}</div>
+            <div class="track">
+                <div class="fill" style="width:${Math.max(3, (d.count / mx) * 100)}%;background:${d.color}">
+                    <span>${d.count.toLocaleString('en-US')}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        function renderDonut() {
+            const svg = document.getElementById('donut-chart');
+            const leg = document.getElementById('donut-legend');
+            const segs = DIST.map(d => ({
+                ...d,
+                nfts: HOLDER_DATA.filter(h => h.nft_count >= d.min && h.nft_count <= d.max).reduce((s, h) => s + h.nft_count, 0)
+            })).filter(s => s.nfts > 0);
+
+            const total = segs.reduce((s, d) => s + d.nfts, 0);
+            let off = 0;
+            const r = 15.91549, circ = 2 * Math.PI * r;
+
+            let html = `<circle cx="21" cy="21" r="${r}" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="5"/>`;
+            segs.forEach(seg => {
+                const pct = seg.nfts / total;
+                const dash = circ * pct;
+                html += `<circle cx="21" cy="21" r="${r}" fill="none" stroke="${seg.color}" stroke-width="5"
+            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-off}" style="transition:all 0.8s"/>`;
+                off += dash;
+            });
+            html += `<text x="21" y="20" text-anchor="middle" fill="var(--text-primary)" font-size="4" font-weight="700"
+        font-family="Inter" transform="rotate(90 21 21)">${total.toLocaleString('en-US')}</text>
+        <text x="21" y="24" text-anchor="middle" fill="var(--text-muted)" font-size="2"
+        font-family="Inter" transform="rotate(90 21 21)">NFT</text>`;
+            svg.innerHTML = html;
+
+            leg.innerHTML = segs.map(s => `
+        <div class="legend-row">
+            <div class="legend-swatch" style="background:${s.color}"></div>
+            ${s.label}: ${s.nfts.toLocaleString('en-US')} (${((s.nfts / total) * 100).toFixed(1)}%)
+        </div>
+    `).join('');
+        }
+
+        // ===== TABLE =====
+        function fmtDolo(n) {
+            if (!n) return '0';
+            if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+            if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+            return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            const start = (currentPage - 1) * PER_PAGE;
+            const page = filteredData.slice(start, start + PER_PAGE);
+            const maxNft = Math.max(...filteredData.map(h => h.nft_count), 1);
+            const maxDolo = Math.max(...filteredData.map(h => h.total_dolo || 0), 1);
+
+            tbody.innerHTML = page.map(h => {
+                const rc = h.rank <= 3 ? `rank-${h.rank}` : '';
+                const nftPct = Math.max(3, (h.nft_count / maxNft) * 100);
+                const doloPct = Math.max(3, ((h.total_dolo || 0) / maxDolo) * 100);
+                const tokPrev = h.token_ids.slice(0, 6).join(', ') + (h.token_ids.length > 6 ? ` … +${h.token_ids.length - 6}` : '');
+                const doloExact = (h.total_dolo || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+                return `<tr>
+            <td class="c-rank">${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}</td>
+            <td class="c-addr">
+                <a href="https://berascan.com/address/${h.address}" target="_blank"
+                   onclick="copyAddr(event,'${h.address}')">${h.address}</a>
+            </td>
+            <td class="c-nft">
+                <div class="mini-bar">
+                    <span>${h.nft_count}</span>
+                    <div class="mini-bar-track"><div class="mini-bar-fill purple" style="width:${nftPct}%"></div></div>
+                </div>
+            </td>
+            <td class="c-dolo" title="${doloExact} DOLO">
+                <div class="mini-bar">
+                    <span>${fmtDolo(h.total_dolo || 0)}</span>
+                    <div class="mini-bar-track"><div class="mini-bar-fill green" style="width:${doloPct}%"></div></div>
+                </div>
+            </td>
+            <td class="c-tokens"><div class="tokens-truncated" title="${h.token_ids.join(', ')}">${tokPrev}</div></td>
+        </tr>`;
+            }).join('');
+
+            document.getElementById('results-count').textContent =
+                `${filteredData.length.toLocaleString('en-US')} results`;
+        }
+
+        // ===== PAGINATION =====
+        function renderPagination() {
+            const total = Math.ceil(filteredData.length / PER_PAGE);
+            const el = document.getElementById('pagination');
+            if (total <= 1) { el.innerHTML = ''; return; }
+
+            let h = `<button class="pg-btn" onclick="goPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
+            h += `<button class="pg-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+            pageRange(currentPage, total).forEach(p => {
+                h += p === '...'
+                    ? `<span class="pg-info">…</span>`
+                    : `<button class="pg-btn ${p === currentPage ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
+            });
+
+            h += `<button class="pg-btn" onclick="goPage(${currentPage + 1})" ${currentPage === total ? 'disabled' : ''}>›</button>`;
+            h += `<button class="pg-btn" onclick="goPage(${total})" ${currentPage === total ? 'disabled' : ''}>»</button>`;
+            h += `<span class="pg-info">${currentPage} / ${total}</span>`;
+            el.innerHTML = h;
+        }
+
+        function pageRange(c, t) {
+            if (t <= 7) return Array.from({ length: t }, (_, i) => i + 1);
+            if (c <= 4) return [1, 2, 3, 4, 5, '...', t];
+            if (c >= t - 3) return [1, '...', t - 4, t - 3, t - 2, t - 1, t];
+            return [1, '...', c - 1, c, c + 1, '...', t];
+        }
+
+        function goPage(p) {
+            const t = Math.ceil(filteredData.length / PER_PAGE);
+            currentPage = Math.max(1, Math.min(p, t));
+            renderTable();
+            renderPagination();
+            document.querySelector('.table-scroll').scrollTop = 0;
+        }
+
+        // ===== SORT =====
+        function sortTable(field) {
+            document.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted'));
+            if (sortField === field) { sortAsc = !sortAsc; } else { sortField = field; sortAsc = field === 'rank'; }
+
+            const th = document.querySelector(`th[data-sort="${field}"]`);
+            th.classList.add('sorted');
+            th.querySelector('.arrow').textContent = sortAsc ? '▲' : '▼';
+
+            filteredData.sort((a, b) => {
+                let va = a[field], vb = b[field];
+                if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+                return va < vb ? (sortAsc ? -1 : 1) : va > vb ? (sortAsc ? 1 : -1) : 0;
+            });
+
+            currentPage = 1;
+            renderTable();
+            renderPagination();
+        }
+
+        // ===== FILTER =====
+        function applyFilters() {
+            const q = document.getElementById('search').value.toLowerCase().trim();
+            const nf = document.getElementById('filter-nft').value;
+
+            filteredData = HOLDER_DATA.filter(h => {
+                if (q) {
+                    const byAddr = h.address.toLowerCase().includes(q);
+                    const byTok = q.match(/^\d+$/) && h.token_ids.includes(parseInt(q));
+                    if (!byAddr && !byTok) return false;
+                }
+                if (nf !== 'all') {
+                    const n = h.nft_count;
+                    switch (nf) {
+                        case '100+': if (n < 100) return false; break;
+                        case '50-100': if (n < 50 || n > 100) return false; break;
+                        case '26-50': if (n < 26 || n > 50) return false; break;
+                        case '11-25': if (n < 11 || n > 25) return false; break;
+                        case '6-10': if (n < 6 || n > 10) return false; break;
+                        case '2-5': if (n < 2 || n > 5) return false; break;
+                        case '1': if (n !== 1) return false; break;
+                    }
+                }
+                return true;
+            });
+
+            if (sortField !== 'rank') {
+                filteredData.sort((a, b) => {
+                    let va = a[sortField], vb = b[sortField];
+                    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+                    return va < vb ? (sortAsc ? -1 : 1) : va > vb ? (sortAsc ? 1 : -1) : 0;
+                });
+            }
+
+            currentPage = 1;
+            renderTable();
+            renderPagination();
+        }
+
+        // ===== UTILS =====
+        function copyAddr(e, addr) {
+            if (e.button === 0 && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                navigator.clipboard.writeText(addr);
+                const t = document.getElementById('copy-toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 1500);
+            }
+        }
+
+        function downloadCSV() {
+            let csv = 'Rank,Address,NFT_Count,Total_DOLO,Token_IDs\n';
+            filteredData.forEach(h => {
+                csv += `${h.rank},${h.address},${h.nft_count},${(h.total_dolo || 0).toFixed(2)},"${h.token_ids.join(';')}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'vedolo_holders.csv'; a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+        loadData();
+    </script>
+</body>
+
+</html>
