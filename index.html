@@ -79,11 +79,28 @@
         /* ===== HEADER ===== */
         .site-header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 16px 0 40px;
+            padding: 24px 0 40px;
             border-bottom: 1px solid var(--border-subtle);
             margin-bottom: 32px;
+        }
+
+        .header-top-logo {
+            margin-bottom: 16px;
+        }
+
+        .header-top-logo img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
 
         .brand {
@@ -239,7 +256,7 @@
         }
 
         .metric-value {
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--text-primary);
             font-variant-numeric: tabular-nums;
@@ -283,7 +300,7 @@
         }
 
         .card-title {
-            font-size: 14px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -312,7 +329,7 @@
 
         .dist-item .label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-secondary);
             min-width: 48px;
             text-align: right;
@@ -336,7 +353,7 @@
         }
 
         .dist-item .fill span {
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.9);
             white-space: nowrap;
@@ -366,7 +383,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
+            font-size: 14px;
             color: var(--text-secondary);
         }
 
@@ -1384,34 +1401,39 @@
 
         <!-- HEADER -->
         <header class="site-header anim">
-            <div class="brand">
-                <div class="brand-icon"><img src="vedolo-logo.svg" alt="veDOLO"></div>
-                <div class="brand-text">
-                    <h1>veDOLO Holders</h1>
-                    <div class="sub">
-                        <span class="live-dot"></span>
-                        Berachain Mainnet · Live Data
+            <div class="header-top-logo">
+                <img src="dolomite-logo.svg" alt="Dolomite">
+            </div>
+            <div class="header-bottom">
+                <div class="brand">
+                    <div class="brand-icon"><img src="vedolo-logo.svg" alt="veDOLO"></div>
+                    <div class="brand-text">
+                        <h1>veDOLO Holders</h1>
+                        <div class="sub">
+                            <span class="live-dot"></span>
+                            Berachain Mainnet · Live Data
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="header-actions">
-                <a class="btn btn-ghost" href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4"
-                    target="_blank">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" />
-                        <path d="M14 4h6v6" />
-                        <path d="M20 4L10 14" />
-                    </svg>
-                    Contract
-                </a>
-                <button class="btn btn-primary" onclick="downloadCSV()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    Export CSV
-                </button>
+                <div class="header-actions">
+                    <a class="btn btn-ghost"
+                        href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4" target="_blank">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" />
+                            <path d="M14 4h6v6" />
+                            <path d="M20 4L10 14" />
+                        </svg>
+                        Contract
+                    </a>
+                    <button class="btn btn-primary" onclick="downloadCSV()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Export CSV
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -1420,7 +1442,10 @@
             <div class="metric-cell">
                 <div class="metric-label">Unique Holders</div>
                 <div class="metric-value" id="m-holders">—</div>
-                <div class="metric-sub">active wallets</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">Total Minted</div>
+                <div class="metric-value" id="m-minted">—</div>
             </div>
             <div class="metric-cell">
                 <div class="metric-label">Active NFTs</div>
@@ -1428,17 +1453,15 @@
                 <div class="metric-sub">in circulation</div>
             </div>
             <div class="metric-cell">
-                <div class="metric-label">Total Minted</div>
-                <div class="metric-value" id="m-minted">—</div>
-            </div>
-            <div class="metric-cell">
                 <div class="metric-label">Burned</div>
-                <div class="metric-value" id="m-burned">—</div>
-                <div class="metric-sub" id="m-burn-pct"></div>
+                <div class="metric-value" id="m-burned">— 🔥</div>
             </div>
             <div class="metric-cell">
-                <div class="metric-label">Locked DOLO</div>
-                <div class="metric-value accent-green" id="m-dolo">—</div>
+                <div class="metric-label">DOLO Locked (veDOLO)</div>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <div class="metric-value accent-green" id="m-dolo">—</div>
+                    <img src="vedolo-logo.svg" alt="veDOLO" style="width:28px;height:28px">
+                </div>
                 <div class="metric-sub">total in lock</div>
             </div>
             <div class="metric-cell">
@@ -1558,7 +1581,10 @@
                 </div>
                 <div class="modal-stat">
                     <div class="modal-stat-label">Total DOLO Locked</div>
-                    <div class="modal-stat-value green" id="pm-dolo"></div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:8px">
+                        <div class="modal-stat-value green" id="pm-dolo"></div>
+                        <img src="vedolo-logo.svg" alt="veDOLO" style="width:24px;height:24px">
+                    </div>
                     <div class="modal-stat-sub" id="pm-dolo-pct"></div>
                 </div>
             </div>
@@ -1648,8 +1674,9 @@
             anim('m-holders', STATS.unique_holders);
             anim('m-active', STATS.active_nfts);
             anim('m-minted', STATS.total_minted);
-            anim('m-burned', STATS.total_burned);
-            document.getElementById('m-burn-pct').textContent =
+            anim('m-burned', STATS.total_burned, false, ' 🔥');
+            const burnPctEl = document.getElementById('m-burn-pct');
+            if (burnPctEl) burnPctEl.textContent =
                 `${((STATS.total_burned / STATS.total_minted) * 100).toFixed(1)}% burned`;
 
             if (STATS.total_locked_dolo) {
@@ -1676,7 +1703,7 @@
         }
 
         // ===== COUNTER ANIMATION =====
-        function anim(id, target, suffix) {
+        function anim(id, target, suffix, emoji) {
             const el = document.getElementById(id);
             const dur = 1000;
             const start = performance.now();
@@ -1688,7 +1715,7 @@
             (function tick(now) {
                 const p = Math.min((now - start) / dur, 1);
                 const e = 1 - Math.pow(1 - p, 3);
-                el.textContent = fmt(Math.floor(target * e));
+                el.textContent = fmt(Math.floor(target * e)) + (emoji || '');
                 if (p < 1) requestAnimationFrame(tick);
             })(start);
         }
