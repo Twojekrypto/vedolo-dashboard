@@ -38,16 +38,12 @@ jobs:
         env:
           BERASCAN_API_KEY: ${{ secrets.BERASCAN_API_KEY }}
 
-      - name: Check for changes
-        id: changes
-        run: |
-          git diff --quiet vedolo_holders.json || echo "changed=true" >> $GITHUB_OUTPUT
-
-      - name: Commit & push
-        if: steps.changes.outputs.changed == 'true'
+      - name: Commit & push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add vedolo_holders.json vedolo_holders.csv locked_cache.json
+          git add vedolo_holders.json vedolo_holders.csv
+          git add locked_cache.json 2>/dev/null || true
+          git diff --staged --quiet && echo "No changes" && exit 0
           git commit -m "📊 Auto-update: $(date -u '+%Y-%m-%d %H:%M UTC')"
           git push

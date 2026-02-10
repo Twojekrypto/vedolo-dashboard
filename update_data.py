@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 veDOLO Dashboard — Auto-updater
-Fetches holder data from BeraScan API + locked DOLO amounts from Berachain RPC.
+Phase 1: Fetches holders + token ownership from BeraScan Transfer events (paginated by block range).
+Phase 2: Fetches locked DOLO amounts from Berachain RPC (batch calls with caching).
 Outputs: vedolo_holders.json, vedolo_holders.csv
 """
 import json, time, os, csv, sys
@@ -22,222 +23,157 @@ CACHE_FILE = os.path.join(DATA_DIR, "locked_cache.json")
 OUTPUT_JSON = os.path.join(DATA_DIR, "vedolo_holders.json")
 OUTPUT_CSV = os.path.join(DATA_DIR, "vedolo_holders.csv")
 
-# BeraScan API key (optional, higher rate limits with key)
 BERASCAN_API_KEY = os.environ.get("BERASCAN_API_KEY", "")
+TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 
+# ===== HELPERS =====
 
-# ===== PHASE 1: Fetch holders from BeraScan =====
-
-def fetch_total_supply():
-    """Fetch total minted token count from BeraScan."""
-    params = {
-        "module": "stats",
-        "action": "tokensupply",
-        "contractaddress": VEDOLO_CONTRACT,
-    }
+def api_params(extra=None):
+    params = {}
     if BERASCAN_API_KEY:
         params["apikey"] = BERASCAN_API_KEY
-    resp = requests.get(BERASCAN_API, params=params, timeout=30)
-    data = resp.json()
-    if data.get("status") == "1":
-        return int(data["result"])
-    return None
+    if extra:
+        params.update(extra)
+    return params
 
 
-def fetch_token_holders_page(page, offset=1000):
-    """Fetch one page of token holders from BeraScan."""
-    params = {
-        "module": "token",
-        "action": "tokenholderlist",
-        "contractaddress": VEDOLO_CONTRACT,
-        "page": page,
-        "offset": offset,
-    }
-    if BERASCAN_API_KEY:
-        params["apikey"] = BERASCAN_API_KEY
-
+def api_get(params, timeout=60):
+    """Make a BeraScan API call with retry logic."""
     for retry in range(3):
         try:
-            resp = requests.get(BERASCAN_API, params=params, timeout=30)
+            resp = requests.get(BERASCAN_API, params=params, timeout=timeout)
             data = resp.json()
-            if data.get("status") == "1" and data.get("result"):
-                return data["result"]
-            if data.get("message") == "No token holder found":
-                return []
-            time.sleep(1 * (retry + 1))
+            if data.get("status") == "1":
+                return data.get("result", [])
+            if "rate limit" in data.get("message", "").lower() or "max rate" in data.get("result", "").lower() if isinstance(data.get("result"), str) else False:
+                print(f"    Rate limited, waiting {2*(retry+1)}s...")
+                time.sleep(2 * (retry + 1))
+                continue
+            return data.get("result", [])
         except Exception as e:
-            print(f"  ⚠️ Page {page} error: {e}")
+            print(f"    API error: {e}, retry {retry+1}/3")
             time.sleep(2 * (retry + 1))
     return []
 
 
-def fetch_all_holders():
-    """Fetch all veDOLO NFT holders from BeraScan API."""
-    print("📡 Phase 1: Fetching holders from BeraScan...")
-    all_holders = []
+def get_latest_block():
+    """Get the latest block number from RPC."""
+    resp = requests.post(RPC_URL, json={
+        "jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 1
+    }, timeout=10)
+    return int(resp.json()["result"], 16)
+
+
+# ===== PHASE 1: Build ownership from NFT transfers =====
+
+def fetch_nft_transfers():
+    """Fetch all ERC-721 transfers for the veDOLO contract using tokennfttx API."""
+    print("📡 Phase 1: Fetching NFT transfer history from BeraScan...")
+    all_txs = []
     page = 1
+    offset = 10000
 
     while True:
-        holders = fetch_token_holders_page(page)
-        if not holders:
-            break
-        all_holders.extend(holders)
-        print(f"  Page {page}: {len(holders)} entries (total: {len(all_holders)})")
-        page += 1
-        time.sleep(0.3)
-
-    # Aggregate by address
-    address_map = {}
-    for entry in all_holders:
-        addr = entry.get("TokenHolderAddress", "")
-        qty = int(entry.get("TokenHolderQuantity", "0"))
-        if addr and qty > 0:
-            if addr not in address_map:
-                address_map[addr] = {"address": addr, "nft_count": 0, "token_ids": []}
-            address_map[addr]["nft_count"] = qty
-
-    print(f"  ✅ Unique holders: {len(address_map)}")
-    return list(address_map.values())
-
-
-def fetch_tokens_for_holder(address, max_tokens=500):
-    """Fetch token IDs owned by a specific address."""
-    token_ids = []
-    page = 1
-
-    while True:
-        params = {
+        params = api_params({
             "module": "account",
             "action": "tokennfttx",
             "contractaddress": VEDOLO_CONTRACT,
-            "address": address,
+            "address": "",  # all addresses
             "page": page,
-            "offset": 100,
+            "offset": offset,
             "sort": "asc",
-        }
-        if BERASCAN_API_KEY:
-            params["apikey"] = BERASCAN_API_KEY
+        })
+        # tokennfttx doesn't need address — use token approach
+        # Actually BeraScan needs an address for tokennfttx, 
+        # so let's use getLogs with block ranges instead
+        break
 
-        try:
-            resp = requests.get(BERASCAN_API, params=params, timeout=30)
-            data = resp.json()
-
-            if data.get("status") != "1" or not data.get("result"):
-                break
-
-            for tx in data["result"]:
-                tid = int(tx.get("tokenID", 0))
-                if tx.get("to", "").lower() == address.lower():
-                    if tid not in token_ids:
-                        token_ids.append(tid)
-                elif tx.get("from", "").lower() == address.lower():
-                    if tid in token_ids:
-                        token_ids.remove(tid)
-
-            if len(data["result"]) < 100:
-                break
-            page += 1
-            time.sleep(0.25)
-
-        except Exception as e:
-            print(f"  ⚠️ Token fetch error for {address[:10]}...: {e}")
-            break
-
-    return sorted(token_ids)
+    # Use getLogs approach with block range pagination
+    return fetch_transfers_via_logs()
 
 
-def fetch_all_token_ids(holders):
-    """Fetch token IDs for all holders using ERC721 enumeration via RPC."""
-    print("\n📦 Fetching token IDs via RPC enumeration...")
-
-    # Alternative: use tokenOfOwnerByIndex if available
-    # First try to get all token IDs from transfer events
-    all_token_ids = set()
-    holder_tokens = {}
-
-    # Fetch transfer events to build ownership map
-    print("  Fetching Transfer events from BeraScan...")
-    ownership = {}  # token_id -> current_owner
-    page = 1
-    total_events = 0
-
-    while True:
-        params = {
+def fetch_transfers_via_logs():
+    """Fetch Transfer events using getLogs with block range pagination."""
+    print("  Using getLogs with block range pagination...")
+    
+    latest_block = get_latest_block()
+    print(f"  Latest block: {latest_block}")
+    
+    all_events = []
+    BLOCK_RANGE = 50000  # 50k blocks per query
+    from_block = 0
+    
+    while from_block <= latest_block:
+        to_block = min(from_block + BLOCK_RANGE - 1, latest_block)
+        
+        params = api_params({
             "module": "logs",
             "action": "getLogs",
             "address": VEDOLO_CONTRACT,
-            "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",  # Transfer
-            "page": page,
-            "offset": 1000,
-            "sort": "asc",
-        }
-        if BERASCAN_API_KEY:
-            params["apikey"] = BERASCAN_API_KEY
+            "topic0": TRANSFER_TOPIC,
+            "fromBlock": from_block,
+            "toBlock": to_block,
+        })
+        
+        result = api_get(params)
+        
+        if isinstance(result, list) and len(result) > 0:
+            all_events.extend(result)
+            print(f"  Blocks {from_block}-{to_block}: {len(result)} events (total: {len(all_events)})")
+        elif isinstance(result, str) and "No records" in result:
+            pass 
+        
+        from_block = to_block + 1
+        time.sleep(0.25)  # Rate limiting
+    
+    print(f"  ✅ Total Transfer events: {len(all_events)}")
+    return all_events
 
-        try:
-            resp = requests.get(BERASCAN_API, params=params, timeout=60)
-            data = resp.json()
 
-            if data.get("status") != "1" or not data.get("result"):
-                break
-
-            events = data["result"]
-            for event in events:
-                topics = event.get("topics", [])
-                if len(topics) >= 4:
-                    token_id = int(topics[3], 16)
-                    to_addr = "0x" + topics[2][-40:]
-                    ownership[token_id] = to_addr.lower()
-                    all_token_ids.add(token_id)
-
-            total_events += len(events)
-            print(f"  Page {page}: {len(events)} events (total: {total_events}, tokens: {len(all_token_ids)})")
-
-            if len(events) < 1000:
-                break
-            page += 1
-            time.sleep(0.3)
-
-        except Exception as e:
-            print(f"  ⚠️ Event fetch error on page {page}: {e}")
-            time.sleep(2)
-            page += 1
-
-    # Build holder -> token_ids map
+def build_ownership(events):
+    """Build current ownership map from Transfer events."""
+    print("\n📊 Building ownership map...")
     ZERO = "0x" + "0" * 40
-    active_tokens = 0
-    burned_tokens = 0
+    ownership = {}  # token_id -> current_owner
 
+    for event in events:
+        topics = event.get("topics", [])
+        if len(topics) >= 4:
+            token_id = int(topics[3], 16)
+            to_addr = "0x" + topics[2][-40:].lower()
+            ownership[token_id] = to_addr
+
+    # Count stats
+    all_token_ids = set(ownership.keys())
+    burned = sum(1 for addr in ownership.values() if addr == ZERO)
+    active_owners = {}
+    
     for tid, owner in ownership.items():
         if owner == ZERO:
-            burned_tokens += 1
             continue
-        active_tokens += 1
-        checksum_owner = owner  # lowercase
-        if checksum_owner not in holder_tokens:
-            holder_tokens[checksum_owner] = []
-        holder_tokens[checksum_owner].append(tid)
+        if owner not in active_owners:
+            active_owners[owner] = []
+        active_owners[owner].append(tid)
 
-    total_minted = len(all_token_ids)
+    stats = {
+        "total_minted": len(all_token_ids),
+        "total_burned": burned,
+        "active_nfts": len(all_token_ids) - burned,
+        "unique_holders": len(active_owners),
+    }
 
-    print(f"  ✅ Total minted: {total_minted}, Active: {active_tokens}, Burned: {burned_tokens}")
-
-    # Merge into holders
-    final_holders = []
-    for owner_addr, tids in holder_tokens.items():
-        # Try to find checksum match
-        final_holders.append({
-            "address": owner_addr,
+    holders = []
+    for addr, tids in active_owners.items():
+        holders.append({
+            "address": addr,
             "nft_count": len(tids),
             "token_ids": sorted(tids),
         })
 
-    return final_holders, {
-        "total_minted": total_minted,
-        "total_burned": burned_tokens,
-        "active_nfts": active_tokens,
-        "unique_holders": len(holder_tokens),
-    }
+    print(f"  Minted: {stats['total_minted']}, Burned: {stats['total_burned']}, Active: {stats['active_nfts']}")
+    print(f"  Unique holders: {stats['unique_holders']}")
+
+    return holders, stats
 
 
 # ===== PHASE 2: Fetch locked DOLO =====
@@ -357,10 +293,21 @@ def main():
     print(f"   {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
     print("=" * 60)
 
-    # Phase 1: Fetch holders + token IDs from Transfer events
-    holders, stats = fetch_all_token_ids(None)
+    # Phase 1: Fetch transfer events and build ownership
+    events = fetch_nft_transfers()
+    
+    if not events:
+        print("⚠️  No transfer events found! Check API key or rate limits.")
+        print("   Keeping existing data.")
+        sys.exit(0)
 
-    # Collect all token IDs
+    holders, stats = build_ownership(events)
+
+    if not holders:
+        print("⚠️  No holders found! Keeping existing data.")
+        sys.exit(0)
+
+    # Collect all active token IDs
     all_token_ids = set()
     for h in holders:
         for tid in h["token_ids"]:
@@ -401,12 +348,16 @@ def main():
         h["rank"] = i
 
     # Fix address checksums
-    from web3 import Web3
-    for h in holders:
-        try:
-            h["address"] = Web3.to_checksum_address(h["address"])
-        except Exception:
-            pass
+    try:
+        from web3 import Web3
+        for h in holders:
+            try:
+                h["address"] = Web3.to_checksum_address(h["address"])
+            except Exception:
+                pass
+    except ImportError:
+        # web3 not available, use simple checksum
+        pass
 
     stats["total_locked_dolo"] = round(total_locked_dolo, 2)
 
@@ -435,6 +386,10 @@ def main():
                 datetime.utcfromtimestamp(h["latest_lock_end"]).strftime('%Y-%m-%d') if h["latest_lock_end"] > 0 else "",
                 ";".join(str(t) for t in h["token_ids"])
             ])
+
+    # Ensure cache file exists for git
+    if not os.path.exists(CACHE_FILE):
+        save_cache({})
 
     print(f"\n💾 Saved: {OUTPUT_JSON}")
     print(f"💾 CSV: {OUTPUT_CSV}")
