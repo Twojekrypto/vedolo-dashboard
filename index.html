@@ -929,6 +929,11 @@
                 <div class="metric-value accent-green" id="m-dolo">—</div>
                 <div class="metric-sub">total in lock</div>
             </div>
+            <div class="metric-cell">
+                <div class="metric-label">Vote Weight</div>
+                <div class="metric-value" id="m-vote" style="color:#f59e0b">—</div>
+                <div class="metric-sub">total veDOLO power</div>
+            </div>
         </div>
 
         <!-- CHARTS -->
@@ -991,6 +996,9 @@
                             </th>
                             <th data-sort="total_dolo" onclick="sortTable('total_dolo')">
                                 DOLO 🔒 <span class="arrow">⇅</span>
+                            </th>
+                            <th data-sort="total_vote_weight" onclick="sortTable('total_vote_weight')">
+                                Vote Weight <span class="arrow">⇅</span>
                             </th>
                             <th>Token IDs</th>
                         </tr>
@@ -1063,6 +1071,9 @@
 
             if (STATS.total_locked_dolo) {
                 anim('m-dolo', Math.round(STATS.total_locked_dolo), true);
+            }
+            if (STATS.total_vote_weight) {
+                anim('m-vote', Math.round(STATS.total_vote_weight), true);
             }
 
             document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', {
@@ -1163,13 +1174,16 @@
             const page = filteredData.slice(start, start + PER_PAGE);
             const maxNft = Math.max(...filteredData.map(h => h.nft_count), 1);
             const maxDolo = Math.max(...filteredData.map(h => h.total_dolo || 0), 1);
+            const maxVote = Math.max(...filteredData.map(h => h.total_vote_weight || 0), 1);
 
             tbody.innerHTML = page.map(h => {
                 const rc = h.rank <= 3 ? `rank-${h.rank}` : '';
                 const nftPct = Math.max(3, (h.nft_count / maxNft) * 100);
                 const doloPct = Math.max(3, ((h.total_dolo || 0) / maxDolo) * 100);
+                const votePct = Math.max(3, ((h.total_vote_weight || 0) / maxVote) * 100);
                 const tokPrev = h.token_ids.slice(0, 6).join(', ') + (h.token_ids.length > 6 ? ` … +${h.token_ids.length - 6}` : '');
                 const doloExact = (h.total_dolo || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+                const voteExact = (h.total_vote_weight || 0).toLocaleString('en-US', { maximumFractionDigits: 4 });
 
                 return `<tr>
             <td class="c-rank">${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}</td>
@@ -1187,6 +1201,12 @@
                 <div class="mini-bar">
                     <span>${fmtDolo(h.total_dolo || 0)}</span>
                     <div class="mini-bar-track"><div class="mini-bar-fill green" style="width:${doloPct}%"></div></div>
+                </div>
+            </td>
+            <td class="c-vote" title="${voteExact} veDOLO">
+                <div class="mini-bar">
+                    <span>${fmtDolo(h.total_vote_weight || 0)}</span>
+                    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${votePct}%;background:linear-gradient(90deg,#f59e0b,#f97316)"></div></div>
                 </div>
             </td>
             <td class="c-tokens"><div class="tokens-truncated" title="${h.token_ids.join(', ')}">${tokPrev}</div></td>
@@ -1304,9 +1324,9 @@
         }
 
         function downloadCSV() {
-            let csv = 'Rank,Address,NFT_Count,Total_DOLO,Token_IDs\n';
+            let csv = 'Rank,Address,NFT_Count,Total_DOLO,Vote_Weight,Token_IDs\n';
             filteredData.forEach(h => {
-                csv += `${h.rank},${h.address},${h.nft_count},${(h.total_dolo || 0).toFixed(2)},"${h.token_ids.join(';')}"\n`;
+                csv += `${h.rank},${h.address},${h.nft_count},${(h.total_dolo || 0).toFixed(2)},${(h.total_vote_weight || 0).toFixed(4)},"${h.token_ids.join(';')}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);

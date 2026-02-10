@@ -16,6 +16,7 @@ ETHERSCAN_V2 = "https://api.etherscan.io/v2/api"
 CHAIN_ID = 80094  # Berachain
 RPC_URL = "https://berachain.drpc.org/"
 LOCKED_SELECTOR = "0xb45a3c0e"  # locked(uint256)
+BALANCE_OF_NFT_SELECTOR = "0xe7e242d4"  # balanceOfNFT(uint256) — current vote weight
 
 BATCH_SIZE = 3
 MAX_WORKERS = 8
@@ -175,7 +176,7 @@ def build_ownership(txs):
     return holders, stats
 
 
-# ===== PHASE 2: Fetch locked DOLO =====
+# ===== PHASE 2: Fetch locked DOLO + PHASE 3: Fetch vote weights =====
 
 def make_batch_call(token_ids):
     """Batch RPC call for locked(uint256)."""
@@ -280,6 +281,78 @@ def fetch_locked_dolo(all_token_ids):
     return cache
 
 
+def make_vote_batch_call(token_ids):
+    """Batch RPC call for balanceOfNFT(uint256) — current vote weight."""
+    s = requests.Session()
+    batch = []
+    for i, tid in enumerate(token_ids):
+        encoded = hex(tid)[2:].zfill(64)
+        batch.append({
+            "jsonrpc": "2.0",
+            "method": "eth_call",
+            "params": [{"to": VEDOLO_CONTRACT, "data": BALANCE_OF_NFT_SELECTOR + encoded}, "latest"],
+            "id": i
+        })
+
+    out = {}
+    for retry in range(3):
+        try:
+            resp = s.post(RPC_URL, json=batch, timeout=15,
+                          headers={"Content-Type": "application/json"})
+            if resp.status_code == 429:
+                time.sleep(1 * (retry + 1))
+                continue
+            resp.raise_for_status()
+            results = resp.json()
+            for r in results:
+                idx = r["id"]
+                tid = token_ids[idx]
+                if "result" in r and r["result"] and len(r["result"]) > 2:
+                    val = int(r["result"], 16)
+                    out[tid] = val / 1e18
+                else:
+                    out[tid] = 0.0
+            return out
+        except Exception as e:
+            if retry < 2:
+                time.sleep(0.5 * (retry + 1))
+
+    for tid in token_ids:
+        if tid not in out:
+            out[tid] = 0.0
+    return out
+
+
+def fetch_vote_weights(all_token_ids):
+    """Fetch current vote weights for all tokens (always fresh, not cached)."""
+    print(f"\n⚖️  Phase 3: Fetching vote weights for {len(all_token_ids):,} tokens...")
+
+    vote_weights = {}
+    chunks = [all_token_ids[i:i+BATCH_SIZE] for i in range(0, len(all_token_ids), BATCH_SIZE)]
+    errors = 0
+    done = 0
+    chunk_idx = 0
+
+    while chunk_idx < len(chunks):
+        window = chunks[chunk_idx:chunk_idx + MAX_WORKERS]
+
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            futures = {executor.submit(make_vote_batch_call, c): ci for ci, c in enumerate(window)}
+            for future in as_completed(futures):
+                for tid, weight in future.result().items():
+                    vote_weights[tid] = weight
+                    done += 1
+
+        chunk_idx += len(window)
+        if chunk_idx % 50 == 0 or chunk_idx >= len(chunks):
+            pct = (done / len(all_token_ids)) * 100
+            print(f"  Progress: {pct:.0f}% ({done:,}/{len(all_token_ids):,})")
+        time.sleep(0.15)
+
+    print(f"  ✅ Done. {len(vote_weights):,} vote weights fetched.")
+    return vote_weights
+
+
 # ===== MAIN =====
 
 def main():
@@ -307,11 +380,16 @@ def main():
     # Phase 2: Fetch locked DOLO
     cache = fetch_locked_dolo(all_token_ids)
 
-    # Merge locked DOLO into holders
+    # Phase 3: Fetch vote weights (always fresh — decays over time)
+    vote_weights = fetch_vote_weights(all_token_ids)
+
+    # Merge locked DOLO + vote weights into holders
     print("\n📊 Merging data...")
     total_locked_dolo = 0
+    total_vote_weight = 0
     for holder in holders:
         holder_dolo = 0
+        holder_vote = 0
         token_details = []
         earliest_end = float('inf')
         latest_end = 0
@@ -320,17 +398,21 @@ def main():
             ld = cache.get(str(tid), {"amount": 0, "end": 0})
             amt = ld.get("amount", 0)
             end = ld.get("end", 0)
+            vw = vote_weights.get(tid, 0)
             holder_dolo += amt
+            holder_vote += vw
             if end > 0:
                 earliest_end = min(earliest_end, end)
                 latest_end = max(latest_end, end)
-            token_details.append({"id": tid, "dolo": round(amt, 2), "end": end})
+            token_details.append({"id": tid, "dolo": round(amt, 2), "end": end, "vote_weight": round(vw, 4)})
 
         holder["total_dolo"] = round(holder_dolo, 2)
+        holder["total_vote_weight"] = round(holder_vote, 4)
         holder["earliest_lock_end"] = earliest_end if earliest_end != float('inf') else 0
         holder["latest_lock_end"] = latest_end
         holder["token_details"] = token_details
         total_locked_dolo += holder_dolo
+        total_vote_weight += holder_vote
 
     # Sort & rank
     holders.sort(key=lambda h: h["total_dolo"], reverse=True)
@@ -349,6 +431,7 @@ def main():
         pass
 
     stats["total_locked_dolo"] = round(total_locked_dolo, 2)
+    stats["total_vote_weight"] = round(total_vote_weight, 4)
 
     output = {
         "contract": VEDOLO_CONTRACT,
@@ -363,11 +446,12 @@ def main():
 
     with open(OUTPUT_CSV, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["Rank", "Address", "NFT_Count", "Total_DOLO",
+        writer.writerow(["Rank", "Address", "NFT_Count", "Total_DOLO", "Vote_Weight",
                          "Earliest_Lock_End", "Latest_Lock_End", "Token_IDs"])
         for h in holders:
             writer.writerow([
                 h["rank"], h["address"], h["nft_count"], h["total_dolo"],
+                h.get("total_vote_weight", 0),
                 datetime.utcfromtimestamp(h["earliest_lock_end"]).strftime('%Y-%m-%d') if h["earliest_lock_end"] > 0 else "",
                 datetime.utcfromtimestamp(h["latest_lock_end"]).strftime('%Y-%m-%d') if h["latest_lock_end"] > 0 else "",
                 ";".join(str(t) for t in h["token_ids"])
@@ -375,11 +459,12 @@ def main():
 
     print(f"\n💾 Saved: vedolo_holders.json + .csv")
     print(f"   Locked DOLO: {total_locked_dolo:,.2f}")
+    print(f"   Vote Weight: {total_vote_weight:,.2f}")
     print(f"   Holders: {len(holders):,}")
 
     print(f"\n🏆 TOP 5:")
     for h in holders[:5]:
-        print(f"   #{h['rank']:<4} {h['address'][:12]}… {h['nft_count']:>4} NFT  {h['total_dolo']:>14,.2f} DOLO")
+        print(f"   #{h['rank']:<4} {h['address'][:12]}… {h['nft_count']:>4} NFT  {h['total_dolo']:>14,.2f} DOLO  {h.get('total_vote_weight',0):>12,.2f} veDOLO")
 
     print("\n✅ Update complete!")
 
