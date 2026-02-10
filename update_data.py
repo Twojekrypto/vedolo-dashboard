@@ -30,7 +30,12 @@ API_KEY = os.environ.get("BERASCAN_API_KEY", "")
 # ===== PHASE 1: Fetch all NFT transfers via Etherscan V2 API =====
 
 def fetch_all_nft_transfers():
-    """Fetch complete NFT transfer history from Etherscan V2 API with pagination."""
+    """Fetch complete NFT transfer history using startblock/endblock pagination.
+    
+    Etherscan V2 caps page*offset <= 10,000. To get ALL transactions,
+    we paginate by block range: fetch 10k sorted asc, then use the last
+    block number as the next startblock.
+    """
     print("📡 Phase 1: Fetching NFT transfers via Etherscan V2 API...")
 
     if not API_KEY:
@@ -38,8 +43,8 @@ def fetch_all_nft_transfers():
         sys.exit(1)
 
     all_txs = []
-    page = 1
-    offset = 10000  # Max per page
+    seen_hashes = set()  # Deduplicate txs spanning block boundaries
+    start_block = 0
 
     while True:
         params = {
@@ -47,8 +52,10 @@ def fetch_all_nft_transfers():
             "module": "account",
             "action": "tokennfttx",
             "contractaddress": VEDOLO_CONTRACT,
-            "page": page,
-            "offset": offset,
+            "startblock": start_block,
+            "endblock": 99999999,
+            "page": 1,
+            "offset": 10000,
             "sort": "asc",
             "apikey": API_KEY,
         }
@@ -60,16 +67,32 @@ def fetch_all_nft_transfers():
 
                 if data.get("status") == "1" and isinstance(data.get("result"), list):
                     results = data["result"]
-                    all_txs.extend(results)
-                    print(f"  Page {page}: {len(results)} txs (total: {len(all_txs)})")
 
-                    if len(results) < offset:
-                        # Last page
+                    # Deduplicate (same block may appear in consecutive calls)
+                    new_count = 0
+                    for tx in results:
+                        tx_key = tx.get("hash", "") + tx.get("tokenID", "")
+                        if tx_key not in seen_hashes:
+                            seen_hashes.add(tx_key)
+                            all_txs.append(tx)
+                            new_count += 1
+
+                    print(f"  Block {start_block}+: {len(results)} txs, {new_count} new (total: {len(all_txs)})")
+
+                    if len(results) < 10000:
+                        # Got all remaining transfers
                         print(f"  ✅ Fetched all {len(all_txs)} NFT transfers")
                         return all_txs
 
-                    page += 1
-                    time.sleep(0.25)  # Rate limit: 5 calls/sec
+                    # Move startblock to the last block in results
+                    last_block = int(results[-1].get("blockNumber", start_block))
+                    if last_block == start_block:
+                        # Edge case: >10k txs in same block. Skip to next block.
+                        start_block = last_block + 1
+                    else:
+                        start_block = last_block
+
+                    time.sleep(0.25)  # Rate limit
                     break
 
                 elif "rate" in str(data.get("result", "")).lower() or "max rate" in str(data.get("message", "")).lower():
@@ -78,12 +101,11 @@ def fetch_all_nft_transfers():
                     continue
 
                 else:
-                    # No more results or error
                     if data.get("message") == "No transactions found" or (
                         isinstance(data.get("result"), str) and "No transactions" in data["result"]):
                         print(f"  ✅ Fetched all {len(all_txs)} NFT transfers")
                         return all_txs
-                    print(f"  ⚠️ Unexpected response: {data.get('message')}: {str(data.get('result',''))[:100]}")
+                    print(f"  ⚠️ API: {data.get('message')}: {str(data.get('result',''))[:100]}")
                     if all_txs:
                         return all_txs
                     sys.exit(1)
@@ -91,8 +113,13 @@ def fetch_all_nft_transfers():
             except Exception as e:
                 print(f"  Error: {e}, retry {retry+1}/3")
                 time.sleep(2 * (retry + 1))
+        else:
+            print(f"  ❌ Failed after 3 retries at block {start_block}")
+            break
 
     return all_txs
+
+
 
 
 def build_ownership(txs):
