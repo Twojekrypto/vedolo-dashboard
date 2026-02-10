@@ -1144,9 +1144,15 @@
             margin-bottom: 28px;
         }
 
+        .expiry-chart-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .expiry-canvas {
             width: 100%;
-            height: 200px;
+            height: 220px;
+            min-width: 500px;
         }
 
         /* ===== COMPARE TOOL ===== */
@@ -1340,6 +1346,11 @@
                 flex-direction: column;
                 gap: 20px;
             }
+
+            .expiry-canvas {
+                height: 260px;
+                min-width: 480px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1498,7 +1509,9 @@
                 <div class="card-title">Lock Expiry Timeline</div>
 
             </div>
-            <canvas class="expiry-canvas" id="expiry-canvas"></canvas>
+            <div class="expiry-chart-scroll">
+                <canvas class="expiry-canvas" id="expiry-canvas"></canvas>
+            </div>
         </div>
 
 
@@ -1814,10 +1827,13 @@
             if (!entries.length) return;
 
             const maxVal = Math.max(...entries.map(e => e[1]));
-            const pad = { top: 24, bottom: 50, left: 70, right: 20 };
+            // Responsive sizing
+            const isMobile = W < 500;
+            const fontSize = isMobile ? 10 : 12;
+            const pad = { top: 24, bottom: isMobile ? 45 : 50, left: isMobile ? 45 : 70, right: isMobile ? 10 : 20 };
             const chartW = W - pad.left - pad.right;
             const chartH = H - pad.top - pad.bottom;
-            const barW = Math.min(40, (chartW / entries.length) * 0.7);
+            const barW = Math.min(40, (chartW / entries.length) * 0.65);
             const gap = chartW / entries.length;
 
             // Y axis
@@ -1831,10 +1847,10 @@
                 ctx.stroke();
 
                 ctx.fillStyle = 'rgba(255,255,255,0.35)';
-                ctx.font = '12px Inter';
+                ctx.font = `${fontSize}px Inter`;
                 ctx.textAlign = 'right';
                 const val = (maxVal * i / 4);
-                ctx.fillText(val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val), pad.left - 8, y + 3);
+                ctx.fillText(val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val), pad.left - 6, y + 3);
             }
 
             // Bars
@@ -1852,15 +1868,17 @@
                 ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
                 ctx.fill();
 
-                // Label
+                // X-axis label
                 ctx.fillStyle = 'rgba(255,255,255,0.5)';
-                ctx.font = '12px Inter';
+                ctx.font = `${fontSize}px Inter`;
                 ctx.textAlign = 'center';
-                ctx.fillText(label, x + barW / 2, H - pad.bottom + 14);
+                // Shorten label on mobile: "Q2 2025" → "Q2'25"
+                const shortLabel = isMobile ? label.replace(/ 20(\d\d)/, "'$1") : label;
+                ctx.fillText(shortLabel, x + barW / 2, H - pad.bottom + 14);
 
                 // Value on top
                 ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                ctx.font = '12px Inter';
+                ctx.font = `${fontSize}px Inter`;
                 const valLbl = val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val);
                 ctx.fillText(valLbl, x + barW / 2, y - 5);
             });
