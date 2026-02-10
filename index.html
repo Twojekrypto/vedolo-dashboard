@@ -1831,7 +1831,7 @@
                 ctx.stroke();
 
                 ctx.fillStyle = 'rgba(255,255,255,0.35)';
-                ctx.font = '13px Inter';
+                ctx.font = '15px Inter';
                 ctx.textAlign = 'right';
                 const val = (maxVal * i / 4);
                 ctx.fillText(val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val), pad.left - 8, y + 3);
@@ -1854,13 +1854,13 @@
 
                 // Label
                 ctx.fillStyle = 'rgba(255,255,255,0.5)';
-                ctx.font = '12px Inter';
+                ctx.font = '15px Inter';
                 ctx.textAlign = 'center';
                 ctx.fillText(label, x + barW / 2, H - pad.bottom + 14);
 
                 // Value on top
                 ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                ctx.font = '12px Inter';
+                ctx.font = '15px Inter';
                 const valLbl = val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val);
                 ctx.fillText(valLbl, x + barW / 2, y - 5);
             });
