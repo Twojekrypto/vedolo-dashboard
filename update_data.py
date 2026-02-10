@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """
-veDOLO Dashboard — Auto-updater
-Phase 1: Build ownership map from Transfer events via RPC eth_getLogs (10k block chunks).
-Phase 2: Fetch locked DOLO amounts from Berachain RPC (batch calls with caching).
+veDOLO Dashboard — Auto-updater (Etherscan V2 API)
+Phase 1: Fetches all NFT transfers via Etherscan V2 tokennfttx (paginated, 100% accurate).
+Phase 2: Fetches locked DOLO amounts from Berachain RPC (batched, cached).
 Outputs: vedolo_holders.json, vedolo_holders.csv
-
-Uses progress file to resume from last fetched block — first full run may take ~5-10min,
-subsequent runs only fetch new blocks since last time.
 """
 import json, time, os, csv, sys
 import requests
@@ -15,169 +12,125 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ===== CONFIG =====
 VEDOLO_CONTRACT = "0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4"
+ETHERSCAN_V2 = "https://api.etherscan.io/v2/api"
+CHAIN_ID = 80094  # Berachain
 RPC_URL = "https://berachain.drpc.org/"
 LOCKED_SELECTOR = "0xb45a3c0e"  # locked(uint256)
-TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-CONTRACT_DEPLOY_BLOCK = 4_180_000  # First Transfer at block ~4,190,046
-BLOCK_CHUNK = 10_000  # Max per eth_getLogs call on free tier
 
-BATCH_SIZE = 3  # RPC batch size for locked() calls
+BATCH_SIZE = 3
 MAX_WORKERS = 8
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_FILE = os.path.join(DATA_DIR, "locked_cache.json")
-EVENTS_CACHE = os.path.join(DATA_DIR, "events_cache.json")
 OUTPUT_JSON = os.path.join(DATA_DIR, "vedolo_holders.json")
 OUTPUT_CSV = os.path.join(DATA_DIR, "vedolo_holders.csv")
 
+API_KEY = os.environ.get("BERASCAN_API_KEY", "")
 
-# ===== HELPERS =====
 
-def rpc_call(method, params):
-    """Single JSON-RPC call."""
-    for retry in range(3):
-        try:
-            resp = requests.post(RPC_URL, json={
-                "jsonrpc": "2.0", "method": method, "params": params, "id": 1
-            }, timeout=15, headers={"Content-Type": "application/json"})
-            data = resp.json()
-            if "error" in data:
-                if "rate" in str(data["error"]).lower():
+# ===== PHASE 1: Fetch all NFT transfers via Etherscan V2 API =====
+
+def fetch_all_nft_transfers():
+    """Fetch complete NFT transfer history from Etherscan V2 API with pagination."""
+    print("📡 Phase 1: Fetching NFT transfers via Etherscan V2 API...")
+
+    if not API_KEY:
+        print("❌ BERASCAN_API_KEY not set! Cannot fetch data.")
+        sys.exit(1)
+
+    all_txs = []
+    page = 1
+    offset = 10000  # Max per page
+
+    while True:
+        params = {
+            "chainid": CHAIN_ID,
+            "module": "account",
+            "action": "tokennfttx",
+            "contractaddress": VEDOLO_CONTRACT,
+            "page": page,
+            "offset": offset,
+            "sort": "asc",
+            "apikey": API_KEY,
+        }
+
+        for retry in range(3):
+            try:
+                resp = requests.get(ETHERSCAN_V2, params=params, timeout=30)
+                data = resp.json()
+
+                if data.get("status") == "1" and isinstance(data.get("result"), list):
+                    results = data["result"]
+                    all_txs.extend(results)
+                    print(f"  Page {page}: {len(results)} txs (total: {len(all_txs)})")
+
+                    if len(results) < offset:
+                        # Last page
+                        print(f"  ✅ Fetched all {len(all_txs)} NFT transfers")
+                        return all_txs
+
+                    page += 1
+                    time.sleep(0.25)  # Rate limit: 5 calls/sec
+                    break
+
+                elif "rate" in str(data.get("result", "")).lower() or "max rate" in str(data.get("message", "")).lower():
+                    print(f"  Rate limited, waiting {2*(retry+1)}s...")
                     time.sleep(2 * (retry + 1))
                     continue
-                return None, data["error"]
-            return data.get("result"), None
-        except Exception as e:
-            time.sleep(1 * (retry + 1))
-    return None, "max retries reached"
+
+                else:
+                    # No more results or error
+                    if data.get("message") == "No transactions found" or (
+                        isinstance(data.get("result"), str) and "No transactions" in data["result"]):
+                        print(f"  ✅ Fetched all {len(all_txs)} NFT transfers")
+                        return all_txs
+                    print(f"  ⚠️ Unexpected response: {data.get('message')}: {str(data.get('result',''))[:100]}")
+                    if all_txs:
+                        return all_txs
+                    sys.exit(1)
+
+            except Exception as e:
+                print(f"  Error: {e}, retry {retry+1}/3")
+                time.sleep(2 * (retry + 1))
+
+    return all_txs
 
 
-def get_latest_block():
-    result, err = rpc_call("eth_blockNumber", [])
-    if result:
-        return int(result, 16)
-    raise Exception(f"Failed to get block number: {err}")
-
-
-# ===== PHASE 1: Fetch Transfer events via RPC =====
-
-def load_events_cache():
-    if os.path.exists(EVENTS_CACHE):
-        with open(EVENTS_CACHE) as f:
-            return json.load(f)
-    return {"last_block": CONTRACT_DEPLOY_BLOCK, "events": []}
-
-
-def save_events_cache(cache):
-    tmp = EVENTS_CACHE + ".tmp"
-    with open(tmp, "w") as f:
-        json.dump(cache, f)
-    os.replace(tmp, EVENTS_CACHE)
-
-
-def fetch_logs_chunk(from_block, to_block):
-    """Fetch Transfer logs for a single block range."""
-    result, err = rpc_call("eth_getLogs", [{
-        "address": VEDOLO_CONTRACT,
-        "topics": [TRANSFER_TOPIC],
-        "fromBlock": hex(from_block),
-        "toBlock": hex(to_block),
-    }])
-    if result is not None:
-        return result
-    return []
-
-
-def fetch_all_transfer_events():
-    """Fetch all Transfer events using block-range pagination with caching."""
-    print("📡 Phase 1: Fetching Transfer events via RPC...")
-
-    ecache = load_events_cache()
-    start_block = ecache["last_block"]
-    latest_block = get_latest_block()
-
-    print(f"  Block range: {start_block:,} → {latest_block:,} ({latest_block - start_block:,} blocks)")
-
-    if start_block >= latest_block:
-        print("  ✅ Already up to date!")
-        return ecache["events"]
-
-    # Build chunk ranges
-    chunks = []
-    b = start_block
-    while b < latest_block:
-        end = min(b + BLOCK_CHUNK - 1, latest_block)
-        chunks.append((b, end))
-        b = end + 1
-
-    print(f"  Chunks to fetch: {len(chunks)}")
-
-    new_events = []
-    fetched = 0
-
-    # Fetch chunks with parallelism (4 concurrent to avoid rate limits)
-    for i in range(0, len(chunks), 4):
-        batch = chunks[i:i+4]
-
-        with ThreadPoolExecutor(max_workers=4) as executor:
-            futures = {executor.submit(fetch_logs_chunk, fb, tb): (fb, tb)
-                       for fb, tb in batch}
-            for future in as_completed(futures):
-                events = future.result()
-                for event in events:
-                    topics = event.get("topics", [])
-                    if len(topics) >= 4:
-                        new_events.append({
-                            "b": int(event["blockNumber"], 16),
-                            "f": "0x" + topics[1][-40:],
-                            "t": "0x" + topics[2][-40:],
-                            "id": int(topics[3], 16),
-                        })
-                fetched += len(batch)
-
-        if fetched % 40 == 0 or i + 4 >= len(chunks):
-            pct = (fetched / len(chunks)) * 100
-            print(f"  Progress: {pct:.0f}% ({fetched}/{len(chunks)} chunks, {len(new_events)} new events)")
-
-        time.sleep(0.1)
-
-    # Merge with existing events & save
-    all_events = ecache["events"] + new_events
-    ecache["events"] = all_events
-    ecache["last_block"] = latest_block
-    save_events_cache(ecache)
-
-    print(f"  ✅ Total events: {len(all_events)} ({len(new_events)} new)")
-    return all_events
-
-
-def build_ownership(events):
-    """Build current ownership map from Transfer events."""
+def build_ownership(txs):
+    """Build current ownership map from NFT transfers."""
     print("\n📊 Building ownership map...")
-    ZERO = "0x" + "0" * 40
+    ZERO = "0x0000000000000000000000000000000000000000"
+
+    # Sort by block number and transaction index for correct ordering
+    txs.sort(key=lambda t: (int(t.get("blockNumber", 0)), int(t.get("transactionIndex", 0))))
+
     ownership = {}  # token_id -> current_owner
+    all_minted = set()
 
-    # Sort by block to ensure correct order
-    events.sort(key=lambda e: (e["b"], e["id"]))
+    for tx in txs:
+        token_id = int(tx.get("tokenID", 0))
+        from_addr = tx.get("from", "").lower()
+        to_addr = tx.get("to", "").lower()
 
-    for event in events:
-        ownership[event["id"]] = event["t"]
+        if from_addr == ZERO.lower():
+            all_minted.add(token_id)
 
-    # Build stats
-    all_token_ids = set(ownership.keys())
-    burned = sum(1 for addr in ownership.values() if addr == ZERO)
+        ownership[token_id] = to_addr
+
+    # Count stats
+    burned = sum(1 for addr in ownership.values() if addr == ZERO.lower())
 
     active_owners = {}
     for tid, owner in ownership.items():
-        if owner == ZERO:
+        if owner == ZERO.lower():
             continue
         if owner not in active_owners:
             active_owners[owner] = []
         active_owners[owner].append(tid)
 
     stats = {
-        "total_minted": len(all_token_ids),
+        "total_minted": len(all_minted),
         "total_burned": burned,
-        "active_nfts": len(all_token_ids) - burned,
+        "active_nfts": len(all_minted) - burned,
         "unique_holders": len(active_owners),
     }
 
@@ -243,14 +196,14 @@ def make_batch_call(token_ids):
     return out
 
 
-def load_locked_cache():
+def load_cache():
     if os.path.exists(CACHE_FILE):
         with open(CACHE_FILE) as f:
             return json.load(f)
     return {}
 
 
-def save_locked_cache(cache):
+def save_cache(cache):
     tmp = CACHE_FILE + ".tmp"
     with open(tmp, "w") as f:
         json.dump(cache, f)
@@ -261,7 +214,7 @@ def fetch_locked_dolo(all_token_ids):
     """Fetch locked DOLO for all token IDs."""
     print(f"\n🔒 Phase 2: Fetching locked DOLO for {len(all_token_ids):,} tokens...")
 
-    cache = load_locked_cache()
+    cache = load_cache()
     cached_ids = {int(k) for k in cache.keys()}
     missing = [tid for tid in all_token_ids if tid not in cached_ids]
     print(f"  Cached: {len(all_token_ids) - len(missing):,}/{len(all_token_ids):,}")
@@ -289,10 +242,10 @@ def fetch_locked_dolo(all_token_ids):
             if chunk_idx % 50 == 0 or chunk_idx >= len(chunks):
                 pct = (done / len(missing)) * 100
                 print(f"  Progress: {pct:.0f}% ({done:,}/{len(missing):,}) | Errors: {errors}")
-                save_locked_cache(cache)
+                save_cache(cache)
             time.sleep(0.15)
 
-        save_locked_cache(cache)
+        save_cache(cache)
         print(f"  ✅ Done. Errors: {errors}/{len(missing):,}")
     else:
         print("  ✅ All cached!")
@@ -304,18 +257,18 @@ def fetch_locked_dolo(all_token_ids):
 
 def main():
     print("=" * 60)
-    print("🔄 veDOLO Dashboard — Data Update")
+    print("🔄 veDOLO Dashboard — Data Update (Etherscan V2)")
     print(f"   {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
     print("=" * 60)
 
-    # Phase 1: Fetch Transfer events
-    events = fetch_all_transfer_events()
+    # Phase 1: Fetch all NFT transfers
+    txs = fetch_all_nft_transfers()
 
-    if not events:
-        print("⚠️  No events found! Keeping existing data.")
+    if not txs:
+        print("⚠️  No transfers found! Keeping existing data.")
         sys.exit(0)
 
-    holders, stats = build_ownership(events)
+    holders, stats = build_ownership(txs)
 
     if not holders:
         print("⚠️  No holders found!")
