@@ -533,10 +533,16 @@
 
         /* Column specific */
         .c-rank {
-            width: 52px;
+            width: 80px;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
             color: var(--text-muted);
+        }
+
+        .rank-cell-inner {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .rank-medal {
@@ -998,6 +1004,263 @@
             }
         }
 
+        /* ===== WHALE GRADIENT ROWS ===== */
+        tr.whale-row {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.06) 0%, transparent 60%);
+        }
+
+        tr.whale-row:hover {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.12) 0%, rgba(255, 255, 255, 0.03) 60%) !important;
+        }
+
+        .whale-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 8px;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-left: 4px;
+        }
+
+        /* ===== ADDRESS LABELS ===== */
+        .addr-label {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .addr-label.contract {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+
+        .addr-label.multisig {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+        }
+
+        .addr-label.team {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        .addr-label.dead {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        /* ===== SUPPLY % IN TABLE ===== */
+        .supply-pct {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        /* ===== LOCK PROGRESS BAR ===== */
+        .lock-progress {
+            margin-top: 6px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .lock-progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s;
+        }
+
+        .lock-progress-fill.active {
+            background: linear-gradient(90deg, #6366f1, #818cf8);
+        }
+
+        .lock-progress-fill.expiring {
+            background: linear-gradient(90deg, #f59e0b, #f97316);
+        }
+
+        .lock-progress-fill.expired {
+            background: #ef4444;
+        }
+
+        /* ===== LOCK SORT CONTROLS ===== */
+        .lock-sort-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .lock-sort-btn {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .lock-sort-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-default);
+        }
+
+        .lock-sort-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* ===== EXPIRY TIMELINE ===== */
+        .expiry-chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .expiry-canvas {
+            width: 100%;
+            height: 200px;
+        }
+
+        /* ===== COMPARE TOOL ===== */
+        .compare-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+        }
+
+        .compare-bar.hidden {
+            display: none;
+        }
+
+        .compare-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: #818cf8;
+        }
+
+        .compare-btn {
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: none;
+            background: #6366f1;
+            color: white;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .compare-btn:hover {
+            background: #4f46e5;
+        }
+
+        .compare-clear {
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 4px 8px;
+        }
+
+        .compare-clear:hover {
+            color: var(--text-primary);
+        }
+
+        .compare-checkbox {
+            width: 14px;
+            height: 14px;
+            accent-color: #6366f1;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .compare-modal .modal-card {
+            max-width: 1100px;
+        }
+
+        .compare-grid {
+            display: grid;
+            gap: 1px;
+            background: var(--border-subtle);
+        }
+
+        .compare-col {
+            background: var(--bg-card);
+            padding: 16px;
+        }
+
+        .compare-col-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            word-break: break-all;
+        }
+
+        .compare-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .compare-metric:last-child {
+            border-bottom: none;
+        }
+
+        .compare-metric-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .compare-metric-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ===== HISTORICAL CHART ===== */
+        .historical-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .historical-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 160px;
+            color: var(--text-muted);
+            gap: 8px;
+        }
+
+        .historical-placeholder svg {
+            opacity: 0.3;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .metrics-strip {
@@ -1190,14 +1453,14 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Holder Distribution</div>
-                    <div class="card-badge">by NFT count</div>
+
                 </div>
                 <div class="dist-stack" id="dist-bars"></div>
             </div>
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">NFT Share by Wallet</div>
-                    <div class="card-badge">share %</div>
+
                 </div>
                 <div class="donut-layout">
                     <svg class="donut-svg" viewBox="0 0 42 42" id="donut-chart"></svg>
@@ -1205,6 +1468,17 @@
                 </div>
             </div>
         </div>
+
+        <!-- EXPIRY TIMELINE -->
+        <div class="expiry-chart-card anim anim-d2" id="expiry-section">
+            <div class="card-header">
+                <div class="card-title">Lock Expiry Timeline</div>
+
+            </div>
+            <canvas class="expiry-canvas" id="expiry-canvas"></canvas>
+        </div>
+
+
 
         <!-- TABLE -->
         <div class="table-section anim anim-d3">
@@ -1285,11 +1559,14 @@
                 <div class="modal-stat">
                     <div class="modal-stat-label">Total DOLO Locked</div>
                     <div class="modal-stat-value green" id="pm-dolo"></div>
-                    <div class="modal-stat-sub">DOLO</div>
+                    <div class="modal-stat-sub" id="pm-dolo-pct"></div>
                 </div>
             </div>
             <div class="modal-body">
-                <div class="modal-section-title" id="pm-locks-title">Active Locks</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                    <div class="modal-section-title" id="pm-locks-title" style="margin-bottom:0">Active Locks</div>
+                    <div class="lock-sort-bar" id="pm-lock-sort" style="margin-bottom:0"></div>
+                </div>
                 <div id="pm-locks"></div>
             </div>
             <div class="modal-links">
@@ -1312,6 +1589,7 @@
         </div>
     </div>
 
+
     <div class="toast" id="copy-toast">✅ Address copied!</div>
 
     <script>
@@ -1323,6 +1601,15 @@
         let filteredData = [];
         let sortField = 'rank';
         let sortAsc = true;
+        let compareSet = new Set();
+
+        // ===== KNOWN ADDRESSES =====
+        const KNOWN_ADDR = {
+            '0x0000000000000000000000000000000000000000': { label: 'Burn', type: 'dead' },
+            '0x000000000000000000000000000000000000dead': { label: 'Burn', type: 'dead' },
+            '0xcb86b75ee6133d179a12d550b09fb3cdb1e141d4': { label: 'veDOLO Contract', type: 'contract' },
+            '0x6bd780e7fdf01d77e4d475c821f1e7ae05409072': { label: 'Dolomite Margin', type: 'contract' },
+        };
 
         const DIST = [
             { label: '1 NFT', min: 1, max: 1, color: '#6366f1' },
@@ -1349,7 +1636,7 @@
 
             if (!HOLDER_DATA.length) {
                 document.getElementById('table-body').innerHTML =
-                    '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place vedolo_holders.json in the same directory.</td></tr>';
+                    '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place vedolo_holders.json in the same directory.</td></tr>';
                 return;
             }
             init();
@@ -1378,6 +1665,7 @@
 
             renderDist();
             renderDonut();
+            renderExpiryChart();
 
             filteredData = [...HOLDER_DATA];
             renderTable();
@@ -1456,12 +1744,113 @@
     `).join('');
         }
 
+        // ===== EXPIRY TIMELINE CHART =====
+        function renderExpiryChart() {
+            const canvas = document.getElementById('expiry-canvas');
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = canvas.offsetWidth * dpr;
+            canvas.height = canvas.offsetHeight * dpr;
+            ctx.scale(dpr, dpr);
+            const W = canvas.offsetWidth, H = canvas.offsetHeight;
+
+            // Gather all lock end dates with DOLO amounts
+            const locks = [];
+            HOLDER_DATA.forEach(h => {
+                (h.token_details || []).forEach(d => {
+                    if (d.end && d.dolo > 0) locks.push({ end: d.end, dolo: d.dolo });
+                });
+            });
+
+            if (!locks.length) {
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.font = '13px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('No lock data available', W / 2, H / 2);
+                return;
+            }
+
+            // Group by quarter
+            const now = Date.now() / 1000;
+            const buckets = {};
+            locks.forEach(l => {
+                const d = new Date(l.end * 1000);
+                const q = `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear()}`;
+                buckets[q] = (buckets[q] || 0) + l.dolo;
+            });
+
+            const entries = Object.entries(buckets).sort((a, b) => {
+                const pa = a[0].split(' '), pb = b[0].split(' ');
+                return (parseInt(pa[1]) * 4 + parseInt(pa[0][1])) - (parseInt(pb[1]) * 4 + parseInt(pb[0][1]));
+            });
+
+            if (!entries.length) return;
+
+            const maxVal = Math.max(...entries.map(e => e[1]));
+            const pad = { top: 20, bottom: 40, left: 60, right: 20 };
+            const chartW = W - pad.left - pad.right;
+            const chartH = H - pad.top - pad.bottom;
+            const barW = Math.min(40, (chartW / entries.length) * 0.7);
+            const gap = chartW / entries.length;
+
+            // Y axis
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = pad.top + chartH * (1 - i / 4);
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(W - pad.right, y);
+                ctx.stroke();
+
+                ctx.fillStyle = 'rgba(255,255,255,0.35)';
+                ctx.font = '10px Inter';
+                ctx.textAlign = 'right';
+                const val = (maxVal * i / 4);
+                ctx.fillText(val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val), pad.left - 8, y + 3);
+            }
+
+            // Bars
+            entries.forEach(([label, val], i) => {
+                const x = pad.left + i * gap + (gap - barW) / 2;
+                const barH = (val / maxVal) * chartH;
+                const y = pad.top + chartH - barH;
+
+                // gradient fill
+                const grd = ctx.createLinearGradient(x, y, x, y + barH);
+                grd.addColorStop(0, '#6366f1');
+                grd.addColorStop(1, '#818cf8');
+                ctx.fillStyle = grd;
+                ctx.beginPath();
+                ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
+                ctx.fill();
+
+                // Label
+                ctx.fillStyle = 'rgba(255,255,255,0.5)';
+                ctx.font = '9px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(label, x + barW / 2, H - pad.bottom + 14);
+
+                // Value on top
+                ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                ctx.font = '9px Inter';
+                const valLbl = val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val);
+                ctx.fillText(valLbl, x + barW / 2, y - 5);
+            });
+        }
+
         // ===== TABLE =====
         function fmtDolo(n) {
             if (!n) return '0';
             if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
             if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
             return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        function getAddrLabel(addr) {
+            const info = KNOWN_ADDR[addr.toLowerCase()];
+            if (!info) return '';
+            return `<span class="addr-label ${info.type}">${info.label}</span>`;
         }
 
         function renderTable() {
@@ -1471,20 +1860,29 @@
             const maxNft = Math.max(...filteredData.map(h => h.nft_count), 1);
             const maxDolo = Math.max(...filteredData.map(h => h.total_dolo || 0), 1);
             const maxVote = Math.max(...filteredData.map(h => h.total_vote_weight || 0), 1);
+            const totalDolo = STATS.total_locked_dolo || 1;
 
             tbody.innerHTML = page.map(h => {
                 const rc = h.rank <= 3 ? `rank-${h.rank}` : '';
+                const isWhale = h.rank <= 10;
                 const nftPct = Math.max(3, (h.nft_count / maxNft) * 100);
                 const doloPct = Math.max(3, ((h.total_dolo || 0) / maxDolo) * 100);
                 const votePct = Math.max(3, ((h.total_vote_weight || 0) / maxVote) * 100);
+                const supplyPct = ((h.total_dolo || 0) / totalDolo * 100).toFixed(1);
                 const tokPrev = h.token_ids.slice(0, 6).join(', ') + (h.token_ids.length > 6 ? ` … +${h.token_ids.length - 6}` : '');
                 const doloExact = (h.total_dolo || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
                 const voteExact = (h.total_vote_weight || 0).toLocaleString('en-US', { maximumFractionDigits: 4 });
+                const addrLabel = getAddrLabel(h.address);
+                const checked = compareSet.has(h.address) ? 'checked' : '';
 
-                return `<tr>
-            <td class="c-rank">${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}</td>
+                return `<tr class="${isWhale ? 'whale-row' : ''}">
+            <td class="c-rank">
+                <div class="rank-cell-inner">
+                    ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}
+                </div>
+            </td>
             <td class="c-addr">
-                <a href="#address=${h.address}" onclick="event.preventDefault();showProfile('${h.address}')">${h.address}</a>
+                <a href="#address=${h.address}" onclick="event.preventDefault();showProfile('${h.address}')">${h.address}</a>${addrLabel}
             </td>
             <td class="c-nft">
                 <div class="mini-bar">
@@ -1494,7 +1892,7 @@
             </td>
             <td class="c-dolo" title="${doloExact} DOLO">
                 <div class="mini-bar">
-                    <span>${fmtDolo(h.total_dolo || 0)}</span>
+                    <span>${fmtDolo(h.total_dolo || 0)}<span class="supply-pct">(${supplyPct}%)</span></span>
                     <div class="mini-bar-track"><div class="mini-bar-fill green" style="width:${doloPct}%"></div></div>
                 </div>
             </td>
@@ -1619,9 +2017,11 @@
         }
 
         function downloadCSV() {
-            let csv = 'Rank,Address,NFT_Count,Total_DOLO,Vote_Weight,Token_IDs\n';
+            let csv = 'Rank,Address,NFT_Count,Total_DOLO,Supply_Pct,Vote_Weight,Token_IDs\n';
+            const totalDolo = STATS.total_locked_dolo || 1;
             filteredData.forEach(h => {
-                csv += `${h.rank},${h.address},${h.nft_count},${(h.total_dolo || 0).toFixed(2)},${(h.total_vote_weight || 0).toFixed(4)},"${h.token_ids.join(';')}"\n`;
+                const pct = ((h.total_dolo || 0) / totalDolo * 100).toFixed(2);
+                csv += `${h.rank},${h.address},${h.nft_count},${(h.total_dolo || 0).toFixed(2)},${pct}%,${(h.total_vote_weight || 0).toFixed(4)},"${h.token_ids.join(';')}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -1634,60 +2034,100 @@
 
         // ===== PROFILE MODAL =====
         let currentProfileAddr = null;
+        let currentLockSort = 'dolo';
+
+        function renderLockCards(details, sortBy) {
+            const now = Date.now() / 1000;
+            const MAX_LOCK = 2 * 365 * 86400; // 2 years max lock
+
+            const sorted = [...details].sort((a, b) => {
+                switch (sortBy) {
+                    case 'vote': return (b.vote_weight || 0) - (a.vote_weight || 0);
+                    case 'time': return (a.end || 0) - (b.end || 0);
+                    default: return (b.dolo || 0) - (a.dolo || 0);
+                }
+            });
+
+            return sorted.map(d => {
+                const dolo = (d.dolo || 0);
+                const vw = (d.vote_weight || 0);
+                const mult = dolo > 0 ? (vw / dolo) : 0;
+                const secsLeft = Math.max(0, (d.end || 0) - now);
+                const daysLeft = Math.ceil(secsLeft / 86400);
+                const maturity = d.end ? new Date(d.end * 1000).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                }) : '—';
+
+                // Progress: how much time has elapsed (estimate: max lock is 2yr)
+                const totalLockTime = MAX_LOCK;
+                const elapsed = totalLockTime - secsLeft;
+                const progressPct = Math.min(100, Math.max(0, (elapsed / totalLockTime) * 100));
+                const progressClass = daysLeft === 0 ? 'expired' : daysLeft < 90 ? 'expiring' : 'active';
+
+                return `<div class="lock-card">
+                    <div>
+                        <div class="lock-card-title">Lock #${d.id}</div>
+                        <div class="lock-card-value">${dolo.toLocaleString('en-US', { maximumFractionDigits: 2 })}</div>
+                        <div class="lock-card-sub">DOLO</div>
+                    </div>
+                    <div>
+                        <div class="lock-card-label">Time Remaining</div>
+                        <div class="lock-card-value sm">${daysLeft > 0 ? daysLeft + ' days' : 'Expired'}</div>
+                        <div class="lock-card-sub">Matures on ${maturity}</div>
+                        <div class="lock-progress"><div class="lock-progress-fill ${progressClass}" style="width:${progressPct}%"></div></div>
+                    </div>
+                    <div class="lock-card-vote">
+                        <div class="lock-card-label">Vote Weight</div>
+                        <div class="lock-card-value">${vw.toLocaleString('en-US', { maximumFractionDigits: 4 })}</div>
+                        <div class="lock-multiplier">${mult.toFixed(2)}x multiplier</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
 
         function showProfile(address) {
             const holder = HOLDER_DATA.find(h => h.address.toLowerCase() === address.toLowerCase());
             if (!holder) return;
             currentProfileAddr = holder.address;
+            currentLockSort = 'dolo';
 
             document.getElementById('pm-rank').textContent = `#${holder.rank}`;
             document.getElementById('pm-addr').textContent = holder.address;
 
             const totalVote = (holder.total_vote_weight || 0);
             const totalDolo = (holder.total_dolo || 0);
+            const supplyPct = STATS.total_locked_dolo ? ((totalDolo / STATS.total_locked_dolo) * 100).toFixed(2) : '0';
             document.getElementById('pm-vote').textContent = totalVote.toLocaleString('en-US', { maximumFractionDigits: 2 });
             document.getElementById('pm-dolo').textContent = totalDolo.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            document.getElementById('pm-dolo-pct').textContent = `${supplyPct}% of total · DOLO`;
 
             const details = holder.token_details || [];
             document.getElementById('pm-locks-title').textContent = `Active Locks (${details.length})`;
 
-            const now = Date.now() / 1000;
-            document.getElementById('pm-locks').innerHTML = details
-                .sort((a, b) => (b.dolo || 0) - (a.dolo || 0))
-                .map(d => {
-                    const dolo = (d.dolo || 0);
-                    const vw = (d.vote_weight || 0);
-                    const mult = dolo > 0 ? (vw / dolo) : 0;
-                    const secsLeft = Math.max(0, (d.end || 0) - now);
-                    const daysLeft = Math.ceil(secsLeft / 86400);
-                    const maturity = d.end ? new Date(d.end * 1000).toLocaleDateString('en-US', {
-                        year: 'numeric', month: 'short', day: 'numeric'
-                    }) : '—';
+            // Lock sort buttons
+            document.getElementById('pm-lock-sort').innerHTML = [
+                { key: 'dolo', label: 'DOLO ↓' },
+                { key: 'vote', label: 'Vote ↓' },
+                { key: 'time', label: 'Expiry ↑' }
+            ].map(s => `<button class="lock-sort-btn ${s.key === currentLockSort ? 'active' : ''}" onclick="sortLocks('${s.key}')">${s.label}</button>`).join('');
 
-                    return `<div class="lock-card">
-                        <div>
-                            <div class="lock-card-title">Lock #${d.id}</div>
-                            <div class="lock-card-value">${dolo.toLocaleString('en-US', { maximumFractionDigits: 2 })}</div>
-                            <div class="lock-card-sub">DOLO</div>
-                        </div>
-                        <div>
-                            <div class="lock-card-label">Time Remaining</div>
-                            <div class="lock-card-value sm">${daysLeft > 0 ? daysLeft + ' days' : 'Expired'}</div>
-                            <div class="lock-card-sub">Matures on ${maturity}</div>
-                        </div>
-                        <div class="lock-card-vote">
-                            <div class="lock-card-label">Vote Weight</div>
-                            <div class="lock-card-value">${vw.toLocaleString('en-US', { maximumFractionDigits: 4 })}</div>
-                            <div class="lock-multiplier">${mult.toFixed(2)}x multiplier</div>
-                        </div>
-                    </div>`;
-                }).join('');
+            document.getElementById('pm-locks').innerHTML = renderLockCards(details, currentLockSort);
 
             document.getElementById('pm-berascan').href = `https://berascan.com/address/${holder.address}`;
 
             document.getElementById('profile-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
             history.replaceState(null, '', `#address=${holder.address}`);
+        }
+
+        function sortLocks(key) {
+            currentLockSort = key;
+            const holder = HOLDER_DATA.find(h => h.address === currentProfileAddr);
+            if (!holder) return;
+
+            document.querySelectorAll('.lock-sort-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.lock-sort-btn[onclick="sortLocks('${key}')"]`).classList.add('active');
+            document.getElementById('pm-locks').innerHTML = renderLockCards(holder.token_details || [], key);
         }
 
         function closeProfile() {
@@ -1706,7 +2146,13 @@
         }
 
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeProfile();
+            if (e.key === 'Escape') {
+                if (document.getElementById('compare-modal').classList.contains('active')) {
+                    closeCompare();
+                } else {
+                    closeProfile();
+                }
+            }
         });
 
         function checkHash() {
@@ -1718,6 +2164,98 @@
         }
 
         window.addEventListener('hashchange', checkHash);
+
+        // ===== COMPARE TOOL =====
+        function toggleCompare(addr, checked) {
+            if (checked) {
+                if (compareSet.size >= 3) {
+                    alert('Max 3 holders for comparison');
+                    renderTable(); // re-render to uncheck
+                    return;
+                }
+                compareSet.add(addr);
+            } else {
+                compareSet.delete(addr);
+            }
+            updateCompareBar();
+        }
+
+        function updateCompareBar() {
+            const bar = document.getElementById('compare-bar');
+            const count = document.getElementById('compare-count');
+            if (compareSet.size > 0) {
+                bar.classList.remove('hidden');
+                count.textContent = `${compareSet.size} selected`;
+            } else {
+                bar.classList.add('hidden');
+            }
+        }
+
+        function clearCompare() {
+            compareSet.clear();
+            updateCompareBar();
+            renderTable();
+        }
+
+        function openCompare() {
+            if (compareSet.size < 2) {
+                alert('Select at least 2 holders to compare');
+                return;
+            }
+
+            const holders = [...compareSet].map(addr =>
+                HOLDER_DATA.find(h => h.address.toLowerCase() === addr.toLowerCase())
+            ).filter(Boolean);
+
+            const totalDolo = STATS.total_locked_dolo || 1;
+            const cols = holders.length;
+
+            document.getElementById('compare-body').innerHTML = `
+                <div class="compare-grid" style="grid-template-columns: repeat(${cols}, 1fr)">
+                    ${holders.map(h => {
+                const supPct = ((h.total_dolo || 0) / totalDolo * 100).toFixed(2);
+                const avgMult = (h.total_dolo || 0) > 0 ? ((h.total_vote_weight || 0) / (h.total_dolo || 1)).toFixed(2) : '0';
+                return `<div class="compare-col">
+                            <div class="compare-col-header">#${h.rank} — ${h.address.slice(0, 8)}…${h.address.slice(-6)}</div>
+                            <div class="compare-metric">
+                                <span class="compare-metric-label">NFTs</span>
+                                <span class="compare-metric-value">${h.nft_count}</span>
+                            </div>
+                            <div class="compare-metric">
+                                <span class="compare-metric-label">Locked DOLO</span>
+                                <span class="compare-metric-value" style="color:var(--accent-green)">${fmtDolo(h.total_dolo || 0)}</span>
+                            </div>
+                            <div class="compare-metric">
+                                <span class="compare-metric-label">Supply %</span>
+                                <span class="compare-metric-value">${supPct}%</span>
+                            </div>
+                            <div class="compare-metric">
+                                <span class="compare-metric-label">Vote Weight</span>
+                                <span class="compare-metric-value" style="color:#f59e0b">${fmtDolo(h.total_vote_weight || 0)}</span>
+                            </div>
+                            <div class="compare-metric">
+                                <span class="compare-metric-label">Avg Multiplier</span>
+                                <span class="compare-metric-value">${avgMult}x</span>
+                            </div>
+                            <div class="compare-metric">
+                                <span class="compare-metric-label">Locks</span>
+                                <span class="compare-metric-value">${(h.token_details || []).length}</span>
+                            </div>
+                        </div>`;
+            }).join('')}
+                </div>
+            `;
+
+            document.getElementById('compare-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCompare() {
+            document.getElementById('compare-modal').classList.remove('active');
+            if (!document.getElementById('profile-modal').classList.contains('active')) {
+                document.body.style.overflow = '';
+            }
+        }
 
         loadData();
     </script>
