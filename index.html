@@ -1931,6 +1931,7 @@
             color: var(--text-secondary);
             line-height: 1.5;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            pointer-events: auto;
         }
 
         .odolo-flow-step:last-child .odolo-flow-icon-wrap .odolo-flow-tooltip {
@@ -1944,7 +1945,8 @@
             transform: none;
         }
 
-        .odolo-flow-icon-wrap:hover .odolo-flow-tooltip {
+        .odolo-flow-icon-wrap:hover .odolo-flow-tooltip,
+        .odolo-flow-icon-wrap.active .odolo-flow-tooltip {
             display: block;
         }
 
@@ -2444,6 +2446,22 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    // Click-to-toggle flow step tooltips
+                    document.querySelectorAll('.odolo-flow-icon-wrap').forEach(wrap => {
+                        wrap.addEventListener('click', function (e) {
+                            e.stopPropagation();
+                            const wasActive = this.classList.contains('active');
+                            // Close all others
+                            document.querySelectorAll('.odolo-flow-icon-wrap.active').forEach(w => w.classList.remove('active'));
+                            if (!wasActive) this.classList.add('active');
+                        });
+                    });
+                    // Close on click outside
+                    document.addEventListener('click', () => {
+                        document.querySelectorAll('.odolo-flow-icon-wrap.active').forEach(w => w.classList.remove('active'));
+                    });
+                </script>
             </div>
 
         </div><!-- /view-odolo -->
