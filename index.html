@@ -2834,11 +2834,12 @@
                 return;
             }
 
-            // Group by quarter
+            // Group by quarter — only future locks
             const now = Date.now() / 1000;
             const buckets = {};
             let totalDoloAll = 0;
             locks.forEach(l => {
+                if (l.end < now) return; // skip already expired
                 const d = new Date(l.end * 1000);
                 const q = `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear()}`;
                 buckets[q] = (buckets[q] || 0) + l.dolo;
