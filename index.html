@@ -415,6 +415,11 @@
         }
 
         /* ===== METRIC TOOLTIPS ===== */
+        .tooltip-wrap {
+            position: relative;
+            cursor: help;
+        }
+
         .tooltip-icon {
             display: inline-flex;
             align-items: center;
@@ -469,7 +474,8 @@
             border-bottom-color: rgba(99, 102, 241, 0.3);
         }
 
-        .tooltip-icon:hover .tooltip-bubble {
+        .tooltip-icon:hover .tooltip-bubble,
+        .tooltip-wrap:hover .tooltip-bubble {
             display: block;
         }
 
