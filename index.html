@@ -81,13 +81,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 24px 0 40px;
-            border-bottom: 1px solid var(--border-subtle);
+            padding: 28px 0 0;
             margin-bottom: 32px;
         }
 
         .header-top-logo {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .header-top-logo img {
@@ -96,53 +95,102 @@
             object-fit: contain;
         }
 
-        .header-bottom {
+        .header-nav-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-tabs {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            width: 100%;
+            gap: 4px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: var(--radius-sm);
+            padding: 3px;
         }
 
-        .brand {
-            display: flex;
+        .nav-tab {
+            display: inline-flex;
             align-items: center;
-            gap: 14px;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all var(--transition);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            white-space: nowrap;
         }
 
-        .brand-icon {
-            width: 44px;
-            height: 44px;
-            flex-shrink: 0;
+        .nav-tab:hover {
+            color: var(--text-secondary);
+            background: rgba(51, 65, 85, 0.4);
         }
 
-        .brand-icon img {
-            width: 100%;
-            height: 100%;
+        .nav-tab.active {
+            color: var(--text-primary);
+            background: rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.1);
+        }
+
+        .nav-tab img {
+            width: 18px;
+            height: 18px;
             object-fit: contain;
         }
 
-        .brand-text h1 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.3px;
+        .nav-tab svg {
+            width: 16px;
+            height: 16px;
         }
 
-        .brand-text .sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
+        .nav-tab-icon {
+            padding: 8px 10px;
+            gap: 0;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border-subtle);
+            margin: 0 6px;
+            flex-shrink: 0;
+        }
+
+        .nav-badge {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin-top: 2px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border-subtle);
+            white-space: nowrap;
         }
 
-        .brand-text .sub .live-dot {
+        .nav-badge .live-dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
             background: var(--accent-green);
             animation: livePulse 2s ease-in-out infinite;
+            flex-shrink: 0;
         }
 
         @keyframes livePulse {
@@ -159,10 +207,29 @@
             }
         }
 
-        .header-actions {
-            display: flex;
+        .nav-link {
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .nav-link svg {
+            width: 12px;
+            height: 12px;
         }
 
         .btn {
@@ -215,7 +282,6 @@
             gap: 1px;
             background: var(--border-subtle);
             border-radius: var(--radius-lg);
-            overflow: hidden;
             margin-bottom: 28px;
         }
 
@@ -223,13 +289,15 @@
             background: var(--bg-card);
             padding: 22px 24px;
             transition: background var(--transition);
+            position: relative;
+            overflow: visible;
         }
 
         .metric-cell:hover {
             background: var(--bg-hover);
         }
 
-        /* 2 rows × 3 cols: top-left, top-right, bottom-left, bottom-right corners */
+        /* Round corners on edge cells */
         .metric-cell:first-child {
             border-radius: var(--radius-lg) 0 0 0;
         }
@@ -253,6 +321,9 @@
             text-transform: uppercase;
             letter-spacing: 0.8px;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .metric-value {
@@ -261,12 +332,145 @@
             color: var(--text-primary);
             font-variant-numeric: tabular-nums;
             line-height: 1.1;
+            transition: transform 0.2s ease, text-shadow 0.25s ease;
+            display: inline-block;
+            cursor: default;
+        }
+
+        .metric-cell:hover .metric-value {
+            transform: scale(1.15);
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .metric-icon {
+            width: 22px;
+            height: 22px;
+            vertical-align: middle;
+            margin: -3px 4px 0 4px;
+            display: inline-block;
+        }
+
+        .metric-cell:hover .metric-value.accent-green {
+            text-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+        }
+
+        .metric-cell:hover .metric-value[style*="color:#f59e0b"],
+        .metric-cell:hover .metric-value.accent-amber {
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        /* oDOLO metric color classes */
+        .metric-value.amber {
+            color: var(--accent-amber);
+        }
+
+        .metric-value.green {
+            color: var(--accent-green);
+        }
+
+        .metric-value.indigo {
+            color: var(--accent-indigo);
+        }
+
+        .metric-value.rose {
+            color: var(--accent-rose);
+        }
+
+        .metric-value.cyan {
+            color: var(--accent-cyan);
+        }
+
+        .metric-value.orange {
+            color: var(--accent-orange);
+        }
+
+        .metric-cell:hover .metric-value.amber {
+            text-shadow: 0 0 20px rgba(255, 164, 6, 0.4);
+        }
+
+        .metric-cell:hover .metric-value.green {
+            text-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+        }
+
+        .metric-cell:hover .metric-value.indigo {
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .metric-cell:hover .metric-value.cyan {
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+        }
+
+        .metric-cell:hover .metric-value.orange {
+            text-shadow: 0 0 20px rgba(251, 146, 60, 0.4);
+        }
+
+        .metric-cell:hover .metric-value.rose {
+            text-shadow: 0 0 20px rgba(251, 113, 133, 0.4);
         }
 
         .metric-sub {
             font-size: 12px;
             color: var(--text-muted);
             margin-top: 4px;
+        }
+
+        /* ===== METRIC TOOLTIPS ===== */
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid var(--text-muted);
+            font-size: 10px;
+            color: var(--text-muted);
+            cursor: help;
+            position: relative;
+            flex-shrink: 0;
+            transition: all var(--transition);
+        }
+
+        .tooltip-icon:hover {
+            border-color: var(--accent-indigo);
+            color: var(--accent-indigo);
+        }
+
+        .tooltip-bubble {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #e2e8f0;
+            width: 220px;
+            z-index: 100;
+            text-transform: none;
+            letter-spacing: normal;
+            line-height: 1.5;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        .tooltip-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-bottom-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .tooltip-icon:hover .tooltip-bubble {
+            display: block;
         }
 
         .metric-value.accent-green {
@@ -359,6 +563,55 @@
             white-space: nowrap;
         }
 
+        .dist-item {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .dist-item:hover {
+            transform: translateX(4px);
+        }
+
+        .dist-item:hover .fill {
+            filter: brightness(1.3);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .dist-tooltip {
+            position: absolute;
+            display: none;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #e2e8f0;
+            z-index: 200;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+        }
+
+        .expiry-tooltip {
+            position: fixed;
+            display: none;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #e2e8f0;
+            z-index: 300;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+            transform: translate(-50%, -100%);
+            text-align: center;
+            line-height: 1.4;
+        }
+
         /* Donut */
         .donut-layout {
             display: flex;
@@ -392,6 +645,33 @@
             height: 8px;
             border-radius: 2px;
             flex-shrink: 0;
+        }
+
+        .legend-row {
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+
+        .legend-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .donut-tooltip {
+            position: fixed;
+            display: none;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #e2e8f0;
+            z-index: 200;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
         }
 
         /* ===== TABLE SECTION ===== */
@@ -1205,17 +1485,17 @@
             border-radius: var(--radius-lg);
             padding: 24px;
             margin-bottom: 28px;
+            position: relative;
         }
 
         .expiry-chart-scroll {
-            overflow-x: auto;
+            overflow: visible;
             -webkit-overflow-scrolling: touch;
         }
 
         .expiry-canvas {
             width: 100%;
-            height: 220px;
-            min-width: 500px;
+            height: 260px;
         }
 
         /* ===== COMPARE TOOL ===== */
@@ -1360,36 +1640,32 @@
             }
 
             .site-header {
-                flex-direction: column;
-                align-items: center;
+                padding: 20px 0 0;
                 gap: 12px;
-                padding-bottom: 20px;
             }
 
             .header-top-logo img {
                 height: 50px;
             }
 
-            .header-bottom {
+            .header-nav-bar {
                 flex-direction: column;
-                align-items: center;
-                gap: 12px;
+                gap: 10px;
+                padding: 10px 12px;
             }
 
-            .brand {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 8px;
+            .nav-tabs {
+                width: 100%;
+                justify-content: center;
             }
 
-            .brand-icon {
-                width: 36px;
-                height: 36px;
+            .nav-tab {
+                padding: 7px 12px;
+                font-size: 12px;
             }
 
-            .brand-text h1 {
-                font-size: 18px;
+            .nav-divider {
+                display: none;
             }
 
             .header-actions {
@@ -1450,8 +1726,12 @@
             }
 
             .expiry-canvas {
-                height: 260px;
-                min-width: 480px;
+                height: 240px;
+            }
+
+            /* When odd number of metric cells, last one spans full width */
+            #view-odolo .metrics-strip .metric-cell:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
             }
         }
 
@@ -1471,6 +1751,265 @@
             thead th,
             tbody td {
                 padding: 9px 12px;
+            }
+        }
+
+        /* ===== VIEW SECTIONS ===== */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* ===== oDOLO SPECIFIC STYLES ===== */
+        .odolo-analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .odolo-donut-layout {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .odolo-donut-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            flex-shrink: 0;
+            overflow: visible;
+            padding: 15px;
+        }
+
+        .odolo-donut-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .odolo-donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .odolo-donut-center-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .odolo-donut-center-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .odolo-donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .odolo-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .odolo-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .odolo-legend-label {
+            color: var(--text-secondary);
+        }
+
+        .odolo-legend-value {
+            margin-left: auto;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .odolo-info-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .odolo-info-box-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-amber);
+            margin-bottom: 8px;
+        }
+
+        .odolo-info-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .odolo-flow-steps {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            overflow: visible;
+            padding: 12px 0;
+        }
+
+        .odolo-flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            min-width: 100px;
+        }
+
+        .odolo-flow-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            border: 2px solid;
+            cursor: help;
+            transition: all var(--transition);
+        }
+
+        .odolo-flow-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.15);
+        }
+
+        .odolo-flow-icon-wrap {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .odolo-flow-icon-wrap .odolo-flow-tooltip {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            z-index: 100;
+            background: #1e1e2e;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .odolo-flow-step:last-child .odolo-flow-icon-wrap .odolo-flow-tooltip {
+            left: auto;
+            right: 0;
+            transform: none;
+        }
+
+        .odolo-flow-step:first-child .odolo-flow-icon-wrap .odolo-flow-tooltip {
+            left: 0;
+            transform: none;
+        }
+
+        .odolo-flow-icon-wrap:hover .odolo-flow-tooltip {
+            display: block;
+        }
+
+        .odolo-flow-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .odolo-flow-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 100px;
+        }
+
+        .odolo-flow-arrow {
+            font-size: 20px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            padding: 0 8px;
+            margin-top: 14px;
+        }
+
+        .odolo-loading-shimmer {
+            background: linear-gradient(90deg, var(--bg-surface) 0%, var(--bg-hover) 50%, var(--bg-surface) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+            display: inline-block;
+            width: 120px;
+            height: 28px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* oDOLO responsive */
+        @media (max-width: 768px) {
+            .odolo-analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .odolo-donut-layout {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .odolo-flow-steps {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                justify-items: center;
+            }
+
+            .odolo-flow-arrow {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .odolo-donut-container {
+                width: 220px;
+                height: 220px;
+                margin: 0 auto;
+                padding: 25px;
             }
         }
 
@@ -1517,164 +2056,395 @@
             <div class="header-top-logo">
                 <a href="https://dolomite.io/" target="_blank"><img src="dolomite-logo.svg" alt="Dolomite"></a>
             </div>
-            <div class="header-bottom">
-                <div class="brand">
-                    <div class="brand-icon"><img src="vedolo-logo.svg" alt="veDOLO"></div>
-                    <div class="brand-text">
-                        <h1>veDOLO Holders</h1>
-                        <div class="sub">
-                            <span class="live-dot"></span>
-                            Berachain Mainnet · Live Data
+            <nav class="header-nav-bar">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" id="tab-vedolo" onclick="switchView('vedolo')">
+                        <img src="vedolo-logo.svg" alt="veDOLO">
+                        veDOLO Holders
+                    </button>
+                    <button class="nav-tab" id="tab-odolo" onclick="switchView('odolo')">
+                        <img src="odolo-logo-official.svg" alt="oDOLO">
+                        oDOLO Stats
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- veDOLO VIEW -->
+        <div id="view-vedolo" class="view-section active">
+
+            <!-- METRICS -->
+            <div class="metrics-strip anim anim-d1">
+                <div class="metric-cell">
+                    <div class="metric-label">Unique Holders
+                        <span class="tooltip-icon">?
+                            <span class="tooltip-bubble">Number of unique wallet addresses holding at least one veDOLO
+                                NFT
+                                position.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="m-holders">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Total Minted
+                        <span class="tooltip-icon">?
+                            <span class="tooltip-bubble">Total number of veDOLO NFT positions ever created (including
+                                burned
+                                ones).</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="m-minted">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Active NFTs
+                        <span class="tooltip-icon">?
+                            <span class="tooltip-bubble">Currently active veDOLO positions — Total Minted minus Burned.
+                                These are in circulation.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="m-active">—</div>
+                    <div class="metric-sub">in circulation</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Burned
+                        <span class="tooltip-icon">?
+                            <span class="tooltip-bubble">veDOLO positions withdrawn after the lock expired. The DOLO is
+                                returned to the holder.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="m-burned">— 🔥</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">DOLO Locked (veDOLO)
+                        <span class="tooltip-icon">?
+                            <span class="tooltip-bubble">Total amount of DOLO locked across all active veDOLO positions.
+                                Locked DOLO earns governance power.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value accent-green" id="m-dolo">—</div>
+                    <div class="metric-sub">total in lock</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Vote Weight
+                        <span class="tooltip-icon">?
+                            <span class="tooltip-bubble">Combined voting power across all veDOLO holders. Longer lock =
+                                more
+                                vote weight per DOLO locked.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="m-vote" style="color:#f59e0b">—</div>
+                    <div class="metric-sub">total veDOLO power</div>
+                </div>
+            </div>
+
+            <!-- CHARTS -->
+            <div class="analytics-grid anim anim-d2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Holder Distribution</div>
+
+                    </div>
+                    <div class="dist-stack" id="dist-bars"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">NFT Share by Wallet</div>
+
+                    </div>
+                    <div class="donut-layout">
+                        <svg class="donut-svg" viewBox="0 0 42 42" id="donut-chart"></svg>
+                        <div class="donut-legend" id="donut-legend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPIRY TIMELINE -->
+            <div class="expiry-chart-card anim anim-d2" id="expiry-section">
+                <div class="card-header">
+                    <div class="card-title">Lock Expiry Timeline</div>
+
+                </div>
+                <div class="expiry-chart-scroll" style="position:relative">
+                    <canvas class="expiry-canvas" id="expiry-canvas"></canvas>
+                </div>
+            </div>
+
+
+
+            <!-- TABLE -->
+            <div class="table-section anim anim-d3">
+                <div class="table-toolbar">
+                    <div class="search-input-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" id="search" placeholder="Search address 0x… or token ID">
+                    </div>
+                    <select class="filter-dropdown" id="filter-nft">
+                        <option value="all">All</option>
+                        <option value="100+">100+ NFT</option>
+                        <option value="50-100">50–100 NFT</option>
+                        <option value="26-50">26–50 NFT</option>
+                        <option value="11-25">11–25 NFT</option>
+                        <option value="6-10">6–10 NFT</option>
+                        <option value="2-5">2–5 NFT</option>
+                        <option value="1">1 NFT</option>
+                    </select>
+                    <div class="toolbar-count" id="results-count"></div>
+                </div>
+
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="c-rank sorted" data-sort="rank" onclick="sortTable('rank')">
+                                    # <span class="arrow">▲</span>
+                                </th>
+                                <th data-sort="address" onclick="sortTable('address')">
+                                    Address <span class="arrow">⇅</span>
+                                </th>
+                                <th data-sort="nft_count" onclick="sortTable('nft_count')">
+                                    NFT <span class="arrow">⇅</span>
+                                </th>
+                                <th data-sort="total_dolo" onclick="sortTable('total_dolo')">
+                                    DOLO 🔒 <span class="arrow">⇅</span>
+                                </th>
+                                <th data-sort="total_vote_weight" onclick="sortTable('total_vote_weight')">
+                                    Vote Weight <span class="arrow">⇅</span>
+                                </th>
+                                <th>Token IDs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+                <div class="table-footer" id="pagination"></div>
+            </div>
+
+        </div><!-- /view-vedolo -->
+
+        <!-- oDOLO VIEW -->
+        <div id="view-odolo" class="view-section">
+
+            <!-- oDOLO METRICS -->
+            <div class="metrics-strip anim anim-d1">
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            TOTAL SUPPLY
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">Total number of oDOLO tokens ever minted by the protocol. This
+                                is the maximum possible supply.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value amber" id="o-m-supply"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub">oDOLO minted</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            HOLDERS
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">Number of unique wallet addresses currently holding oDOLO
+                                tokens.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="o-m-holders"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub">unique wallets</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            IN VESTER
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">oDOLO tokens sitting in the Vester contract, waiting to be
+                                distributed. This is the protocol's reserve — not yet given to anyone.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="o-m-vester"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub" id="o-m-vester-pct">awaiting distribution</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            CURRENTLY VESTING
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">oDOLO that users have paired with DOLO and are actively
+                                vesting. These are locked and in the process of converting to veDOLO.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="o-m-vesting"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub">paired with DOLO</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            EXERCISED
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">oDOLO that has been successfully exercised (redeemed) into
+                                veDOLO. These tokens completed the full vesting cycle.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value green" id="o-m-exercised"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub">converted to veDOLO</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            EXERCISED VOLUME (USD)
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">Exact total USDC.e paid by users when exercising oDOLO into
+                                veDOLO. Calculated from on-chain Transfer events for each exercise transaction. Updated
+                                periodically.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value green" id="o-m-revenue"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub" id="o-m-revenue-sub">USDC.e paid for veDOLO</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            AVG veDOLO PRICE
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">Average price paid per veDOLO through oDOLO exercise.
+                                Calculated as total USDC.e paid ÷ total oDOLO exercised.</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="o-m-avg-price"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub">USDC.e per veDOLO</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            AVG LOCK DURATION
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">Average veDOLO lock duration chosen by users when exercising
+                                oDOLO. Longer locks get bigger discounts (5% for 1 week up to 50% for 2 years).</span>
+                        </span>
+                    </div>
+                    <div class="metric-value" id="o-m-avg-lock"><span class="odolo-loading-shimmer"></span></div>
+                    <div class="metric-sub" id="o-m-avg-lock-sub">avg discount</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">
+                        <span class="tooltip-wrap">
+                            AVG DISCOUNT
+                            <i class="tooltip-icon">?</i>
+                            <span class="tooltip-bubble">Average discount received when exercising oDOLO into veDOLO.
+                                Linear scale from 5% (1 week lock) to 50% (2 year lock).</span>
+                        </span>
+                    </div>
+                    <div class="metric-value green" id="o-m-avg-discount"><span class="odolo-loading-shimmer"></span>
+                    </div>
+                    <div class="metric-sub">from veDOLO market price</div>
+                </div>
+            </div>
+
+            <!-- oDOLO CHARTS -->
+            <div class="odolo-analytics-grid anim anim-d2">
+                <!-- DISTRIBUTION DONUT -->
+                <div class="card">
+                    <div class="card-title">oDOLO Distribution</div>
+                    <div class="odolo-donut-layout">
+                        <div class="odolo-donut-container" style="position:relative;">
+                            <canvas class="odolo-donut-canvas" id="o-dist-donut"></canvas>
+                            <div class="odolo-donut-center">
+                                <div class="odolo-donut-center-value" id="o-donut-total">—</div>
+                                <div class="odolo-donut-center-label">total oDOLO</div>
+                            </div>
+                            <div id="o-donut-tooltip" style="
+                            display: none;
+                            position: fixed;
+                            pointer-events: none;
+                            background: rgba(15, 23, 42, 0.95);
+                            border: 1px solid rgba(99, 102, 241, 0.4);
+                            border-radius: 8px;
+                            padding: 10px 14px;
+                            font-size: 13px;
+                            color: #e2e8f0;
+                            z-index: 200;
+                            backdrop-filter: blur(8px);
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+                            white-space: nowrap;
+                            transition: opacity 0.15s ease;
+                        "></div>
+                        </div>
+                        <div class="odolo-donut-legend" id="o-dist-legend">
+                            <!-- filled by JS -->
                         </div>
                     </div>
                 </div>
-                <div class="header-actions">
-                    <a class="btn btn-ghost"
-                        href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4" target="_blank">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" />
-                            <path d="M14 4h6v6" />
-                            <path d="M20 4L10 14" />
-                        </svg>
-                        Contract
-                    </a>
-                    <button class="btn btn-primary" onclick="downloadCSV()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                            <polyline points="7 10 12 15 17 10" />
-                            <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                        Export CSV
-                    </button>
+
+                <!-- HOW IT WORKS -->
+                <div class="card">
+                    <div class="card-title">How oDOLO Works</div>
+                    <div class="odolo-info-box">
+                        <div class="odolo-info-box-title">⚡ Option Token Mechanics</div>
+                        <p>oDOLO is an option token that lets you acquire veDOLO at a discount. Pair oDOLO + DOLO,
+                            choose a lock duration (longer lock = bigger discount), then exercise to receive veDOLO.</p>
+                        <p style="margin-top: 10px; color: var(--accent-amber); font-size: 12px;">⚠️ The discounted
+                            veDOLO price is determined at execution (redemption time), not when pairing.</p>
+                    </div>
+                    <div class="odolo-flow-steps">
+                        <div class="odolo-flow-step">
+                            <div class="odolo-flow-icon-wrap">
+                                <div class="odolo-flow-icon"
+                                    style="border-color: var(--accent-amber); color: var(--accent-amber);">1</div>
+                                <span class="tooltip-bubble odolo-flow-tooltip">You have 1 oDOLO — earn it via liquidity
+                                    mining rewards on <a href="https://app.dolomite.io/earn" target="_blank"
+                                        style="color: var(--accent-cyan); text-decoration: underline;">Dolomite Earn</a>
+                                    or buy on the open market.</span>
+                            </div>
+                            <div class="odolo-flow-label">Have oDOLO</div>
+                            <div class="odolo-flow-desc">Earn or buy</div>
+                        </div>
+                        <div class="odolo-flow-arrow">→</div>
+                        <div class="odolo-flow-step">
+                            <div class="odolo-flow-icon-wrap">
+                                <div class="odolo-flow-icon"
+                                    style="border-color: var(--accent-indigo); color: var(--accent-indigo);">2</div>
+                                <span class="tooltip-bubble odolo-flow-tooltip">Pair 1 oDOLO with 1 DOLO to activate the
+                                    discount. The DOLO is required to start the process.</span>
+                            </div>
+                            <div class="odolo-flow-label">Pair + DOLO</div>
+                            <div class="odolo-flow-desc">Activate discount</div>
+                        </div>
+                        <div class="odolo-flow-arrow">→</div>
+                        <div class="odolo-flow-step">
+                            <div class="odolo-flow-icon-wrap">
+                                <div class="odolo-flow-icon"
+                                    style="border-color: var(--accent-cyan); color: var(--accent-cyan);">3</div>
+                                <span class="tooltip-bubble odolo-flow-tooltip">Wait 7 days cooldown. During this period
+                                    your oDOLO + DOLO are locked and cannot be withdrawn.</span>
+                            </div>
+                            <div class="odolo-flow-label">Wait 7 Days</div>
+                            <div class="odolo-flow-desc">Cooldown period</div>
+                        </div>
+                        <div class="odolo-flow-arrow">→</div>
+                        <div class="odolo-flow-step">
+                            <div class="odolo-flow-icon-wrap">
+                                <div class="odolo-flow-icon"
+                                    style="border-color: var(--accent-green); color: var(--accent-green);">4</div>
+                                <span class="tooltip-bubble odolo-flow-tooltip">Redeem: buy 1 veDOLO at 50% off (max
+                                    2-year lock), paid in USDC. oDOLO is burned, your DOLO is returned.</span>
+                            </div>
+                            <div class="odolo-flow-label">Redeem</div>
+                            <div class="odolo-flow-desc">50% off veDOLO</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <!-- METRICS -->
-        <div class="metrics-strip anim anim-d1">
-            <div class="metric-cell">
-                <div class="metric-label">Unique Holders</div>
-                <div class="metric-value" id="m-holders">—</div>
-            </div>
-            <div class="metric-cell">
-                <div class="metric-label">Total Minted</div>
-                <div class="metric-value" id="m-minted">—</div>
-            </div>
-            <div class="metric-cell">
-                <div class="metric-label">Active NFTs</div>
-                <div class="metric-value" id="m-active">—</div>
-                <div class="metric-sub">in circulation</div>
-            </div>
-            <div class="metric-cell">
-                <div class="metric-label">Burned</div>
-                <div class="metric-value" id="m-burned">— 🔥</div>
-            </div>
-            <div class="metric-cell">
-                <div class="metric-label">DOLO Locked (veDOLO)</div>
-                <div style="display:flex;align-items:center;gap:8px">
-                    <div class="metric-value accent-green" id="m-dolo">—</div>
-                    <img src="vedolo-logo.svg" alt="veDOLO" style="width:28px;height:28px">
-                </div>
-                <div class="metric-sub">total in lock</div>
-            </div>
-            <div class="metric-cell">
-                <div class="metric-label">Vote Weight</div>
-                <div class="metric-value" id="m-vote" style="color:#f59e0b">—</div>
-                <div class="metric-sub">total veDOLO power</div>
-            </div>
-        </div>
-
-        <!-- CHARTS -->
-        <div class="analytics-grid anim anim-d2">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Holder Distribution</div>
-
-                </div>
-                <div class="dist-stack" id="dist-bars"></div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">NFT Share by Wallet</div>
-
-                </div>
-                <div class="donut-layout">
-                    <svg class="donut-svg" viewBox="0 0 42 42" id="donut-chart"></svg>
-                    <div class="donut-legend" id="donut-legend"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- EXPIRY TIMELINE -->
-        <div class="expiry-chart-card anim anim-d2" id="expiry-section">
-            <div class="card-header">
-                <div class="card-title">Lock Expiry Timeline</div>
-
-            </div>
-            <div class="expiry-chart-scroll">
-                <canvas class="expiry-canvas" id="expiry-canvas"></canvas>
-            </div>
-        </div>
-
-
-
-        <!-- TABLE -->
-        <div class="table-section anim anim-d3">
-            <div class="table-toolbar">
-                <div class="search-input-wrapper">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                    <input type="text" id="search" placeholder="Search address 0x… or token ID">
-                </div>
-                <select class="filter-dropdown" id="filter-nft">
-                    <option value="all">All</option>
-                    <option value="100+">100+ NFT</option>
-                    <option value="50-100">50–100 NFT</option>
-                    <option value="26-50">26–50 NFT</option>
-                    <option value="11-25">11–25 NFT</option>
-                    <option value="6-10">6–10 NFT</option>
-                    <option value="2-5">2–5 NFT</option>
-                    <option value="1">1 NFT</option>
-                </select>
-                <div class="toolbar-count" id="results-count"></div>
-            </div>
-
-            <div class="table-scroll">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="c-rank sorted" data-sort="rank" onclick="sortTable('rank')">
-                                # <span class="arrow">▲</span>
-                            </th>
-                            <th data-sort="address" onclick="sortTable('address')">
-                                Address <span class="arrow">⇅</span>
-                            </th>
-                            <th data-sort="nft_count" onclick="sortTable('nft_count')">
-                                NFT <span class="arrow">⇅</span>
-                            </th>
-                            <th data-sort="total_dolo" onclick="sortTable('total_dolo')">
-                                DOLO 🔒 <span class="arrow">⇅</span>
-                            </th>
-                            <th data-sort="total_vote_weight" onclick="sortTable('total_vote_weight')">
-                                Vote Weight <span class="arrow">⇅</span>
-                            </th>
-                            <th>Token IDs</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body"></tbody>
-                </table>
-            </div>
-            <div class="table-footer" id="pagination"></div>
-        </div>
+        </div><!-- /view-odolo -->
 
         <footer class="site-footer anim anim-d4">
             Generated <span id="footer-date"></span> · Data from <a href="https://berascan.com"
                 target="_blank">BeraScan</a> ·
             Contract <a href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4"
-                target="_blank">veDOLO</a>
+                target="_blank">veDOLO</a> · <a
+                href="https://berascan.com/token/0x02E513b5B54eE216Bf836ceb471507488fC89543" target="_blank">oDOLO</a>
         </footer>
     </div>
 
@@ -1786,7 +2556,8 @@
 
         function init() {
             // Metrics
-            anim('m-holders', STATS.unique_holders);
+            const vedoloIcon = ' <img src="vedolo-logo.svg" class="metric-icon">';
+            anim('m-holders', STATS.unique_holders, false, '', vedoloIcon);
             anim('m-active', STATS.active_nfts);
             anim('m-minted', STATS.total_minted);
             anim('m-burned', STATS.total_burned, false, ' 🔥');
@@ -1795,7 +2566,7 @@
                 `${((STATS.total_burned / STATS.total_minted) * 100).toFixed(1)}% burned`;
 
             if (STATS.total_locked_dolo) {
-                anim('m-dolo', Math.round(STATS.total_locked_dolo), true);
+                anim('m-dolo', Math.round(STATS.total_locked_dolo), true, '', vedoloIcon);
             }
             if (STATS.total_vote_weight) {
                 anim('m-vote', Math.round(STATS.total_vote_weight), true);
@@ -1808,6 +2579,7 @@
             renderDist();
             renderDonut();
             renderExpiryChart();
+            setupExpiryInteraction();
 
             filteredData = [...HOLDER_DATA];
             renderTable();
@@ -1818,7 +2590,7 @@
         }
 
         // ===== COUNTER ANIMATION =====
-        function anim(id, target, suffix, emoji) {
+        function anim(id, target, suffix, emoji, iconHtml) {
             const el = document.getElementById(id);
             const dur = 1000;
             const start = performance.now();
@@ -1830,7 +2602,8 @@
             (function tick(now) {
                 const p = Math.min((now - start) / dur, 1);
                 const e = 1 - Math.pow(1 - p, 3);
-                el.textContent = fmt(Math.floor(target * e)) + (emoji || '');
+                const val = fmt(Math.floor(target * e)) + (emoji || '');
+                el.innerHTML = val + (iconHtml || '');
                 if (p < 1) requestAnimationFrame(tick);
             })(start);
         }
@@ -1840,16 +2613,22 @@
             const el = document.getElementById('dist-bars');
             const counts = DIST.map(d => ({ ...d, count: HOLDER_DATA.filter(h => h.nft_count >= d.min && h.nft_count <= d.max).length }));
             const mx = Math.max(...counts.map(c => c.count));
-            el.innerHTML = counts.map(d => `
-        <div class="dist-item">
+            const totalHolders = counts.reduce((s, d) => s + d.count, 0);
+            el.innerHTML = counts.map(d => {
+                const pct = ((d.count / totalHolders) * 100).toFixed(1);
+                return `
+        <div class="dist-item" onmouseenter="this.querySelector('.dist-tooltip').style.display='block'" onmouseleave="this.querySelector('.dist-tooltip').style.display='none'">
             <div class="label">${d.label}</div>
-            <div class="track">
+            <div class="track" style="position:relative">
                 <div class="fill" style="width:${Math.max(3, (d.count / mx) * 100)}%;background:${d.color}">
                     <span>${d.count.toLocaleString('en-US')}</span>
                 </div>
+                <div class="dist-tooltip" style="position:absolute;top:-36px;right:0">
+                    <strong style="color:${d.color}">${d.label}</strong>: ${d.count.toLocaleString('en-US')} holders · <strong>${pct}%</strong>
+                </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
         }
 
         function renderDonut() {
@@ -1864,12 +2643,24 @@
             let off = 0;
             const r = 15.91549, circ = 2 * Math.PI * r;
 
+            // Create tooltip element if not exists
+            let tooltip = document.getElementById('donut-hover-tip');
+            if (!tooltip) {
+                tooltip = document.createElement('div');
+                tooltip.id = 'donut-hover-tip';
+                tooltip.className = 'donut-tooltip';
+                document.body.appendChild(tooltip);
+            }
+
             let html = `<circle cx="21" cy="21" r="${r}" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="5"/>`;
-            segs.forEach(seg => {
+            segs.forEach((seg, i) => {
                 const pct = seg.nfts / total;
                 const dash = circ * pct;
                 html += `<circle cx="21" cy="21" r="${r}" fill="none" stroke="${seg.color}" stroke-width="5"
-            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-off}" style="transition:all 0.8s"/>`;
+            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-off}"
+            style="transition:all 0.3s;cursor:pointer"
+            data-idx="${i}" data-label="${seg.label}" data-nfts="${seg.nfts}" data-pct="${(pct * 100).toFixed(1)}" data-color="${seg.color}"
+            onmouseenter="donutHover(this, event)" onmouseleave="donutUnhover(this)" onmousemove="donutMove(event)"/>`;
                 off += dash;
             });
             html += `<text x="21" y="20" text-anchor="middle" fill="var(--text-primary)" font-size="4" font-weight="700"
@@ -1878,16 +2669,121 @@
         font-family="Inter" transform="rotate(90 21 21)">NFT</text>`;
             svg.innerHTML = html;
 
-            leg.innerHTML = segs.map(s => `
-        <div class="legend-row">
+            leg.innerHTML = segs.map((s, i) => {
+                const pct = ((s.nfts / total) * 100).toFixed(1);
+                return `
+        <div class="legend-row" data-idx="${i}"
+            onmouseenter="legendHover(${i}, '${s.color}')" onmouseleave="legendUnhover(${i})">
             <div class="legend-swatch" style="background:${s.color}"></div>
-            ${s.label}: ${s.nfts.toLocaleString('en-US')} (${((s.nfts / total) * 100).toFixed(1)}%)
+            ${s.label}: ${s.nfts.toLocaleString('en-US')} (${pct}%)
         </div>
-    `).join('');
+    `}).join('');
+        }
+
+        // Donut hover helpers
+        function donutHover(el, e) {
+            const idx = parseInt(el.dataset.idx);
+            el.setAttribute('stroke-width', '7');
+            el.style.filter = 'brightness(1.4) drop-shadow(0 0 6px ' + el.dataset.color + ')';
+            const tip = document.getElementById('donut-hover-tip');
+            tip.innerHTML = `<strong style="color:${el.dataset.color}">${el.dataset.label}</strong><br>${parseInt(el.dataset.nfts).toLocaleString('en-US')} NFTs · <strong>${el.dataset.pct}%</strong>`;
+            tip.style.display = 'block';
+            donutMove(e);
+            // Highlight corresponding legend row
+            const rows = document.querySelectorAll('#donut-legend .legend-row');
+            rows.forEach(r => {
+                if (parseInt(r.dataset.idx) === idx) {
+                    r.style.background = 'rgba(255,255,255,0.08)';
+                    r.style.borderLeft = '3px solid ' + el.dataset.color;
+                    r.style.paddingLeft = '8px';
+                    r.style.color = '#fff';
+                    r.style.fontWeight = '700';
+                } else {
+                    r.style.opacity = '0.4';
+                }
+            });
+            // Dim other segments
+            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
+            circles.forEach(c => {
+                if (parseInt(c.dataset.idx) !== idx) {
+                    c.style.opacity = '0.3';
+                }
+            });
+        }
+        function donutUnhover(el) {
+            el.setAttribute('stroke-width', '5');
+            el.style.filter = '';
+            document.getElementById('donut-hover-tip').style.display = 'none';
+            // Reset legend rows
+            const rows = document.querySelectorAll('#donut-legend .legend-row');
+            rows.forEach(r => {
+                r.style.background = '';
+                r.style.borderLeft = '';
+                r.style.paddingLeft = '';
+                r.style.color = '';
+                r.style.fontWeight = '';
+                r.style.opacity = '1';
+            });
+            // Reset other segments
+            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
+            circles.forEach(c => {
+                c.style.opacity = '1';
+            });
+        }
+        function donutMove(e) {
+            const tip = document.getElementById('donut-hover-tip');
+            tip.style.left = (e.clientX + 14) + 'px';
+            tip.style.top = (e.clientY - 10) + 'px';
+        }
+        function legendHover(idx, color) {
+            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
+            circles.forEach(c => {
+                if (parseInt(c.dataset.idx) === idx) {
+                    c.setAttribute('stroke-width', '7');
+                    c.style.filter = 'brightness(1.4) drop-shadow(0 0 6px ' + color + ')';
+                } else {
+                    c.style.opacity = '0.3';
+                }
+            });
+            // Highlight this legend row, dim others
+            const rows = document.querySelectorAll('#donut-legend .legend-row');
+            rows.forEach(r => {
+                if (parseInt(r.dataset.idx) === idx) {
+                    r.style.background = 'rgba(255,255,255,0.08)';
+                    r.style.borderLeft = '3px solid ' + color;
+                    r.style.paddingLeft = '8px';
+                    r.style.color = '#fff';
+                    r.style.fontWeight = '700';
+                } else {
+                    r.style.opacity = '0.4';
+                }
+            });
+        }
+        function legendUnhover(idx) {
+            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
+            circles.forEach(c => {
+                c.setAttribute('stroke-width', '5');
+                c.style.filter = '';
+                c.style.opacity = '1';
+            });
+            // Reset all legend rows
+            const rows = document.querySelectorAll('#donut-legend .legend-row');
+            rows.forEach(r => {
+                r.style.background = '';
+                r.style.borderLeft = '';
+                r.style.paddingLeft = '';
+                r.style.color = '';
+                r.style.fontWeight = '';
+                r.style.opacity = '1';
+            });
         }
 
         // ===== EXPIRY TIMELINE CHART =====
-        function renderExpiryChart() {
+        let expiryBars = [];  // stored bar rects for hit detection
+        let expiryEntries = [];  // stored data entries
+        let expiryTotalDolo = 0;
+
+        function renderExpiryChart(hoveredIdx) {
             const canvas = document.getElementById('expiry-canvas');
             const ctx = canvas.getContext('2d');
             const dpr = window.devicePixelRatio || 1;
@@ -1915,10 +2811,12 @@
             // Group by quarter
             const now = Date.now() / 1000;
             const buckets = {};
+            let totalDoloAll = 0;
             locks.forEach(l => {
                 const d = new Date(l.end * 1000);
                 const q = `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear()}`;
                 buckets[q] = (buckets[q] || 0) + l.dolo;
+                totalDoloAll += l.dolo;
             });
 
             const entries = Object.entries(buckets).sort((a, b) => {
@@ -1927,12 +2825,14 @@
             });
 
             if (!entries.length) return;
+            expiryEntries = entries;
+            expiryTotalDolo = totalDoloAll;
 
             const maxVal = Math.max(...entries.map(e => e[1]));
             // Responsive sizing
             const isMobile = W < 500;
             const fontSize = isMobile ? 10 : 12;
-            const pad = { top: 24, bottom: isMobile ? 45 : 50, left: isMobile ? 45 : 70, right: isMobile ? 10 : 20 };
+            const pad = { top: 40, bottom: isMobile ? 45 : 50, left: isMobile ? 45 : 70, right: isMobile ? 10 : 20 };
             const chartW = W - pad.left - pad.right;
             const chartH = H - pad.top - pad.bottom;
             const barW = Math.min(40, (chartW / entries.length) * 0.65);
@@ -1955,34 +2855,139 @@
                 ctx.fillText(val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val), pad.left - 6, y + 3);
             }
 
+            // Store bar positions for hit detection
+            const bars = [];
+
             // Bars
             entries.forEach(([label, val], i) => {
                 const x = pad.left + i * gap + (gap - barW) / 2;
                 const barH = (val / maxVal) * chartH;
                 const y = pad.top + chartH - barH;
+                const isHovered = (hoveredIdx === i);
+
+                bars.push({ x, y, w: barW, h: barH, label, val, idx: i });
 
                 // gradient fill
                 const grd = ctx.createLinearGradient(x, y, x, y + barH);
-                grd.addColorStop(0, '#6366f1');
-                grd.addColorStop(1, '#818cf8');
+                if (isHovered) {
+                    grd.addColorStop(0, '#818cf8');
+                    grd.addColorStop(1, '#a5b4fc');
+                } else {
+                    grd.addColorStop(0, '#6366f1');
+                    grd.addColorStop(1, '#818cf8');
+                }
                 ctx.fillStyle = grd;
+
+                // dim non-hovered bars when one is hovered
+                if (hoveredIdx !== undefined && !isHovered) {
+                    ctx.globalAlpha = 0.35;
+                }
+
                 ctx.beginPath();
                 ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
                 ctx.fill();
 
+                // glow effect on hovered bar
+                if (isHovered) {
+                    ctx.shadowColor = '#6366f1';
+                    ctx.shadowBlur = 16;
+                    ctx.fill();
+                    ctx.shadowColor = 'transparent';
+                    ctx.shadowBlur = 0;
+                }
+
+                ctx.globalAlpha = 1;
+
                 // X-axis label
-                ctx.fillStyle = 'rgba(255,255,255,0.5)';
-                ctx.font = `${fontSize}px Inter`;
+                ctx.fillStyle = isHovered ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.5)';
+                ctx.font = `${isHovered ? 'bold ' : ''}${fontSize}px Inter`;
                 ctx.textAlign = 'center';
-                // Shorten label on mobile: "Q2 2025" → "Q2'25"
                 const shortLabel = isMobile ? label.replace(/ 20(\d\d)/, "'$1") : label;
                 ctx.fillText(shortLabel, x + barW / 2, H - pad.bottom + 14);
 
                 // Value on top
-                ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                ctx.font = `${fontSize}px Inter`;
+                ctx.fillStyle = isHovered ? '#fff' : 'rgba(255,255,255,0.7)';
+                ctx.font = `${isHovered ? 'bold ' : ''}${fontSize}px Inter`;
                 const valLbl = val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val);
                 ctx.fillText(valLbl, x + barW / 2, y - 5);
+            });
+
+            expiryBars = bars;
+        }
+
+        // Expiry chart mouse interaction
+        function setupExpiryInteraction() {
+            const canvas = document.getElementById('expiry-canvas');
+            if (!canvas) return;
+            const tooltip = document.getElementById('expiry-tooltip');
+            let lastHovered;
+
+            function handleMove(clientX, clientY) {
+                const rect = canvas.getBoundingClientRect();
+                const mx = clientX - rect.left;
+                const my = clientY - rect.top;
+                let hit;
+
+                for (const bar of expiryBars) {
+                    const colCenter = bar.x + bar.w / 2;
+                    const halfGap = 35;
+                    if (mx >= colCenter - halfGap && mx <= colCenter + halfGap) {
+                        hit = bar.idx;
+                        break;
+                    }
+                }
+
+                if (hit !== lastHovered) {
+                    lastHovered = hit;
+                    renderExpiryChart(hit);
+                }
+
+                if (hit !== undefined && expiryBars[hit]) {
+                    canvas.style.cursor = 'pointer';
+                    const bar = expiryBars[hit];
+                    const pct = expiryTotalDolo ? ((bar.val / expiryTotalDolo) * 100).toFixed(1) : '0';
+                    const doloFmt = bar.val >= 1e6 ? (bar.val / 1e6).toFixed(2) + 'M' : bar.val >= 1e3 ? (bar.val / 1e3).toFixed(1) + 'K' : Math.round(bar.val);
+                    tooltip.innerHTML = `<strong style="color:#a5b4fc">${bar.label}</strong><br>${doloFmt} DOLO<br><span style="opacity:0.7">${pct}% of total</span>`;
+                    tooltip.style.display = 'block';
+                    // Position tooltip using viewport coordinates (fixed positioning)
+                    const tipX = rect.left + bar.x + bar.w / 2;
+                    const tipY = rect.top + bar.y - 8;
+                    tooltip.style.left = tipX + 'px';
+                    tooltip.style.top = tipY + 'px';
+                } else {
+                    canvas.style.cursor = 'default';
+                    tooltip.style.display = 'none';
+                }
+            }
+
+            canvas.addEventListener('mousemove', function (e) {
+                handleMove(e.clientX, e.clientY);
+            });
+
+            canvas.addEventListener('mouseleave', function () {
+                lastHovered = undefined;
+                renderExpiryChart();
+                tooltip.style.display = 'none';
+                canvas.style.cursor = 'default';
+            });
+
+            // Touch support for mobile
+            canvas.addEventListener('touchstart', function (e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                handleMove(touch.clientX, touch.clientY);
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                handleMove(touch.clientX, touch.clientY);
+            }, { passive: false });
+
+            canvas.addEventListener('touchend', function () {
+                lastHovered = undefined;
+                renderExpiryChart();
+                tooltip.style.display = 'none';
             });
         }
 
@@ -2404,8 +3409,452 @@
             }
         }
 
+        // ===== TAB SWITCHING =====
+        let currentView = 'vedolo';
+        let odoloLoaded = false;
+
+        function switchView(view) {
+            if (view === currentView) return;
+            currentView = view;
+
+            // Toggle view sections
+            document.getElementById('view-vedolo').classList.toggle('active', view === 'vedolo');
+            document.getElementById('view-odolo').classList.toggle('active', view === 'odolo');
+
+            // Toggle tab active states
+            document.getElementById('tab-vedolo').classList.toggle('active', view === 'vedolo');
+            document.getElementById('tab-odolo').classList.toggle('active', view === 'odolo');
+
+            // Update page title
+            document.title = view === 'vedolo'
+                ? 'veDOLO Holders — Berachain Dashboard'
+                : 'oDOLO Stats — Berachain Dashboard';
+
+            // Lazy load oDOLO data on first switch
+            if (view === 'odolo' && !odoloLoaded) {
+                odoloLoaded = true;
+                odolo_init();
+            }
+
+            // Re-render oDOLO donut on switch (canvas needs visible dimensions)
+            if (view === 'odolo' && odolo_cachedData) {
+                setTimeout(() => odolo_renderDonut(odolo_cachedData), 50);
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== oDOLO NAMESPACE =====
+        const ODOLO_RPC_URLS = [
+            'https://berachain.drpc.org/',
+            'https://rpc.berachain.com/',
+            'https://berachain-rpc.publicnode.com/',
+        ];
+        const ODOLO_TOKEN = '0x02E513b5B54eE216Bf836ceb471507488fC89543';
+        const ODOLO_VESTER = '0x3E9b9A16743551DA49b5e136C716bBa7932d2cEc';
+
+        const ODOLO_SEL = {
+            totalSupply: '0x18160ddd',
+            balanceOf: '0x70a08231',
+            decimals: '0x313ce567',
+            promisedTokens: '0x5e17b694',
+            pushedTokens: '0x818c16e2',
+            availableTokens: '0x69bb4dc2',
+        };
+
+        let odolo_rpcId = 1000;
+        let odolo_rpcUrlIdx = 0;
+        let odolo_cachedData = null;
+
+        function odolo_getRpcUrl() {
+            return ODOLO_RPC_URLS[odolo_rpcUrlIdx % ODOLO_RPC_URLS.length];
+        }
+
+        async function odolo_rpcCall(to, data, retries = 3) {
+            for (let attempt = 0; attempt < retries; attempt++) {
+                try {
+                    const resp = await fetch(odolo_getRpcUrl(), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            method: 'eth_call',
+                            params: [{ to, data }, 'latest'],
+                            id: odolo_rpcId++
+                        })
+                    });
+                    const json = await resp.json();
+                    if (json.error) {
+                        console.warn(`oDOLO RPC error:`, json.error);
+                        odolo_rpcUrlIdx++;
+                        continue;
+                    }
+                    return json.result || '0x0';
+                } catch (err) {
+                    console.warn(`oDOLO RPC failed (attempt ${attempt + 1}):`, err.message);
+                    odolo_rpcUrlIdx++;
+                    await new Promise(r => setTimeout(r, 300 * (attempt + 1)));
+                }
+            }
+            return '0x0';
+        }
+
+        async function odolo_rpcBatch3(calls) {
+            try {
+                const batch = calls.map((c, i) => ({
+                    jsonrpc: '2.0',
+                    method: 'eth_call',
+                    params: [{ to: c.to, data: c.data }, 'latest'],
+                    id: i + 1000
+                }));
+                const resp = await fetch(odolo_getRpcUrl(), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(batch)
+                });
+                const results = await resp.json();
+                if (Array.isArray(results)) {
+                    results.sort((a, b) => a.id - b.id);
+                    return results.map(r => r.result || '0x0');
+                }
+                const out = [];
+                for (const c of calls) out.push(await odolo_rpcCall(c.to, c.data));
+                return out;
+            } catch (err) {
+                const out = [];
+                for (const c of calls) out.push(await odolo_rpcCall(c.to, c.data));
+                return out;
+            }
+        }
+
+        function odolo_decodeUint256(hex) {
+            if (!hex || hex === '0x' || hex === '0x0') return 0n;
+            const clean = hex.replace('0x', '').slice(0, 64);
+            return BigInt('0x' + (clean || '0'));
+        }
+
+        function odolo_padAddress(addr) {
+            return addr.replace('0x', '').toLowerCase().padStart(64, '0');
+        }
+
+        function odolo_formatNum(n, decimals = 2) {
+            if (n >= 1e9) return (n / 1e9).toFixed(decimals) + 'B';
+            if (n >= 1e6) return (n / 1e6).toFixed(decimals) + 'M';
+            if (n >= 1e3) return (n / 1e3).toFixed(decimals) + 'K';
+            return n.toFixed(decimals);
+        }
+
+        function odolo_formatFullNum(n) {
+            return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        async function odolo_fetchAllData() {
+            console.log('🔄 Fetching oDOLO data...');
+            try {
+                const batch1 = await odolo_rpcBatch3([
+                    { to: ODOLO_TOKEN, data: ODOLO_SEL.totalSupply },
+                    { to: ODOLO_TOKEN, data: ODOLO_SEL.decimals },
+                    { to: ODOLO_TOKEN, data: ODOLO_SEL.balanceOf + odolo_padAddress(ODOLO_VESTER) },
+                ]);
+                const batch2 = await odolo_rpcBatch3([
+                    { to: ODOLO_VESTER, data: ODOLO_SEL.promisedTokens },
+                    { to: ODOLO_VESTER, data: ODOLO_SEL.pushedTokens },
+                    { to: ODOLO_VESTER, data: ODOLO_SEL.availableTokens },
+                ]);
+
+                const oDec = Number(odolo_decodeUint256(batch1[1])) || 18;
+                const divisor = 10 ** oDec;
+
+                const totalSupply = Number(odolo_decodeUint256(batch1[0])) / divisor;
+                const inVesterBalance = Number(odolo_decodeUint256(batch1[2])) / divisor;
+                const promisedTokens = Number(odolo_decodeUint256(batch2[0])) / divisor;
+                const pushedTokens = Number(odolo_decodeUint256(batch2[1])) / divisor;
+                const availableTokens = Number(odolo_decodeUint256(batch2[2])) / divisor;
+
+                const inCirculation = totalSupply - availableTokens - promisedTokens;
+
+                console.log('✅ oDOLO data fetched:', { totalSupply, promisedTokens, pushedTokens, availableTokens, inCirculation });
+
+                odolo_cachedData = {
+                    totalSupply, availableTokens, inCirculation,
+                    promisedTokens, pushedTokens,
+                };
+
+                try {
+                    const usdResp = await fetch('exercised_usd.json?t=' + Date.now());
+                    if (usdResp.ok) {
+                        const usdData = await usdResp.json();
+                        odolo_cachedData.exercisedUsd = usdData.total_usdc;
+                        odolo_cachedData.exercisedTxs = usdData.total_txs;
+                        odolo_cachedData.exercisedUpdated = usdData.last_updated;
+                    }
+                } catch (e) { console.warn('⚠️ oDOLO: exercised_usd.json error:', e); }
+
+                try {
+                    const lockResp = await fetch('avg_lock_data.json?t=' + Date.now());
+                    if (lockResp.ok) {
+                        const lockData = await lockResp.json();
+                        odolo_cachedData.avgLockDays = lockData.avg_lock_days;
+                        odolo_cachedData.avgLockMonths = lockData.avg_lock_months;
+                        odolo_cachedData.avgDiscountPct = lockData.avg_discount_pct;
+                    }
+                } catch (e) { console.warn('⚠️ oDOLO: avg_lock_data.json error:', e); }
+
+                return odolo_cachedData;
+            } catch (err) {
+                console.error('❌ oDOLO fetch error:', err);
+                return null;
+            }
+        }
+
+        function odolo_renderMetrics(data) {
+            if (!data) return;
+            document.getElementById('o-m-supply').innerHTML = odolo_formatNum(data.totalSupply) + ' <img src="odolo-logo-official.svg" class="metric-icon">';
+            document.getElementById('o-m-holders').textContent = '1,724';
+            document.getElementById('o-m-vester').textContent = odolo_formatNum(data.availableTokens);
+            const vesterPct = data.totalSupply > 0 ? ((data.availableTokens / data.totalSupply) * 100).toFixed(1) : '0';
+            document.getElementById('o-m-vester-pct').textContent = vesterPct + '% of supply';
+            document.getElementById('o-m-vesting').textContent = odolo_formatNum(data.promisedTokens);
+            document.getElementById('o-m-exercised').innerHTML = odolo_formatNum(data.pushedTokens) + ' <img src="vedolo-logo.svg" class="metric-icon">';
+
+            if (data.exercisedUsd && data.exercisedUsd > 0) {
+                document.getElementById('o-m-revenue').textContent = '$' + odolo_formatNum(data.exercisedUsd);
+                const updDate = data.exercisedUpdated
+                    ? new Date(data.exercisedUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : '';
+                document.getElementById('o-m-revenue-sub').textContent =
+                    data.exercisedTxs + ' exercises' + (updDate ? ' · updated ' + updDate : '');
+            } else {
+                document.getElementById('o-m-revenue').textContent = '—';
+                document.getElementById('o-m-revenue-sub').textContent = 'data pending';
+            }
+
+            if (data.exercisedUsd && data.pushedTokens > 0) {
+                const avgPrice = data.exercisedUsd / data.pushedTokens;
+                document.getElementById('o-m-avg-price').textContent = '$' + avgPrice.toFixed(4);
+            } else {
+                document.getElementById('o-m-avg-price').textContent = '—';
+            }
+
+            if (data.avgLockDays) {
+                document.getElementById('o-m-avg-lock').textContent = Math.round(data.avgLockDays) + ' days';
+                document.getElementById('o-m-avg-lock-sub').textContent = '~' + (data.avgLockDays / 30.44).toFixed(1) + ' months';
+            } else {
+                document.getElementById('o-m-avg-lock').textContent = '—';
+                document.getElementById('o-m-avg-lock-sub').textContent = 'data pending';
+            }
+
+            if (data.avgDiscountPct) {
+                document.getElementById('o-m-avg-discount').textContent = data.avgDiscountPct.toFixed(1) + '%';
+            } else {
+                document.getElementById('o-m-avg-discount').textContent = '—';
+            }
+        }
+
+        // ===== oDOLO DONUT =====
+        let odolo_donutSegments = [];
+        let odolo_donutTotal = 0;
+        let odolo_donutCx = 0, odolo_donutCy = 0, odolo_donutOuterR = 0, odolo_donutInnerR = 0;
+        let odolo_hoveredSegIdx = -1;
+
+        function odolo_renderDonut(data) {
+            if (!data) return;
+
+            const canvas = document.getElementById('o-dist-donut');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            if (rect.width === 0) return; // not visible yet
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+
+            const segments = [
+                { label: 'Available in Vester', value: data.availableTokens, color: '#22d3ee' },
+                { label: 'In Circulation', value: data.inCirculation, color: '#fbbf24' },
+                { label: 'Currently Vesting', value: data.promisedTokens, color: '#6366f1' },
+                { label: 'Exercised (Redeemed)', value: data.pushedTokens, color: '#34d399' },
+            ].filter(s => s.value > 0);
+
+            const total = segments.reduce((s, seg) => s + seg.value, 0);
+            odolo_donutSegments = segments;
+            odolo_donutTotal = total;
+            odolo_donutCx = rect.width / 2;
+            odolo_donutCy = rect.height / 2;
+            odolo_donutOuterR = Math.min(rect.width, rect.height) / 2 - 20;
+            odolo_donutInnerR = odolo_donutOuterR * 0.65;
+
+            const gap = 0.02;
+            let angle = -Math.PI / 2;
+            segments.forEach(seg => {
+                const slice = (seg.value / total) * (Math.PI * 2 - gap * segments.length);
+                seg.startAngle = angle + gap / 2;
+                seg.endAngle = angle + slice - gap / 2;
+                angle += slice + gap;
+            });
+
+            odolo_drawDonut(-1);
+
+            document.getElementById('o-donut-total').textContent = odolo_formatNum(data.totalSupply);
+
+            const legend = document.getElementById('o-dist-legend');
+            legend.innerHTML = segments.map((seg, i) => `
+                <div class="odolo-legend-item" data-seg-idx="${i}" style="cursor:pointer; padding: 4px 6px; border-radius: 6px; transition: background 0.2s;">
+                    <span class="odolo-legend-dot" style="background: ${seg.color}"></span>
+                    <span class="odolo-legend-label">${seg.label}</span>
+                    <span class="odolo-legend-value">${odolo_formatNum(seg.value)} (${((seg.value / total) * 100).toFixed(1)}%)</span>
+                </div>
+            `).join('');
+
+            legend.querySelectorAll('.odolo-legend-item').forEach(item => {
+                const idx = parseInt(item.dataset.segIdx);
+                item.addEventListener('mouseenter', () => {
+                    odolo_hoveredSegIdx = idx;
+                    odolo_drawDonut(idx);
+                    odolo_highlightLegend(idx);
+                });
+                item.addEventListener('mouseleave', () => {
+                    odolo_hoveredSegIdx = -1;
+                    odolo_drawDonut(-1);
+                    odolo_highlightLegend(-1);
+                });
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                const mRect = canvas.getBoundingClientRect();
+                const mx = e.clientX - mRect.left;
+                const my = e.clientY - mRect.top;
+                const idx = odolo_getHoveredSegment(mx, my);
+
+                if (idx !== odolo_hoveredSegIdx) {
+                    odolo_hoveredSegIdx = idx;
+                    odolo_drawDonut(idx);
+                    odolo_highlightLegend(idx);
+                }
+
+                const tooltip = document.getElementById('o-donut-tooltip');
+                if (idx >= 0) {
+                    canvas.style.cursor = 'pointer';
+                    const seg = odolo_donutSegments[idx];
+                    const pct = ((seg.value / odolo_donutTotal) * 100).toFixed(1);
+                    tooltip.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <span style="width:10px;height:10px;border-radius:3px;background:${seg.color};display:inline-block;"></span>
+                            <strong>${seg.label}</strong>
+                        </div>
+                        <div style="color:#94a3b8; font-size:12px;">
+                            ${odolo_formatFullNum(Math.round(seg.value))} oDOLO · <span style="color:${seg.color};font-weight:600;">${pct}%</span> of supply
+                        </div>
+                    `;
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = (e.clientX + 14) + 'px';
+                    tooltip.style.top = (e.clientY - 20) + 'px';
+                } else {
+                    canvas.style.cursor = 'default';
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                odolo_hoveredSegIdx = -1;
+                odolo_drawDonut(-1);
+                odolo_highlightLegend(-1);
+                canvas.style.cursor = 'default';
+                document.getElementById('o-donut-tooltip').style.display = 'none';
+            });
+        }
+
+        function odolo_getHoveredSegment(mx, my) {
+            const dx = mx - odolo_donutCx;
+            const dy = my - odolo_donutCy;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < odolo_donutInnerR || dist > odolo_donutOuterR + 10) return -1;
+            let ang = Math.atan2(dy, dx);
+            if (ang < -Math.PI / 2) ang += Math.PI * 2;
+            for (let i = 0; i < odolo_donutSegments.length; i++) {
+                let start = odolo_donutSegments[i].startAngle;
+                let end = odolo_donutSegments[i].endAngle;
+                if (start < -Math.PI / 2) start += Math.PI * 2;
+                if (end < -Math.PI / 2) end += Math.PI * 2;
+                if (ang >= start && ang <= end) return i;
+            }
+            return -1;
+        }
+
+        function odolo_drawDonut(hoverIdx) {
+            const canvas = document.getElementById('o-dist-donut');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            if (rect.width === 0) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.scale(dpr, dpr);
+
+            const cx = odolo_donutCx, cy = odolo_donutCy;
+            const outerR = odolo_donutOuterR, innerR = odolo_donutInnerR;
+            const pushOut = 8;
+
+            odolo_donutSegments.forEach((seg, i) => {
+                const isHovered = (i === hoverIdx);
+                const midAngle = (seg.startAngle + seg.endAngle) / 2;
+                const offX = isHovered ? Math.cos(midAngle) * pushOut : 0;
+                const offY = isHovered ? Math.sin(midAngle) * pushOut : 0;
+                const r = isHovered ? outerR + 4 : outerR;
+
+                ctx.beginPath();
+                ctx.arc(cx + offX, cy + offY, r, seg.startAngle, seg.endAngle);
+                ctx.arc(cx + offX, cy + offY, innerR, seg.endAngle, seg.startAngle, true);
+                ctx.closePath();
+                ctx.fillStyle = seg.color;
+                ctx.globalAlpha = (hoverIdx >= 0 && !isHovered) ? 0.4 : 1;
+                ctx.fill();
+
+                if (isHovered) {
+                    ctx.shadowColor = seg.color;
+                    ctx.shadowBlur = 16;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            });
+
+            ctx.globalAlpha = 1;
+            ctx.restore();
+        }
+
+        function odolo_highlightLegend(hoverIdx) {
+            const items = document.querySelectorAll('#o-dist-legend .odolo-legend-item');
+            items.forEach((item, i) => {
+                if (hoverIdx >= 0 && i !== hoverIdx) {
+                    item.style.opacity = '0.4';
+                    item.style.background = 'transparent';
+                } else if (i === hoverIdx) {
+                    item.style.opacity = '1';
+                    item.style.background = 'rgba(99, 102, 241, 0.1)';
+                } else {
+                    item.style.opacity = '1';
+                    item.style.background = 'transparent';
+                }
+            });
+        }
+
+        async function odolo_init() {
+            const data = await odolo_fetchAllData();
+            odolo_renderMetrics(data);
+            odolo_renderDonut(data);
+        }
+
+        // Redraw oDOLO donut on resize
+        let odolo_resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(odolo_resizeTimer);
+            odolo_resizeTimer = setTimeout(() => {
+                if (odolo_cachedData && currentView === 'odolo') odolo_renderDonut(odolo_cachedData);
+            }, 300);
+        });
+
         loadData();
     </script>
+    <div class="expiry-tooltip" id="expiry-tooltip"></div>
 </body>
 
 </html>
