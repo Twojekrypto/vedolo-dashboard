@@ -1498,12 +1498,13 @@
         }
 
         .expiry-chart-scroll {
-            overflow: visible;
+            overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
 
         .expiry-canvas {
             width: 100%;
+            min-width: 600px;
             height: 260px;
         }
 
@@ -2927,7 +2928,7 @@
                 ctx.fillStyle = isHovered ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.5)';
                 ctx.font = `${isHovered ? 'bold ' : ''}${fontSize}px Inter`;
                 ctx.textAlign = 'center';
-                const shortLabel = isMobile ? label.replace(/ 20(\d\d)/, "'$1") : label;
+                const shortLabel = label.replace(/ 20(\d\d)/, "'$1");
                 ctx.fillText(shortLabel, x + barW / 2, H - pad.bottom + 14);
 
                 // Value on top
