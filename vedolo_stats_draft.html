@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=0">
+    <title>veDOLO Stats — Premium Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #06060e;
+            --bg-surface: rgba(17, 17, 28, 0.6);
+            --bg-card: rgba(22, 22, 36, 0.55);
+            --bg-card-solid: #161624;
+            --bg-hover: rgba(30, 30, 48, 0.7);
+            --bg-input: rgba(14, 14, 24, 0.8);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(99, 102, 241, 0.15);
+            --border-focus: rgba(99, 102, 241, 0.5);
+            --text-primary: #f0f0f6;
+            --text-secondary: #8b8fa3;
+            --text-muted: #555770;
+            --accent-indigo: #6366f1;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #22d3ee;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            --accent-orange: #fb923c;
+            --gradient-brand: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+            --gradient-warm: linear-gradient(135deg, #fbbf24 0%, #fb7185 100%);
+            --gradient-success: linear-gradient(135deg, #34d399 0%, #22d3ee 100%);
+            --glass-bg: rgba(22, 22, 38, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border-subtle);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-subtle);
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.08);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+            overflow-x: hidden
+        }
+
+        /* GRADIENT MESH BG */
+        .mesh-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none
+        }
+
+        .mesh-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            animation: meshFloat 20s ease-in-out infinite
+        }
+
+        .mesh-blob:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: #6366f1;
+            top: -10%;
+            left: -5%;
+            animation-delay: 0s
+        }
+
+        .mesh-blob:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: #22d3ee;
+            bottom: -15%;
+            right: -10%;
+            animation-delay: -7s
+        }
+
+        .mesh-blob:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: #fb7185;
+            top: 40%;
+            left: 50%;
+            animation-delay: -14s
+        }
+
+        @keyframes meshFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            33% {
+                transform: translate(40px, -30px) scale(1.1)
+            }
+
+            66% {
+                transform: translate(-20px, 40px) scale(0.9)
+            }
+        }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 32px 24px 80px
+        }
+
+        /* HEADER */
+        .site-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0 40px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 32px
+        }
+
+        .header-top-logo {
+            margin-bottom: 16px
+        }
+
+        .header-top-logo img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            filter: brightness(1.1)
+        }
+
+        .header-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            box-shadow: var(--shadow-glow)
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: var(--gradient-brand);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .brand-text .sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 1px
+        }
+
+        .brand-text .sub .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: livePulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(52, 211, 153, 0.4)
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4)
+            }
+
+            50% {
+                opacity: 0.6;
+                box-shadow: 0 0 0 6px rgba(52, 211, 153, 0)
+            }
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: none;
+            text-decoration: none;
+            white-space: nowrap
+        }
+
+        .btn-ghost {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border)
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: var(--bg-hover);
+            transform: translateY(-1px)
+        }
+
+        .btn-primary {
+            background: var(--gradient-brand);
+            color: white;
+            box-shadow: 0 2px 12px rgba(99, 102, 241, 0.25)
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 24px rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px)
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98)
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px
+        }
+
+        /* BENTO METRICS */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 12px;
+            margin-bottom: 32px
+        }
+
+        .bento-cell {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            transition: all var(--transition-spring);
+            position: relative;
+            overflow: hidden
+        }
+
+        .bento-cell::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.04), transparent 60%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--transition)
+        }
+
+        .bento-cell:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-glow)
+        }
+
+        .bento-cell:hover::before {
+            opacity: 1
+        }
+
+        .bento-hero {
+            grid-column: 1/2;
+            grid-row: 1/3
+        }
+
+        .bento-hero .metric-value {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px
+        }
+
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 18px
+        }
+
+        .metric-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px
+        }
+
+        .metric-value.accent-green {
+            color: var(--accent-green)
+        }
+
+        .metric-value.accent-amber {
+            color: var(--accent-amber)
+        }
+
+        /* GLASS CARDS */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all var(--transition-spring)
+        }
+
+        .card:hover {
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-glow)
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .card-title .icon {
+            font-size: 16px;
+            opacity: 0.6
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px
+        }
+
+        /* DIST BARS */
+        .dist-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .dist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all var(--transition);
+            padding: 2px 0;
+            border-radius: 6px
+        }
+
+        .dist-item:hover {
+            transform: translateX(4px)
+        }
+
+        .dist-item .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            min-width: 48px;
+            text-align: right
+        }
+
+        .dist-item .track {
+            flex: 1;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            overflow: hidden
+        }
+
+        .dist-item .fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative
+        }
+
+        .dist-item .fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1));
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity var(--transition)
+        }
+
+        .dist-item:hover .fill::after {
+            opacity: 1
+        }
+
+        .dist-item .fill span {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap
+        }
+
+        /* DONUT */
+        .donut-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px
+        }
+
+        .donut-svg {
+            width: 180px;
+            height: 180px;
+            transform: rotate(-90deg)
+        }
+
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            cursor: default;
+            padding: 2px 6px;
+            border-radius: 4px
+        }
+
+        .legend-row:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary)
+        }
+
+        .legend-swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0
+        }
+
+        /* EXPIRY CHART */
+        .expiry-chart-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 28px;
+            transition: all var(--transition-spring)
+        }
+
+        .expiry-chart-card:hover {
+            border-color: var(--border-glow)
+        }
+
+        .expiry-canvas {
+            width: 100%;
+            height: 220px
+        }
+
+        /* FILTER CHIPS */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .filter-chip {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 100px;
+            border: 1px solid var(--border-default);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap
+        }
+
+        .filter-chip:hover {
+            border-color: var(--border-glow);
+            color: var(--text-primary)
+        }
+
+        .filter-chip.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: #818cf8
+        }
+
+        /* TABLE */
+        .table-section {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden
+        }
+
+        .table-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 200px;
+            position: relative
+        }
+
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            pointer-events: none
+        }
+
+        .search-input-wrapper input {
+            width: 100%;
+            padding: 10px 36px 10px 36px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            outline: none;
+            transition: all var(--transition)
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif
+        }
+
+        .search-input-wrapper input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08)
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+            padding: 2px 4px;
+            border-radius: 4px
+        }
+
+        .search-clear:hover {
+            color: var(--text-primary)
+        }
+
+        .toolbar-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            padding: 0 8px
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            max-height: 68vh;
+            overflow-y: auto
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        thead th {
+            background: rgba(17, 17, 28, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 11px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            user-select: none;
+            transition: color var(--transition);
+            white-space: nowrap
+        }
+
+        thead th:hover {
+            color: var(--text-secondary)
+        }
+
+        thead th.sorted {
+            color: var(--accent-indigo)
+        }
+
+        thead th .arrow {
+            margin-left: 3px;
+            font-size: 9px;
+            opacity: 0.4
+        }
+
+        thead th.sorted .arrow {
+            opacity: 1
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all var(--transition)
+        }
+
+        tbody tr:hover {
+            background: rgba(99, 102, 241, 0.03)
+        }
+
+        tbody tr:last-child {
+            border-bottom: none
+        }
+
+        tbody td {
+            padding: 10px 20px;
+            font-size: 13px;
+            vertical-align: middle
+        }
+
+        tr.whale-row {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.06) 0%, transparent 60%)
+        }
+
+        tr.whale-row:hover {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.12) 0%, rgba(99, 102, 241, 0.03) 60%) !important
+        }
+
+        .c-rank {
+            width: 80px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-muted)
+        }
+
+        .rank-cell-inner {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .rank-medal {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a2e
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            color: #1a1a2e
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #d97706, #92400e);
+            color: #fef3c7
+        }
+
+        .c-addr {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px
+        }
+
+        .c-addr a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color var(--transition);
+            position: relative
+        }
+
+        .c-addr a:hover {
+            color: var(--accent-cyan)
+        }
+
+        .c-nft {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums
+        }
+
+        .mini-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .mini-bar-track {
+            width: 56px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            overflow: hidden
+        }
+
+        .mini-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.6s ease
+        }
+
+        .mini-bar-fill.purple {
+            background: var(--accent-indigo)
+        }
+
+        .mini-bar-fill.green {
+            background: var(--accent-green)
+        }
+
+        .c-dolo {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            color: var(--accent-green)
+        }
+
+        .c-tokens {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            max-width: 360px
+        }
+
+        .tokens-truncated {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: default;
+            transition: color var(--transition)
+        }
+
+        .tokens-truncated:hover {
+            color: var(--text-secondary)
+        }
+
+        .supply-pct {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 4px
+        }
+
+        .addr-label {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            vertical-align: middle
+        }
+
+        .addr-label.contract {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8
+        }
+
+        .addr-label.multisig {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399
+        }
+
+        .addr-label.team {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24
+        }
+
+        .addr-label.dead {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444
+        }
+
+        /* PAGINATION */
+        .table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border-subtle);
+            background: rgba(17, 17, 28, 0.5)
+        }
+
+        .pg-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition)
+        }
+
+        .pg-btn:hover:not(:disabled) {
+            border-color: var(--accent-indigo);
+            color: var(--text-primary)
+        }
+
+        .pg-btn.active {
+            background: var(--accent-indigo);
+            border-color: var(--accent-indigo);
+            color: white
+        }
+
+        .pg-btn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed
+        }
+
+        .pg-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 0 6px
+        }
+
+        /* FOOTER */
+        .site-footer {
+            text-align: center;
+            padding: 32px 0 0;
+            font-size: 12px;
+            color: var(--text-muted)
+        }
+
+        .site-footer a {
+            color: var(--accent-indigo);
+            text-decoration: none
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(16px);
+            background: var(--gradient-brand);
+            color: white;
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3)
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0)
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.14)
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s, visibility 0.25s;
+            padding: 24px
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .modal-card {
+            background: var(--bg-card-solid);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 800px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            box-shadow: var(--shadow-elevated)
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0) scale(1)
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle)
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0
+        }
+
+        .modal-rank {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            flex-shrink: 0
+        }
+
+        .modal-addr {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all var(--transition);
+            flex-shrink: 0
+        }
+
+        .modal-close:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary)
+        }
+
+        .modal-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-subtle)
+        }
+
+        .modal-stat {
+            background: rgba(17, 17, 28, 0.8);
+            padding: 24px;
+            text-align: center
+        }
+
+        .modal-stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px
+        }
+
+        .modal-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums
+        }
+
+        .modal-stat-value.orange {
+            color: #f59e0b
+        }
+
+        .modal-stat-value.green {
+            color: var(--accent-green)
+        }
+
+        .modal-stat-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding: 20px 24px;
+            flex: 1
+        }
+
+        .modal-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 14px
+        }
+
+        .lock-card {
+            background: rgba(17, 17, 28, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            align-items: center;
+            transition: border-color var(--transition)
+        }
+
+        .lock-card:hover {
+            border-color: var(--border-glow)
+        }
+
+        .lock-card-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px
+        }
+
+        .lock-card-title {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 2px
+        }
+
+        .lock-card-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums
+        }
+
+        .lock-card-value.sm {
+            font-size: 15px
+        }
+
+        .lock-card-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px
+        }
+
+        .lock-card-vote {
+            text-align: right
+        }
+
+        .lock-card-vote .lock-card-value {
+            color: #f59e0b
+        }
+
+        .lock-multiplier {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px
+        }
+
+        .lock-progress {
+            margin-top: 6px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            overflow: hidden
+        }
+
+        .lock-progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s
+        }
+
+        .lock-progress-fill.active {
+            background: linear-gradient(90deg, #6366f1, #818cf8)
+        }
+
+        .lock-progress-fill.expiring {
+            background: linear-gradient(90deg, #f59e0b, #f97316)
+        }
+
+        .lock-progress-fill.expired {
+            background: #ef4444
+        }
+
+        .lock-sort-bar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .lock-sort-btn {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition)
+        }
+
+        .lock-sort-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-default)
+        }
+
+        .lock-sort-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            border-color: rgba(99, 102, 241, 0.3)
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 10px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle)
+        }
+
+        .modal-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: rgba(17, 17, 28, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition)
+        }
+
+        .modal-link:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--border-glow)
+        }
+
+        /* SCROLL REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        .reveal-d1 {
+            transition-delay: 0.08s
+        }
+
+        .reveal-d2 {
+            transition-delay: 0.16s
+        }
+
+        .reveal-d3 {
+            transition-delay: 0.24s
+        }
+
+        .reveal-d4 {
+            transition-delay: 0.32s
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:1024px) {
+            .bento-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .bento-hero {
+                grid-column: 1/-1;
+                grid-row: auto
+            }
+        }
+
+        @media(max-width:768px) {
+            .page-wrapper {
+                padding: 16px 14px 48px
+            }
+
+            .site-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding-bottom: 24px
+            }
+
+            .bento-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .bento-hero {
+                grid-column: 1/-1
+            }
+
+            .bento-cell {
+                padding: 18px
+            }
+
+            .bento-hero .metric-value {
+                font-size: 32px
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr
+            }
+
+            .table-toolbar {
+                flex-wrap: wrap
+            }
+
+            .donut-layout {
+                flex-direction: column;
+                gap: 20px
+            }
+
+            .lock-card {
+                grid-template-columns: 1fr;
+                gap: 10px
+            }
+
+            .lock-card-vote {
+                text-align: left
+            }
+        }
+
+        @media(max-width:480px) {
+            .brand-text h1 {
+                font-size: 18px
+            }
+
+            .metric-value {
+                font-size: 22px
+            }
+
+            .bento-hero .metric-value {
+                font-size: 28px
+            }
+
+            thead th,
+            tbody td {
+                padding: 9px 12px
+            }
+
+            .filter-bar {
+                gap: 6px
+            }
+
+            .filter-chip {
+                padding: 5px 10px;
+                font-size: 11px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mesh-bg">
+        <div class="mesh-blob"></div>
+        <div class="mesh-blob"></div>
+        <div class="mesh-blob"></div>
+    </div>
+    <div class="page-wrapper">
+
+        <header class="site-header reveal">
+            <div class="header-top-logo">
+                <img src="dolomite-logo.svg" alt="Dolomite">
+            </div>
+            <div class="header-bottom">
+                <div class="brand">
+                    <div class="brand-icon"><img src="vedolo-logo.svg" alt="veDOLO"></div>
+                    <div class="brand-text">
+                        <h1>veDOLO Holders</h1>
+                        <div class="sub"><span class="live-dot"></span>Berachain Mainnet · Live Data</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a class="btn btn-ghost"
+                        href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4" target="_blank">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" />
+                            <path d="M14 4h6v6" />
+                            <path d="M20 4L10 14" />
+                        </svg>Contract</a>
+                    <button class="btn btn-primary" onclick="downloadCSV()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>Export CSV</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- BENTO METRICS -->
+        <div class="bento-grid reveal reveal-d1">
+            <div class="bento-cell bento-hero">
+                <div class="metric-icon" style="background:rgba(52,211,153,0.1)">🔒</div>
+                <div class="metric-label">Total Locked DOLO</div>
+                <div class="metric-value accent-green" id="m-dolo">—</div>
+                <div class="metric-sub">total tokens in lock contracts</div>
+            </div>
+            <div class="bento-cell">
+                <div class="metric-icon" style="background:rgba(99,102,241,0.1)">👥</div>
+                <div class="metric-label">Unique Holders</div>
+                <div class="metric-value" id="m-holders">—</div>
+                <div class="metric-sub">active wallets</div>
+            </div>
+            <div class="bento-cell">
+                <div class="metric-icon" style="background:rgba(34,211,238,0.1)">🎫</div>
+                <div class="metric-label">Active NFTs</div>
+                <div class="metric-value" id="m-active">—</div>
+                <div class="metric-sub">in circulation</div>
+            </div>
+            <div class="bento-cell">
+                <div class="metric-icon" style="background:rgba(251,191,36,0.1)">⚡</div>
+                <div class="metric-label">Vote Weight</div>
+                <div class="metric-value accent-amber" id="m-vote">—</div>
+                <div class="metric-sub">total veDOLO power</div>
+            </div>
+            <div class="bento-cell">
+                <div class="metric-icon" style="background:rgba(251,113,133,0.1)">🔥</div>
+                <div class="metric-label">Burned</div>
+                <div class="metric-value" id="m-burned" style="color:var(--accent-rose)">—</div>
+                <div class="metric-sub" id="m-burn-pct"></div>
+            </div>
+            <div class="bento-cell">
+                <div class="metric-icon" style="background:rgba(59,130,246,0.1)">📊</div>
+                <div class="metric-label">Total Minted</div>
+                <div class="metric-value" id="m-minted">—</div>
+            </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="analytics-grid reveal reveal-d2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">📊</span> Holder Distribution</div>
+                </div>
+                <div class="dist-stack" id="dist-bars"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">🍩</span> NFT Share by Wallet</div>
+                </div>
+                <div class="donut-layout">
+                    <svg class="donut-svg" viewBox="0 0 42 42" id="donut-chart"></svg>
+                    <div class="donut-legend" id="donut-legend"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPIRY TIMELINE -->
+        <div class="expiry-chart-card reveal reveal-d3" id="expiry-section">
+            <div class="card-header">
+                <div class="card-title"><span class="icon">📅</span> Lock Expiry Timeline</div>
+            </div>
+            <canvas class="expiry-canvas" id="expiry-canvas"></canvas>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-section reveal reveal-d4">
+            <div class="table-toolbar">
+                <div class="search-input-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="search" placeholder="Search address 0x… or token ID">
+                    <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+                </div>
+                <div class="filter-bar" id="filter-bar">
+                    <button class="filter-chip active" data-filter="all" onclick="setFilter('all',this)">All</button>
+                    <button class="filter-chip" data-filter="100+" onclick="setFilter('100+',this)">100+</button>
+                    <button class="filter-chip" data-filter="50-100" onclick="setFilter('50-100',this)">50–100</button>
+                    <button class="filter-chip" data-filter="26-50" onclick="setFilter('26-50',this)">26–50</button>
+                    <button class="filter-chip" data-filter="11-25" onclick="setFilter('11-25',this)">11–25</button>
+                    <button class="filter-chip" data-filter="6-10" onclick="setFilter('6-10',this)">6–10</button>
+                    <button class="filter-chip" data-filter="2-5" onclick="setFilter('2-5',this)">2–5</button>
+                    <button class="filter-chip" data-filter="1" onclick="setFilter('1',this)">1</button>
+                </div>
+                <div class="toolbar-count" id="results-count"></div>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="c-rank sorted" data-sort="rank" onclick="sortTable('rank')"># <span
+                                    class="arrow">▲</span></th>
+                            <th data-sort="address" onclick="sortTable('address')">Address <span class="arrow">⇅</span>
+                            </th>
+                            <th data-sort="nft_count" onclick="sortTable('nft_count')">NFT <span class="arrow">⇅</span>
+                            </th>
+                            <th data-sort="total_dolo" onclick="sortTable('total_dolo')">DOLO 🔒 <span
+                                    class="arrow">⇅</span></th>
+                            <th data-sort="total_vote_weight" onclick="sortTable('total_vote_weight')">Vote Weight <span
+                                    class="arrow">⇅</span></th>
+                            <th>Token IDs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+            <div class="table-footer" id="pagination"></div>
+        </div>
+
+        <footer class="site-footer reveal">Generated <span id="footer-date"></span> · Data from <a
+                href="https://berascan.com" target="_blank">BeraScan</a> · Contract <a
+                href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4" target="_blank">veDOLO</a>
+        </footer>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div class="modal-overlay" id="profile-modal" onclick="if(event.target===this)closeProfile()">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-header-left"><span class="modal-rank" id="pm-rank"></span><span class="modal-addr"
+                        id="pm-addr"></span></div>
+                <button class="modal-close" onclick="closeProfile()" title="Close">✕</button>
+            </div>
+            <div class="modal-summary">
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Total Vote Weight</div>
+                    <div class="modal-stat-value orange" id="pm-vote"></div>
+                    <div class="modal-stat-sub">veDOLO</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Total DOLO Locked</div>
+                    <div class="modal-stat-value green" id="pm-dolo"></div>
+                    <div class="modal-stat-sub" id="pm-dolo-pct"></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                    <div class="modal-section-title" id="pm-locks-title" style="margin-bottom:0">Active Locks</div>
+                    <div class="lock-sort-bar" id="pm-lock-sort" style="margin-bottom:0"></div>
+                </div>
+                <div id="pm-locks"></div>
+            </div>
+            <div class="modal-links">
+                <a class="modal-link" id="pm-berascan" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>View on BeraScan</a>
+                <a class="modal-link" id="pm-copy" onclick="copyFromModal()"><svg width="14" height="14"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                    </svg>Copy Address</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="copy-toast">✅ Address copied!</div>
+
+    <!-- JAVASCRIPT PLACEHOLDER -->
+    <script>
+        let HOLDER_DATA = [];
+        const STATS = { total_minted: 23391, total_burned: 8606, active_nfts: 14785, unique_holders: 10979, total_locked_dolo: 0 };
+        const PER_PAGE = 50; let currentPage = 1; let filteredData = []; let sortField = 'rank'; let sortAsc = true;
+        let currentNftFilter = 'all';
+
+        const KNOWN_ADDR = {
+            '0x0000000000000000000000000000000000000000': { label: 'Burn', type: 'dead' },
+            '0x000000000000000000000000000000000000dead': { label: 'Burn', type: 'dead' },
+            '0xcb86b75ee6133d179a12d550b09fb3cdb1e141d4': { label: 'veDOLO Contract', type: 'contract' },
+            '0x6bd780e7fdf01d77e4d475c821f1e7ae05409072': { label: 'Dolomite Margin', type: 'contract' },
+        };
+        const DIST = [
+            { label: '1 NFT', min: 1, max: 1, color: '#6366f1' }, { label: '2–5', min: 2, max: 5, color: '#818cf8' },
+            { label: '6–10', min: 6, max: 10, color: '#22d3ee' }, { label: '11–25', min: 11, max: 25, color: '#34d399' },
+            { label: '26–50', min: 26, max: 50, color: '#fbbf24' }, { label: '51–100', min: 51, max: 100, color: '#fb923c' },
+            { label: '100+', min: 101, max: Infinity, color: '#fb7185' },
+        ];
+
+        // SCROLL REVEAL
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) } });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // LOAD DATA
+        async function loadData() {
+            try { const r = await fetch('vedolo_holders.json'); if (r.ok) { const d = await r.json(); HOLDER_DATA = d.holders; Object.assign(STATS, d.stats) } }
+            catch (e) { console.warn('Could not load JSON', e) }
+            if (!HOLDER_DATA.length) { document.getElementById('table-body').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place vedolo_holders.json in the same directory.</td></tr>'; return }
+            init(); checkHash();
+        }
+
+        function init() {
+            animCount('m-holders', STATS.unique_holders); animCount('m-active', STATS.active_nfts);
+            animCount('m-minted', STATS.total_minted); animCount('m-burned', STATS.total_burned);
+            document.getElementById('m-burn-pct').textContent = `${((STATS.total_burned / STATS.total_minted) * 100).toFixed(1)}% burned`;
+            if (STATS.total_locked_dolo) animCount('m-dolo', Math.round(STATS.total_locked_dolo), true);
+            if (STATS.total_vote_weight) animCount('m-vote', Math.round(STATS.total_vote_weight), true);
+            document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            renderDist(); renderDonut(); renderExpiryChart();
+            filteredData = [...HOLDER_DATA]; renderTable(); renderPagination();
+            document.getElementById('search').addEventListener('input', debounce(() => { applyFilters(); toggleSearchClear() }, 200));
+        }
+
+        // ANIMATED COUNTER
+        function animCount(id, target, suffix) {
+            const el = document.getElementById(id); const dur = 1200; const start = performance.now();
+            const fmt = n => { if (suffix && n >= 1e6) return (n / 1e6).toFixed(1).replace('.', ',') + 'M'; if (suffix && n >= 1e3) return Math.round(n / 1e3).toLocaleString('en-US') + 'K'; return n.toLocaleString('en-US') };
+            (function tick(now) { const p = Math.min((now - start) / dur, 1); const e = 1 - Math.pow(1 - p, 4); el.textContent = fmt(Math.floor(target * e)); if (p < 1) requestAnimationFrame(tick) })(start);
+        }
+
+        // SEARCH CLEAR
+        function toggleSearchClear() { const v = document.getElementById('search').value; document.getElementById('search-clear').style.display = v ? 'block' : 'none' }
+        function clearSearch() { document.getElementById('search').value = ''; toggleSearchClear(); applyFilters() }
+
+        // FILTER CHIPS
+        function setFilter(val, btn) {
+            currentNftFilter = val;
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active'); applyFilters();
+        }
+
+        // CHARTS
+        function renderDist() {
+            const el = document.getElementById('dist-bars');
+            const counts = DIST.map(d => ({ ...d, count: HOLDER_DATA.filter(h => h.nft_count >= d.min && h.nft_count <= d.max).length }));
+            const mx = Math.max(...counts.map(c => c.count));
+            el.innerHTML = counts.map(d => `<div class="dist-item"><div class="label">${d.label}</div><div class="track"><div class="fill" style="width:${Math.max(3, (d.count / mx) * 100)}%;background:${d.color}"><span>${d.count.toLocaleString('en-US')}</span></div></div></div>`).join('');
+        }
+
+        function renderDonut() {
+            const svg = document.getElementById('donut-chart'), leg = document.getElementById('donut-legend');
+            const segs = DIST.map(d => ({ ...d, nfts: HOLDER_DATA.filter(h => h.nft_count >= d.min && h.nft_count <= d.max).reduce((s, h) => s + h.nft_count, 0) })).filter(s => s.nfts > 0);
+            const total = segs.reduce((s, d) => s + d.nfts, 0); let off = 0; const r = 15.91549, circ = 2 * Math.PI * r;
+            let h = `<circle cx="21" cy="21" r="${r}" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="5"/>`;
+            segs.forEach(seg => { const pct = seg.nfts / total; const dash = circ * pct; h += `<circle cx="21" cy="21" r="${r}" fill="none" stroke="${seg.color}" stroke-width="5" stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-off}" style="transition:all 0.8s"/>`; off += dash });
+            h += `<text x="21" y="20" text-anchor="middle" fill="var(--text-primary)" font-size="4" font-weight="700" font-family="Inter" transform="rotate(90 21 21)">${total.toLocaleString('en-US')}</text><text x="21" y="24" text-anchor="middle" fill="var(--text-muted)" font-size="2" font-family="Inter" transform="rotate(90 21 21)">NFT</text>`;
+            svg.innerHTML = h;
+            leg.innerHTML = segs.map(s => `<div class="legend-row"><div class="legend-swatch" style="background:${s.color}"></div>${s.label}: ${s.nfts.toLocaleString('en-US')} (${((s.nfts / total) * 100).toFixed(1)}%)</div>`).join('');
+        }
+
+        function renderExpiryChart() {
+            const canvas = document.getElementById('expiry-canvas'), ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1; canvas.width = canvas.offsetWidth * dpr; canvas.height = canvas.offsetHeight * dpr; ctx.scale(dpr, dpr);
+            const W = canvas.offsetWidth, H = canvas.offsetHeight;
+            const locks = []; HOLDER_DATA.forEach(h => { (h.token_details || []).forEach(d => { if (d.end && d.dolo > 0) locks.push({ end: d.end, dolo: d.dolo }) }) });
+            if (!locks.length) { ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '13px Inter'; ctx.textAlign = 'center'; ctx.fillText('No lock data available', W / 2, H / 2); return }
+            const buckets = {}; locks.forEach(l => { const d = new Date(l.end * 1000); const q = `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear()}`; buckets[q] = (buckets[q] || 0) + l.dolo });
+            const entries = Object.entries(buckets).sort((a, b) => { const pa = a[0].split(' '), pb = b[0].split(' '); return (parseInt(pa[1]) * 4 + parseInt(pa[0][1])) - (parseInt(pb[1]) * 4 + parseInt(pb[0][1])) });
+            if (!entries.length) return;
+            const maxVal = Math.max(...entries.map(e => e[1])); const pad = { top: 20, bottom: 40, left: 60, right: 20 };
+            const chartW = W - pad.left - pad.right, chartH = H - pad.top - pad.bottom;
+            const barW = Math.min(40, (chartW / entries.length) * 0.7), gap = chartW / entries.length;
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) { const y = pad.top + chartH * (1 - i / 4); ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke(); ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = '10px Inter'; ctx.textAlign = 'right'; const val = (maxVal * i / 4); ctx.fillText(val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val), pad.left - 8, y + 3) }
+            entries.forEach(([label, val], i) => {
+                const x = pad.left + i * gap + (gap - barW) / 2; const barH = (val / maxVal) * chartH; const y = pad.top + chartH - barH;
+                const grd = ctx.createLinearGradient(x, y, x, y + barH); grd.addColorStop(0, '#6366f1'); grd.addColorStop(1, '#22d3ee'); ctx.fillStyle = grd; ctx.beginPath(); ctx.roundRect(x, y, barW, barH, [6, 6, 0, 0]); ctx.fill();
+                ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '9px Inter'; ctx.textAlign = 'center'; ctx.fillText(label, x + barW / 2, H - pad.bottom + 14);
+                ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '9px Inter'; const valLbl = val >= 1e6 ? (val / 1e6).toFixed(1) + 'M' : val >= 1e3 ? Math.round(val / 1e3) + 'K' : Math.round(val); ctx.fillText(valLbl, x + barW / 2, y - 5)
+            });
+        }
+
+        // TABLE
+        function fmtDolo(n) { if (!n) return '0'; if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'; if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'; return n.toLocaleString('en-US', { maximumFractionDigits: 0 }) }
+        function getAddrLabel(addr) { const info = KNOWN_ADDR[addr.toLowerCase()]; if (!info) return ''; return `<span class="addr-label ${info.type}">${info.label}</span>` }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body'); const start = (currentPage - 1) * PER_PAGE; const page = filteredData.slice(start, start + PER_PAGE);
+            const maxNft = Math.max(...filteredData.map(h => h.nft_count), 1); const maxDolo = Math.max(...filteredData.map(h => h.total_dolo || 0), 1);
+            const maxVote = Math.max(...filteredData.map(h => h.total_vote_weight || 0), 1); const totalDolo = STATS.total_locked_dolo || 1;
+            tbody.innerHTML = page.map(h => {
+                const rc = h.rank <= 3 ? `rank-${h.rank}` : ''; const isWhale = h.rank <= 10;
+                const nftPct = Math.max(3, (h.nft_count / maxNft) * 100); const doloPct = Math.max(3, ((h.total_dolo || 0) / maxDolo) * 100);
+                const votePct = Math.max(3, ((h.total_vote_weight || 0) / maxVote) * 100); const supplyPct = ((h.total_dolo || 0) / totalDolo * 100).toFixed(1);
+                const tokPrev = h.token_ids.slice(0, 6).join(', ') + (h.token_ids.length > 6 ? ` … +${h.token_ids.length - 6}` : '');
+                const doloExact = (h.total_dolo || 0).toLocaleString('en-US', { maximumFractionDigits: 2 }); const voteExact = (h.total_vote_weight || 0).toLocaleString('en-US', { maximumFractionDigits: 4 });
+                return `<tr class="${isWhale ? 'whale-row' : ''}">
+<td class="c-rank"><div class="rank-cell-inner">${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}</div></td>
+<td class="c-addr"><a href="#address=${h.address}" onclick="event.preventDefault();showProfile('${h.address}')">${h.address}</a>${getAddrLabel(h.address)}</td>
+<td class="c-nft"><div class="mini-bar"><span>${h.nft_count}</span><div class="mini-bar-track"><div class="mini-bar-fill purple" style="width:${nftPct}%"></div></div></div></td>
+<td class="c-dolo" title="${doloExact} DOLO"><div class="mini-bar"><span>${fmtDolo(h.total_dolo || 0)}<span class="supply-pct">(${supplyPct}%)</span></span><div class="mini-bar-track"><div class="mini-bar-fill green" style="width:${doloPct}%"></div></div></div></td>
+<td class="c-vote" title="${voteExact} veDOLO"><div class="mini-bar"><span>${fmtDolo(h.total_vote_weight || 0)}</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${votePct}%;background:linear-gradient(90deg,#f59e0b,#f97316)"></div></div></div></td>
+<td class="c-tokens"><div class="tokens-truncated" title="${h.token_ids.join(', ')}">${tokPrev}</div></td></tr>`
+            }).join('');
+            document.getElementById('results-count').textContent = `${filteredData.length.toLocaleString('en-US')} results`;
+        }
+
+        // PAGINATION
+        function renderPagination() {
+            const total = Math.ceil(filteredData.length / PER_PAGE); const el = document.getElementById('pagination');
+            if (total <= 1) { el.innerHTML = ''; return }
+            let h = `<button class="pg-btn" onclick="goPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button><button class="pg-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+            pageRange(currentPage, total).forEach(p => { h += p === '...' ? `<span class="pg-info">…</span>` : `<button class="pg-btn ${p === currentPage ? 'active' : ''}" onclick="goPage(${p})">${p}</button>` });
+            h += `<button class="pg-btn" onclick="goPage(${currentPage + 1})" ${currentPage === total ? 'disabled' : ''}>›</button><button class="pg-btn" onclick="goPage(${total})" ${currentPage === total ? 'disabled' : ''}>»</button><span class="pg-info">${currentPage} / ${total}</span>`;
+            el.innerHTML = h;
+        }
+        function pageRange(c, t) { if (t <= 7) return Array.from({ length: t }, (_, i) => i + 1); if (c <= 4) return [1, 2, 3, 4, 5, '...', t]; if (c >= t - 3) return [1, '...', t - 4, t - 3, t - 2, t - 1, t]; return [1, '...', c - 1, c, c + 1, '...', t] }
+        function goPage(p) { const t = Math.ceil(filteredData.length / PER_PAGE); currentPage = Math.max(1, Math.min(p, t)); renderTable(); renderPagination(); document.querySelector('.table-scroll').scrollTop = 0 }
+
+        // SORT
+        function sortTable(field) {
+            document.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted'));
+            if (sortField === field) { sortAsc = !sortAsc } else { sortField = field; sortAsc = field === 'rank' }
+            const th = document.querySelector(`th[data-sort="${field}"]`); th.classList.add('sorted'); th.querySelector('.arrow').textContent = sortAsc ? '▲' : '▼';
+            filteredData.sort((a, b) => { let va = a[field], vb = b[field]; if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase() } return va < vb ? (sortAsc ? -1 : 1) : va > vb ? (sortAsc ? 1 : -1) : 0 });
+            currentPage = 1; renderTable(); renderPagination();
+        }
+
+        // FILTER
+        function applyFilters() {
+            const q = document.getElementById('search').value.toLowerCase().trim(); const nf = currentNftFilter;
+            filteredData = HOLDER_DATA.filter(h => {
+                if (q) { const byAddr = h.address.toLowerCase().includes(q); const byTok = q.match(/^\d+$/) && h.token_ids.includes(parseInt(q)); if (!byAddr && !byTok) return false }
+                if (nf !== 'all') { const n = h.nft_count; switch (nf) { case '100+': if (n < 100) return false; break; case '50-100': if (n < 50 || n > 100) return false; break; case '26-50': if (n < 26 || n > 50) return false; break; case '11-25': if (n < 11 || n > 25) return false; break; case '6-10': if (n < 6 || n > 10) return false; break; case '2-5': if (n < 2 || n > 5) return false; break; case '1': if (n !== 1) return false; break } }
+                return true
+            });
+            if (sortField !== 'rank') { filteredData.sort((a, b) => { let va = a[sortField], vb = b[sortField]; if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase() } return va < vb ? (sortAsc ? -1 : 1) : va > vb ? (sortAsc ? 1 : -1) : 0 }) }
+            currentPage = 1; renderTable(); renderPagination();
+        }
+
+        // UTILS
+        function downloadCSV() {
+            let csv = 'Rank,Address,NFT_Count,Total_DOLO,Supply_Pct,Vote_Weight,Token_IDs\n'; const totalDolo = STATS.total_locked_dolo || 1;
+            filteredData.forEach(h => { const pct = ((h.total_dolo || 0) / totalDolo * 100).toFixed(2); csv += `${h.rank},${h.address},${h.nft_count},${(h.total_dolo || 0).toFixed(2)},${pct}%,${(h.total_vote_weight || 0).toFixed(4)},"${h.token_ids.join(';')}"\n` });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'vedolo_holders.csv'; a.click(); URL.revokeObjectURL(url);
+        }
+        function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms) } }
+
+        // PROFILE MODAL
+        let currentProfileAddr = null; let currentLockSort = 'dolo';
+        function renderLockCards(details, sortBy) {
+            const now = Date.now() / 1000; const MAX_LOCK = 2 * 365 * 86400;
+            const sorted = [...details].sort((a, b) => { switch (sortBy) { case 'vote': return (b.vote_weight || 0) - (a.vote_weight || 0); case 'time': return (a.end || 0) - (b.end || 0); default: return (b.dolo || 0) - (a.dolo || 0) } });
+            return sorted.map(d => {
+                const dolo = d.dolo || 0; const vw = d.vote_weight || 0; const mult = dolo > 0 ? vw / dolo : 0; const secsLeft = Math.max(0, (d.end || 0) - now); const daysLeft = Math.ceil(secsLeft / 86400);
+                const maturity = d.end ? new Date(d.end * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
+                const elapsed = MAX_LOCK - secsLeft; const progressPct = Math.min(100, Math.max(0, (elapsed / MAX_LOCK) * 100)); const progressClass = daysLeft === 0 ? 'expired' : daysLeft < 90 ? 'expiring' : 'active';
+                return `<div class="lock-card"><div><div class="lock-card-title">Lock #${d.id}</div><div class="lock-card-value">${dolo.toLocaleString('en-US', { maximumFractionDigits: 2 })}</div><div class="lock-card-sub">DOLO</div></div>
+<div><div class="lock-card-label">Time Remaining</div><div class="lock-card-value sm">${daysLeft > 0 ? daysLeft + ' days' : 'Expired'}</div><div class="lock-card-sub">Matures on ${maturity}</div><div class="lock-progress"><div class="lock-progress-fill ${progressClass}" style="width:${progressPct}%"></div></div></div>
+<div class="lock-card-vote"><div class="lock-card-label">Vote Weight</div><div class="lock-card-value">${vw.toLocaleString('en-US', { maximumFractionDigits: 4 })}</div><div class="lock-multiplier">${mult.toFixed(2)}x multiplier</div></div></div>`
+            }).join('');
+        }
+
+        function showProfile(address) {
+            const holder = HOLDER_DATA.find(h => h.address.toLowerCase() === address.toLowerCase()); if (!holder) return;
+            currentProfileAddr = holder.address; currentLockSort = 'dolo';
+            document.getElementById('pm-rank').textContent = `#${holder.rank}`; document.getElementById('pm-addr').textContent = holder.address;
+            const totalVote = holder.total_vote_weight || 0; const totalDolo = holder.total_dolo || 0;
+            const supplyPct = STATS.total_locked_dolo ? ((totalDolo / STATS.total_locked_dolo) * 100).toFixed(2) : '0';
+            document.getElementById('pm-vote').textContent = totalVote.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            document.getElementById('pm-dolo').textContent = totalDolo.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            document.getElementById('pm-dolo-pct').textContent = `${supplyPct}% of total · DOLO`;
+            const details = holder.token_details || []; document.getElementById('pm-locks-title').textContent = `Active Locks (${details.length})`;
+            document.getElementById('pm-lock-sort').innerHTML = [{ key: 'dolo', label: 'DOLO ↓' }, { key: 'vote', label: 'Vote ↓' }, { key: 'time', label: 'Expiry ↑' }].map(s => `<button class="lock-sort-btn ${s.key === currentLockSort ? 'active' : ''}" onclick="sortLocks('${s.key}')">${s.label}</button>`).join('');
+            document.getElementById('pm-locks').innerHTML = renderLockCards(details, currentLockSort);
+            document.getElementById('pm-berascan').href = `https://berascan.com/address/${holder.address}`;
+            document.getElementById('profile-modal').classList.add('active'); document.body.style.overflow = 'hidden';
+            history.replaceState(null, '', `#address=${holder.address}`);
+        }
+
+        function sortLocks(key) {
+            currentLockSort = key; const holder = HOLDER_DATA.find(h => h.address === currentProfileAddr); if (!holder) return;
+            document.querySelectorAll('.lock-sort-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.lock-sort-btn[onclick="sortLocks('${key}')"]`).classList.add('active');
+            document.getElementById('pm-locks').innerHTML = renderLockCards(holder.token_details || [], key);
+        }
+
+        function closeProfile() { document.getElementById('profile-modal').classList.remove('active'); document.body.style.overflow = ''; currentProfileAddr = null; history.replaceState(null, '', window.location.pathname) }
+        function copyFromModal() { if (!currentProfileAddr) return; navigator.clipboard.writeText(currentProfileAddr); const t = document.getElementById('copy-toast'); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1500) }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProfile() });
+        function checkHash() { const hash = window.location.hash; if (hash.startsWith('#address=')) { const addr = hash.slice(9); if (addr && HOLDER_DATA.length > 0) showProfile(addr) } }
+        window.addEventListener('hashchange', checkHash);
+
+        loadData();
+    </script>
+</body>
+
+</html>

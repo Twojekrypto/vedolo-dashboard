@@ -136,13 +136,8 @@
         }
 
         .nav-tab:hover {
-            color: var(--accent-cyan);
+            color: var(--text-secondary);
             background: rgba(51, 65, 85, 0.4);
-            font-size: 15px;
-        }
-
-        .nav-tab:hover img {
-            transform: scale(1.25);
         }
 
         .nav-tab.active {
@@ -155,7 +150,6 @@
             width: 18px;
             height: 18px;
             object-fit: contain;
-            transition: transform 0.2s;
         }
 
         .nav-tab svg {
@@ -787,13 +781,6 @@
             background: rgba(99, 102, 241, 0.06);
         }
 
-        .exerciser-row:hover td,
-        .exerciser-row:hover td span,
-        .exerciser-row:hover td .addr-link,
-        .exerciser-row:hover td a:not(.debank-icon) {
-            font-size: 15px !important;
-        }
-
         .exerciser-row.expanded {
             background: rgba(99, 102, 241, 0.1);
         }
@@ -918,21 +905,7 @@
         }
 
         tbody tr:hover {
-            background: rgba(99, 102, 241, 0.06);
-        }
-
-        tbody tr:hover td,
-        tbody tr:hover td span,
-        tbody tr:hover td .mini-bar span,
-        tbody tr:hover td .addr-link,
-        tbody tr:hover td a:not(.debank-icon) {
-            color: var(--accent-cyan) !important;
-            font-size: 14px;
-        }
-
-        tbody tr:hover td .tokens-truncated {
-            color: #ffffff !important;
-            font-size: 14px;
+            background: rgba(255, 255, 255, 0.02);
         }
 
         tbody tr:last-child {
@@ -1000,16 +973,6 @@
             color: var(--accent-cyan);
         }
 
-        .addr-link {
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: color var(--transition);
-        }
-
-        .addr-link:hover {
-            color: var(--accent-cyan);
-        }
-
         .c-nft {
             font-weight: 600;
             font-variant-numeric: tabular-nums;
@@ -1032,7 +995,6 @@
         .mini-bar-fill {
             height: 100%;
             border-radius: 2px;
-            transition: background 0.2s;
         }
 
         .mini-bar-fill.purple {
@@ -1328,13 +1290,11 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 16px;
             align-items: center;
-            transition: border-color var(--transition), transform 0.2s, box-shadow 0.2s;
+            transition: border-color var(--transition);
         }
 
         .lock-card:hover {
-            border-color: var(--accent-cyan);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(34, 211, 238, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
         }
 
         .lock-card-label {
@@ -1477,14 +1437,6 @@
                 font-size: 11px;
             }
 
-            #em-txs .detail-table tbody tr:hover {
-                background: rgba(34, 211, 238, 0.08) !important;
-            }
-
-            #em-txs .detail-table tbody tr:hover td {
-                color: var(--accent-cyan);
-            }
-
             #em-txs .detail-table th {
                 font-size: 9px;
                 padding: 5px 6px;
@@ -1581,15 +1533,12 @@
             align-items: center;
             margin-left: 6px;
             opacity: 0.5;
-            transition: opacity 0.2s, transform 0.2s;
+            transition: opacity 0.2s;
             vertical-align: middle;
-            position: relative;
-            top: -1px;
         }
 
         .debank-icon:hover {
             opacity: 1;
-            transform: scale(1.6);
         }
 
         .debank-icon img {
@@ -1930,102 +1879,17 @@
                 font-size: 17px;
             }
 
-            /* Smaller logo on phones */
-            .header-top-logo img {
-                height: 40px;
-            }
-
             .metric-value {
-                font-size: 18px;
+                font-size: 20px;
             }
 
             .metric-label {
-                font-size: 9px;
-                letter-spacing: 0.3px;
-            }
-
-            .metric-sub {
                 font-size: 10px;
             }
 
-            /* Stack search + filter vertically */
-            .table-toolbar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-                padding: 12px 14px;
-            }
-
-            .filter-dropdown {
-                width: 100%;
-            }
-
-            .toolbar-count {
-                text-align: center;
-            }
-
-            /* Tighter table on mobile — will scroll horizontally */
-            thead th {
-                padding: 8px 8px;
-                font-size: 10px;
-                letter-spacing: 0.3px;
-            }
-
+            thead th,
             tbody td {
-                padding: 8px 8px;
-                font-size: 12px;
-            }
-
-            /* Force table min-width so it scrolls horizontally instead of cramping */
-            .table-scroll table {
-                min-width: 700px;
-            }
-
-            /* Disable hover font-size effects on touch — no hover on phones */
-            tbody tr:hover td,
-            tbody tr:hover td span,
-            tbody tr:hover td .addr-link,
-            tbody tr:hover td a:not(.debank-icon) {
-                font-size: inherit !important;
-            }
-
-            .exerciser-row:hover td,
-            .exerciser-row:hover td span,
-            .exerciser-row:hover td .addr-link,
-            .exerciser-row:hover td a:not(.debank-icon) {
-                font-size: inherit !important;
-            }
-
-            /* Nav tab smaller */
-            .nav-tab {
-                padding: 6px 10px;
-                font-size: 11px;
-                gap: 5px;
-            }
-
-            .nav-tab img {
-                width: 14px;
-                height: 14px;
-            }
-
-            /* Disable tab hover font increase on touch */
-            .nav-tab:hover {
-                font-size: 11px;
-            }
-
-            .nav-tab:hover img {
-                transform: none;
-            }
-
-            /* Lock Expiry chart scroll */
-            .expiry-canvas {
-                min-width: 450px;
-                height: 200px;
-            }
-
-            /* Page wrapper tighter padding */
-            .page-wrapper {
-                padding: 12px 8px 40px;
+                padding: 9px 12px;
             }
         }
 
@@ -3453,14 +3317,14 @@
                 const addrLabel = getAddrLabel(h.address);
                 const checked = compareSet.has(h.address) ? 'checked' : '';
 
-                return `<tr class="${isWhale ? 'whale-row' : ''}" style="cursor:pointer" onclick="showProfile('${h.address}')">
+                return `<tr class="${isWhale ? 'whale-row' : ''}">
             <td class="c-rank">
                 <div class="rank-cell-inner">
                     ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}
                 </div>
             </td>
             <td class="c-addr">
-                <a href="#address=${h.address}" onclick="event.preventDefault();event.stopPropagation();showProfile('${h.address}')">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>${addrLabel}
+                <a href="#address=${h.address}" onclick="event.preventDefault();showProfile('${h.address}')">${h.address}</a>${addrLabel}
                 <a href="https://debank.com/profile/${h.address}?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
             </td>
             <td class="c-nft">
@@ -3643,10 +3507,9 @@
                 const progressPct = Math.min(100, Math.max(0, (elapsed / totalLockTime) * 100));
                 const progressClass = daysLeft === 0 ? 'expired' : daysLeft < 90 ? 'expiring' : 'active';
 
-                const nftUrl = `https://berascan.com/nft/0xcb86b75ee6133d179a12d550b09fb3cdb1e141d4/${d.id}`;
-                return `<div class="lock-card" style="cursor:pointer" onclick="window.open('${nftUrl}','_blank')">
+                return `<div class="lock-card">
                     <div>
-                        <div class="lock-card-title">Lock #${d.id} <span style="font-size:9px;color:var(--text-muted);margin-left:4px">↗ BeraChain</span></div>
+                        <div class="lock-card-title">Lock #${d.id}</div>
                         <div class="lock-card-value">${dolo.toLocaleString('en-US', { maximumFractionDigits: 2 })}</div>
                         <div class="lock-card-sub">DOLO</div>
                     </div>
@@ -4379,15 +4242,15 @@
             html += '<th>Tx</th>';
             html += '</tr></thead><tbody>';
             txs.forEach((tx, i) => {
-                const rowBg = i % 2 === 0 ? '' : 'background:rgba(255,255,255,0.02);';
-                html += '<tr style="' + rowBg + 'cursor:pointer" onclick="window.open(\'https://berascan.com/tx/' + tx.hash + '\',\'_blank\')">';
+                const rowBg = i % 2 === 0 ? '' : ' style="background:rgba(255,255,255,0.02)"';
+                html += '<tr' + rowBg + '>';
                 html += '<td>' + (i + 1) + '</td>';
                 html += '<td>' + exFmtDate(tx.date) + '</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + exFmtUsd(tx.usdc) + '</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (tx.vedolo != null ? tx.vedolo.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '\u2014') + '</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:#34d399">' + (tx.price != null ? '$' + tx.price.toFixed(4) : '\u2014') + '</td>';
                 html += '<td style="text-align:center">' + exFmtLock(tx.lock_days) + '</td>';
-                html += '<td><a href="https://berascan.com/tx/' + tx.hash + '" target="_blank" class="tx-link" onclick="event.stopPropagation()">' + tx.hash.slice(0, 8) + '\u2026</a></td>';
+                html += '<td><a href="https://berascan.com/tx/' + tx.hash + '" target="_blank" class="tx-link">' + tx.hash.slice(0, 8) + '\u2026</a></td>';
                 html += '</tr>';
             });
             if (txs.length > 1) {

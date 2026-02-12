@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+    <title>oDOLO Stats — Berachain Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===== DESIGN TOKENS (Dolomite-inspired) ===== */
+        :root {
+            --bg-base: #090910;
+            --bg-surface: #111119;
+            --bg-card: #15151f;
+            --bg-card-alt: #1a1a26;
+            --bg-hover: #1e1e2c;
+            --bg-input: #12121c;
+
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(99, 102, 241, 0.5);
+
+            --text-primary: #f0f0f6;
+            --text-secondary: #8b8fa3;
+            --text-muted: #555770;
+
+            --accent-indigo: #6366f1;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #22d3ee;
+            --accent-green: #34d399;
+            --accent-amber: #FFA406;
+            --accent-rose: #fb7185;
+            --accent-orange: #fb923c;
+
+            --gradient-brand: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+            --gradient-warm: linear-gradient(135deg, #fbbf24 0%, #fb7185 100%);
+            --gradient-success: linear-gradient(135deg, #34d399 0%, #22d3ee 100%);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border-subtle);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.5;
+        }
+
+        .page-wrapper {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        /* ===== HEADER ===== */
+        .site-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 0 0;
+            margin-bottom: 32px;
+        }
+
+        .header-top-logo {
+            margin-bottom: 20px;
+        }
+
+        .header-top-logo img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header-nav-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: var(--radius-sm);
+            padding: 3px;
+        }
+
+        .nav-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all var(--transition);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-secondary);
+            background: rgba(51, 65, 85, 0.4);
+        }
+
+        .nav-tab.active {
+            color: var(--text-primary);
+            background: rgba(251, 191, 36, 0.15);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.1);
+        }
+
+        .nav-tab img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: none;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-default);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--accent-indigo);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .metrics-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 32px;
+        }
+
+        .metric-cell {
+            background: var(--bg-card);
+            padding: 24px;
+            position: relative;
+            overflow: visible;
+        }
+
+        /* Round corners on edge cells instead of overflow:hidden */
+        .metric-cell:nth-child(1) {
+            border-top-left-radius: var(--radius-lg);
+        }
+
+        .metric-cell:nth-child(3) {
+            border-top-right-radius: var(--radius-lg);
+        }
+
+        .metric-cell:nth-child(7) {
+            border-bottom-left-radius: var(--radius-lg);
+        }
+
+        .metric-cell:nth-child(9) {
+            border-bottom-right-radius: var(--radius-lg);
+        }
+
+        .metric-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 26px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            transition: transform 0.2s ease;
+            display: inline-block;
+            cursor: default;
+        }
+
+        .metric-value:hover {
+            transform: scale(1.15);
+        }
+
+        .metric-value.amber {
+            color: var(--accent-amber);
+        }
+
+        .metric-value.green {
+            color: var(--accent-green);
+        }
+
+        .metric-value.indigo {
+            color: var(--accent-indigo);
+        }
+
+        .metric-value.rose {
+            color: var(--accent-rose);
+        }
+
+        .metric-value.cyan {
+            color: var(--accent-cyan);
+        }
+
+        .metric-value.orange {
+            color: var(--accent-orange);
+        }
+
+        .metric-icon {
+            width: 22px;
+            height: 22px;
+            vertical-align: middle;
+            margin: -3px 4px 0 4px;
+            display: inline-block;
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== TOOLTIPS ===== */
+        .tooltip-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: help;
+            flex-shrink: 0;
+            transition: all var(--transition);
+            font-style: normal;
+        }
+
+        .tooltip-icon:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.08);
+        }
+
+        .tooltip-bubble {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: #1e1e2e;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            width: 260px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .tooltip-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 16px;
+            border: 6px solid transparent;
+            border-bottom-color: #1e1e2e;
+        }
+
+        .tooltip-icon:hover+.tooltip-bubble,
+        .tooltip-bubble:hover {
+            display: block;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            padding: 28px;
+            margin-bottom: 28px;
+            overflow: visible;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* ===== DONUT CHART ===== */
+        .donut-layout {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .donut-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            flex-shrink: 0;
+            overflow: visible;
+            padding: 15px;
+        }
+
+        .donut-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-center-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .donut-center-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .legend-label {
+            color: var(--text-secondary);
+        }
+
+        .legend-value {
+            margin-left: auto;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== INFO BOX ===== */
+        .info-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .info-box-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-amber);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== FLOW DIAGRAM ===== */
+        .flow-steps {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            overflow: visible;
+            padding: 12px 0;
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            min-width: 100px;
+        }
+
+        .flow-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            border: 2px solid;
+            cursor: help;
+            transition: all var(--transition);
+        }
+
+        .flow-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.15);
+        }
+
+        .flow-icon-wrap {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .flow-icon-wrap .flow-tooltip {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            z-index: 100;
+        }
+
+        .flow-icon-wrap .flow-tooltip::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Prevent right-edge clipping for 4th step */
+        .flow-step:last-child .flow-icon-wrap .flow-tooltip {
+            left: auto;
+            right: 0;
+            transform: none;
+        }
+
+        .flow-step:last-child .flow-icon-wrap .flow-tooltip::after {
+            left: auto;
+            right: 14px;
+            transform: none;
+        }
+
+        /* Prevent left-edge clipping for 1st step */
+        .flow-step:first-child .flow-icon-wrap .flow-tooltip {
+            left: 0;
+            transform: none;
+        }
+
+        .flow-step:first-child .flow-icon-wrap .flow-tooltip::after {
+            left: 14px;
+            transform: none;
+        }
+
+        .flow-icon-wrap:hover .flow-tooltip {
+            display: block;
+        }
+
+        .flow-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .flow-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 100px;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            padding: 0 8px;
+            margin-top: 14px;
+            /* align with center of 48px circle icon */
+        }
+
+        /* ===== LOADING ===== */
+        .loading-shimmer {
+            background: linear-gradient(90deg, var(--bg-surface) 0%, var(--bg-hover) 50%, var(--bg-surface) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+            display: inline-block;
+            width: 120px;
+            height: 28px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        .page-footer {
+            text-align: center;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 32px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .page-footer a {
+            color: var(--accent-indigo);
+            text-decoration: none;
+        }
+
+        .page-footer a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .anim {
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim-d1 {
+            animation-delay: 0.05s;
+        }
+
+        .anim-d2 {
+            animation-delay: 0.1s;
+        }
+
+        .anim-d3 {
+            animation-delay: 0.15s;
+        }
+
+        .anim-d4 {
+            animation-delay: 0.2s;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 16px 14px 48px;
+            }
+
+            .site-header {
+                padding: 20px 0 0;
+                gap: 12px;
+            }
+
+            .header-top-logo img {
+                height: 50px;
+            }
+
+            .header-nav-bar {
+                padding: 10px 12px;
+            }
+
+            .nav-tab {
+                padding: 7px 12px;
+                font-size: 12px;
+            }
+
+            .metrics-strip {
+                grid-template-columns: 1fr 1fr;
+                border-radius: var(--radius-md);
+            }
+
+            .metric-cell {
+                padding: 16px;
+            }
+
+            .metric-value {
+                font-size: 20px;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .donut-layout {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .flow-steps {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                justify-items: center;
+            }
+
+            .flow-arrow {
+                display: none;
+            }
+
+            .metric-cell:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-value {
+                font-size: 22px;
+            }
+
+            .metric-cell {
+                padding: 14px 16px;
+            }
+
+            .metric-cell:nth-child(1) {
+                border-top-left-radius: var(--radius-lg);
+                border-top-right-radius: var(--radius-lg);
+            }
+
+            .metric-cell:nth-child(3),
+            .metric-cell:nth-child(7) {
+                border-top-right-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            .metric-cell:last-child {
+                border-bottom-left-radius: var(--radius-lg);
+                border-bottom-right-radius: var(--radius-lg);
+            }
+
+            .metric-cell:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .donut-container {
+                width: 220px;
+                height: 220px;
+                margin: 0 auto;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+
+        <!-- HEADER -->
+        <header class="site-header anim">
+            <div class="header-top-logo">
+                <a href="https://dolomite.io/" target="_blank"><img src="dolomite-logo.svg" alt="Dolomite"></a>
+            </div>
+            <nav class="header-nav-bar">
+                <div class="nav-tabs">
+                    <a class="nav-tab" href="index_draft.html">
+                        <img src="vedolo-logo.svg" alt="veDOLO">
+                        veDOLO Holders
+                    </a>
+                    <a class="nav-tab active" href="odolo_draft.html">
+                        <img src="odolo-logo-official.svg" alt="oDOLO">
+                        oDOLO Stats
+                    </a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- METRICS -->
+        <div class="metrics-strip anim anim-d1">
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        TOTAL SUPPLY
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">Total number of oDOLO tokens ever minted by the protocol. This is
+                            the maximum possible supply.</span>
+                    </span>
+                </div>
+                <div class="metric-value amber" id="m-supply"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub">oDOLO minted</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        HOLDERS
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">Number of unique wallet addresses currently holding oDOLO
+                            tokens.</span>
+                    </span>
+                </div>
+                <div class="metric-value" id="m-holders"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub">unique wallets</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        IN VESTER
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">oDOLO tokens sitting in the Vester contract, waiting to be
+                            distributed. This is the protocol's reserve — not yet given to anyone.</span>
+                    </span>
+                </div>
+                <div class="metric-value" id="m-vester"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub" id="m-vester-pct">awaiting distribution</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        CURRENTLY VESTING
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">oDOLO that users have paired with DOLO and are actively vesting.
+                            These are locked and in the process of converting to veDOLO.</span>
+                    </span>
+                </div>
+                <div class="metric-value" id="m-vesting"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub">paired with DOLO</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        EXERCISED
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">oDOLO that has been successfully exercised (redeemed) into veDOLO.
+                            These tokens completed the full vesting cycle.</span>
+                    </span>
+                </div>
+                <div class="metric-value green" id="m-exercised"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub">converted to veDOLO</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        EXERCISED VOLUME (USD)
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">Exact total USDC.e paid by users when exercising oDOLO into veDOLO.
+                            Calculated from on-chain Transfer events for each exercise transaction.
+                            Updated periodically.</span>
+                    </span>
+                </div>
+                <div class="metric-value green" id="m-revenue"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub" id="m-revenue-sub">USDC.e paid for veDOLO</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        AVG veDOLO PRICE
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">Average price paid per veDOLO through oDOLO exercise.
+                            Calculated as total USDC.e paid ÷ total oDOLO exercised.</span>
+                    </span>
+                </div>
+                <div class="metric-value" id="m-avg-price"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub">USDC.e per veDOLO</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        AVG LOCK DURATION
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">Average veDOLO lock duration chosen by users when exercising oDOLO.
+                            Longer locks get bigger discounts (5% for 1 week up to 50% for 2 years).</span>
+                    </span>
+                </div>
+                <div class="metric-value" id="m-avg-lock"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub" id="m-avg-lock-sub">avg discount</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-label">
+                    <span class="tooltip-wrap">
+                        AVG DISCOUNT
+                        <i class="tooltip-icon">?</i>
+                        <span class="tooltip-bubble">Average discount received when exercising oDOLO into veDOLO.
+                            Linear scale from 5% (1 week lock) to 50% (2 year lock).</span>
+                    </span>
+                </div>
+                <div class="metric-value green" id="m-avg-discount"><span class="loading-shimmer"></span></div>
+                <div class="metric-sub">from veDOLO market price</div>
+            </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="analytics-grid anim anim-d2">
+            <!-- DISTRIBUTION DONUT -->
+            <div class="card">
+                <div class="card-title">oDOLO Distribution</div>
+                <div class="donut-layout">
+                    <div class="donut-container" style="position:relative;">
+                        <canvas class="donut-canvas" id="dist-donut"></canvas>
+                        <div class="donut-center">
+                            <div class="donut-center-value" id="donut-total">—</div>
+                            <div class="donut-center-label">total oDOLO</div>
+                        </div>
+                        <div id="donut-tooltip" style="
+                            display: none;
+                            position: fixed;
+                            pointer-events: none;
+                            background: rgba(15, 23, 42, 0.95);
+                            border: 1px solid rgba(99, 102, 241, 0.4);
+                            border-radius: 8px;
+                            padding: 10px 14px;
+                            font-size: 13px;
+                            color: #e2e8f0;
+                            z-index: 200;
+                            backdrop-filter: blur(8px);
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+                            white-space: nowrap;
+                            transition: opacity 0.15s ease;
+                        "></div>
+                    </div>
+                    <div class="donut-legend" id="dist-legend">
+                        <!-- filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOW IT WORKS -->
+            <div class="card">
+                <div class="card-title">How oDOLO Works</div>
+                <div class="info-box">
+                    <div class="info-box-title">⚡ Option Token Mechanics</div>
+                    <p>oDOLO is an option token that lets you acquire veDOLO at a discount. Pair oDOLO + DOLO, choose a
+                        lock duration (longer lock = bigger discount), then exercise to receive veDOLO.</p>
+                    <p style="margin-top: 10px; color: var(--accent-amber); font-size: 12px;">⚠️ The discounted veDOLO
+                        price is determined at execution (redemption time), not when pairing.</p>
+                </div>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="flow-icon-wrap">
+                            <div class="flow-icon"
+                                style="border-color: var(--accent-amber); color: var(--accent-amber);">1</div>
+                            <span class="tooltip-bubble flow-tooltip">You have 1 oDOLO — earn it via liquidity mining
+                                rewards on <a href="https://app.dolomite.io/earn" target="_blank"
+                                    style="color: var(--accent-cyan); text-decoration: underline;">Dolomite Earn</a> or
+                                buy on the open market.</span>
+                        </div>
+                        <div class="flow-label">Have oDOLO</div>
+                        <div class="flow-desc">Earn or buy</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon-wrap">
+                            <div class="flow-icon"
+                                style="border-color: var(--accent-indigo); color: var(--accent-indigo);">2</div>
+                            <span class="tooltip-bubble flow-tooltip">Pair 1 oDOLO with 1 DOLO to activate the discount.
+                                The DOLO is required to start the process.</span>
+                        </div>
+                        <div class="flow-label">Pair + DOLO</div>
+                        <div class="flow-desc">Activate discount</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon-wrap">
+                            <div class="flow-icon" style="border-color: var(--accent-cyan); color: var(--accent-cyan);">
+                                3</div>
+                            <span class="tooltip-bubble flow-tooltip">Wait 7 days cooldown. During this period your
+                                oDOLO + DOLO are locked and cannot be withdrawn.</span>
+                        </div>
+                        <div class="flow-label">Wait 7 Days</div>
+                        <div class="flow-desc">Cooldown period</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon-wrap">
+                            <div class="flow-icon"
+                                style="border-color: var(--accent-green); color: var(--accent-green);">4</div>
+                            <span class="tooltip-bubble flow-tooltip">Redeem: buy 1 veDOLO at 50% off (max 2-year lock),
+                                paid in USDC. oDOLO is burned, your DOLO is returned.</span>
+                        </div>
+                        <div class="flow-label">Redeem</div>
+                        <div class="flow-desc">50% off veDOLO</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="page-footer anim anim-d4">
+            <span id="gen-time"></span> · Data from <a href="https://berascan.com" target="_blank">BeraScan</a> ·
+            Contract <a href="https://berascan.com/token/0x02E513b5B54eE216Bf836ceb471507488fC89543"
+                target="_blank">oDOLO</a> · Vester <a
+                href="https://berascan.com/address/0x3E9b9A16743551DA49b5e136C716bBa7932d2cEc"
+                target="_blank">voDOLO</a>
+        </footer>
+    </div>
+
+    <script>
+        // ===== CONFIG =====
+        const RPC_URLS = [
+            'https://berachain.drpc.org/',
+            'https://rpc.berachain.com/',
+            'https://berachain-rpc.publicnode.com/',
+        ];
+        const ODOLO_TOKEN = '0x02E513b5B54eE216Bf836ceb471507488fC89543';
+        const VESTER = '0x3E9b9A16743551DA49b5e136C716bBa7932d2cEc';
+
+        // Correct function selectors (verified via keccak256)
+        const SEL = {
+            totalSupply: '0x18160ddd',
+            balanceOf: '0x70a08231',
+            decimals: '0x313ce567',
+            promisedTokens: '0x5e17b694',
+            pushedTokens: '0x818c16e2',
+            availableTokens: '0x69bb4dc2',
+        };
+
+        let rpcId = 1;
+        let rpcUrlIdx = 0;
+        let cachedData = null;
+
+        function getRpcUrl() {
+            return RPC_URLS[rpcUrlIdx % RPC_URLS.length];
+        }
+
+        // ===== RPC HELPERS =====
+        async function rpcCall(to, data, retries = 3) {
+            for (let attempt = 0; attempt < retries; attempt++) {
+                try {
+                    const resp = await fetch(getRpcUrl(), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            method: 'eth_call',
+                            params: [{ to, data }, 'latest'],
+                            id: rpcId++
+                        })
+                    });
+                    const json = await resp.json();
+                    if (json.error) {
+                        console.warn(`RPC error (${getRpcUrl()}):`, json.error);
+                        rpcUrlIdx++;
+                        continue;
+                    }
+                    return json.result || '0x0';
+                } catch (err) {
+                    console.warn(`RPC call failed (attempt ${attempt + 1}):`, err.message);
+                    rpcUrlIdx++;
+                    await new Promise(r => setTimeout(r, 300 * (attempt + 1)));
+                }
+            }
+            return '0x0';
+        }
+
+        // Small batch (max 3 calls to respect drpc limit)
+        async function rpcBatch3(calls) {
+            try {
+                const batch = calls.map((c, i) => ({
+                    jsonrpc: '2.0',
+                    method: 'eth_call',
+                    params: [{ to: c.to, data: c.data }, 'latest'],
+                    id: i
+                }));
+                const resp = await fetch(getRpcUrl(), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(batch)
+                });
+                const results = await resp.json();
+                if (Array.isArray(results)) {
+                    results.sort((a, b) => a.id - b.id);
+                    return results.map(r => r.result || '0x0');
+                }
+                // If batch rejected, fall back to individual calls
+                console.warn('Batch rejected, falling back to individual calls');
+                const out = [];
+                for (const c of calls) {
+                    out.push(await rpcCall(c.to, c.data));
+                }
+                return out;
+            } catch (err) {
+                console.warn('Batch error, falling back:', err);
+                const out = [];
+                for (const c of calls) {
+                    out.push(await rpcCall(c.to, c.data));
+                }
+                return out;
+            }
+        }
+
+        function decodeUint256(hex) {
+            if (!hex || hex === '0x' || hex === '0x0') return 0n;
+            const clean = hex.replace('0x', '').slice(0, 64);
+            return BigInt('0x' + (clean || '0'));
+        }
+
+        function padAddress(addr) {
+            return addr.replace('0x', '').toLowerCase().padStart(64, '0');
+        }
+
+        function formatNum(n, decimals = 2) {
+            if (n >= 1e9) return (n / 1e9).toFixed(decimals) + 'B';
+            if (n >= 1e6) return (n / 1e6).toFixed(decimals) + 'M';
+            if (n >= 1e3) return (n / 1e3).toFixed(decimals) + 'K';
+            return n.toFixed(decimals);
+        }
+
+        function formatFullNum(n) {
+            return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        // ===== FETCH DATA =====
+        async function fetchAllData() {
+            console.log('🔄 Fetching oDOLO data...');
+
+            try {
+                // Batch 1 (3 calls): oDOLO token basics
+                const batch1 = await rpcBatch3([
+                    { to: ODOLO_TOKEN, data: SEL.totalSupply },
+                    { to: ODOLO_TOKEN, data: SEL.decimals },
+                    { to: ODOLO_TOKEN, data: SEL.balanceOf + padAddress(VESTER) },
+                ]);
+
+                // Batch 2 (3 calls): Vester contract data
+                const batch2 = await rpcBatch3([
+                    { to: VESTER, data: SEL.promisedTokens },
+                    { to: VESTER, data: SEL.pushedTokens },
+                    { to: VESTER, data: SEL.availableTokens },
+                ]);
+
+                const oDec = Number(decodeUint256(batch1[1])) || 18;
+                const divisor = 10 ** oDec;
+
+                const totalSupply = Number(decodeUint256(batch1[0])) / divisor;
+                const inVesterBalance = Number(decodeUint256(batch1[2])) / divisor;
+                const promisedTokens = Number(decodeUint256(batch2[0])) / divisor;
+                const pushedTokens = Number(decodeUint256(batch2[1])) / divisor;
+                const availableTokens = Number(decodeUint256(batch2[2])) / divisor;
+
+                // In circulation = totalSupply - what's still in the vester
+                const inCirculation = totalSupply - availableTokens - promisedTokens;
+
+                console.log('✅ Data fetched:', {
+                    totalSupply, inVesterBalance, promisedTokens,
+                    pushedTokens, availableTokens, inCirculation
+                });
+
+                cachedData = {
+                    totalSupply,
+                    availableTokens,
+                    inCirculation,
+                    promisedTokens,
+                    pushedTokens,
+                };
+
+                // Fetch pre-computed USD exercised volume
+                try {
+                    const usdResp = await fetch('exercised_usd.json?t=' + Date.now());
+                    if (usdResp.ok) {
+                        const usdData = await usdResp.json();
+                        cachedData.exercisedUsd = usdData.total_usdc;
+                        cachedData.exercisedTxs = usdData.total_txs;
+                        cachedData.exercisedUpdated = usdData.last_updated;
+                        cachedData.exercisedPeriod = usdData.period;
+                        console.log('✅ USD exercised data:', usdData);
+                    }
+                } catch (e) {
+                    console.warn('⚠️ Could not load exercised_usd.json:', e);
+                }
+
+                // Fetch avg lock duration data
+                try {
+                    const lockResp = await fetch('avg_lock_data.json?t=' + Date.now());
+                    if (lockResp.ok) {
+                        const lockData = await lockResp.json();
+                        cachedData.avgLockDays = lockData.avg_lock_days;
+                        cachedData.avgLockMonths = lockData.avg_lock_months;
+                        cachedData.avgDiscountPct = lockData.avg_discount_pct;
+                        console.log('✅ Avg lock data:', lockData);
+                    }
+                } catch (e) {
+                    console.warn('⚠️ Could not load avg_lock_data.json:', e);
+                }
+
+                return cachedData;
+            } catch (err) {
+                console.error('❌ Fetch error:', err);
+                return null;
+            }
+        }
+
+        // ===== RENDER =====
+        function renderMetrics(data) {
+            if (!data) return;
+
+            document.getElementById('m-supply').innerHTML = formatNum(data.totalSupply) + ' <img src="odolo-logo-official.svg" class="metric-icon">';
+            document.getElementById('m-holders').textContent = '1,724';
+            document.getElementById('m-vester').textContent = formatNum(data.availableTokens);
+            const vesterPct = data.totalSupply > 0
+                ? ((data.availableTokens / data.totalSupply) * 100).toFixed(1)
+                : '0';
+            document.getElementById('m-vester-pct').textContent = vesterPct + '% of supply';
+            document.getElementById('m-vesting').textContent = formatNum(data.promisedTokens);
+            document.getElementById('m-exercised').innerHTML = formatNum(data.pushedTokens) + ' <img src="vedolo-logo.svg" class="metric-icon">';
+
+            // Revenue: show exact USD from pre-computed data
+            if (data.exercisedUsd && data.exercisedUsd > 0) {
+                document.getElementById('m-revenue').textContent = '$' + formatNum(data.exercisedUsd);
+                const updDate = data.exercisedUpdated
+                    ? new Date(data.exercisedUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : '';
+                document.getElementById('m-revenue-sub').textContent =
+                    data.exercisedTxs + ' exercises' + (updDate ? ' · updated ' + updDate : '');
+            } else if (data.pushedTokens > 0) {
+                document.getElementById('m-revenue').textContent = formatNum(data.pushedTokens) + ' DOLO';
+                document.getElementById('m-revenue-sub').textContent = 'DOLO value (USD pending)';
+            } else {
+                document.getElementById('m-revenue').textContent = '—';
+                document.getElementById('m-revenue-sub').textContent = 'data pending';
+            }
+
+            // Avg veDOLO price
+            if (data.exercisedUsd && data.pushedTokens > 0) {
+                const avgPrice = data.exercisedUsd / data.pushedTokens;
+                document.getElementById('m-avg-price').textContent = '$' + avgPrice.toFixed(4);
+            } else {
+                document.getElementById('m-avg-price').textContent = '—';
+            }
+
+            // Avg lock duration
+            if (data.avgLockDays) {
+                document.getElementById('m-avg-lock').textContent = Math.round(data.avgLockDays) + ' days';
+                document.getElementById('m-avg-lock-sub').textContent = '~' + (data.avgLockDays / 30.44).toFixed(1) + ' months';
+            } else {
+                document.getElementById('m-avg-lock').textContent = '—';
+                document.getElementById('m-avg-lock-sub').textContent = 'data pending';
+            }
+
+            // Avg discount
+            if (data.avgDiscountPct) {
+                document.getElementById('m-avg-discount').textContent = data.avgDiscountPct.toFixed(1) + '%';
+            } else {
+                document.getElementById('m-avg-discount').textContent = '—';
+            }
+        }
+
+        // ===== INTERACTIVE DONUT =====
+        let donutSegments = [];
+        let donutTotal = 0;
+        let donutCx = 0, donutCy = 0, donutOuterR = 0, donutInnerR = 0;
+        let hoveredSegIdx = -1;
+
+        function renderDonut(data) {
+            if (!data) return;
+
+            const canvas = document.getElementById('dist-donut');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+
+            const segments = [
+                { label: 'Available in Vester', value: data.availableTokens, color: '#22d3ee' },
+                { label: 'In Circulation', value: data.inCirculation, color: '#fbbf24' },
+                { label: 'Currently Vesting', value: data.promisedTokens, color: '#6366f1' },
+                { label: 'Exercised (Redeemed)', value: data.pushedTokens, color: '#34d399' },
+            ].filter(s => s.value > 0);
+
+            const total = segments.reduce((s, seg) => s + seg.value, 0);
+            donutSegments = segments;
+            donutTotal = total;
+            donutCx = rect.width / 2;
+            donutCy = rect.height / 2;
+            donutOuterR = Math.min(rect.width, rect.height) / 2 - 20;
+            donutInnerR = donutOuterR * 0.65;
+
+            // Compute segment angles
+            const gap = 0.02;
+            let angle = -Math.PI / 2;
+            segments.forEach(seg => {
+                const slice = (seg.value / total) * (Math.PI * 2 - gap * segments.length);
+                seg.startAngle = angle + gap / 2;
+                seg.endAngle = angle + slice - gap / 2;
+                angle += slice + gap;
+            });
+
+            drawDonut(-1);
+
+            // Center text
+            document.getElementById('donut-total').textContent = formatNum(data.totalSupply);
+
+            // Legend
+            const legend = document.getElementById('dist-legend');
+            legend.innerHTML = segments.map((seg, i) => `
+                <div class="legend-item" data-seg-idx="${i}" style="cursor:pointer; padding: 4px 6px; border-radius: 6px; transition: background 0.2s;">
+                    <span class="legend-dot" style="background: ${seg.color}"></span>
+                    <span class="legend-label">${seg.label}</span>
+                    <span class="legend-value">${formatNum(seg.value)} (${((seg.value / total) * 100).toFixed(1)}%)</span>
+                </div>
+            `).join('');
+
+            // Legend hover events
+            legend.querySelectorAll('.legend-item').forEach(item => {
+                const idx = parseInt(item.dataset.segIdx);
+                item.addEventListener('mouseenter', () => {
+                    hoveredSegIdx = idx;
+                    drawDonut(idx);
+                    highlightLegend(idx);
+                });
+                item.addEventListener('mouseleave', () => {
+                    hoveredSegIdx = -1;
+                    drawDonut(-1);
+                    highlightLegend(-1);
+                });
+            });
+
+            // Canvas mouse events
+            canvas.addEventListener('mousemove', (e) => {
+                const mRect = canvas.getBoundingClientRect();
+                const mx = e.clientX - mRect.left;
+                const my = e.clientY - mRect.top;
+                const idx = getHoveredSegment(mx, my);
+
+                if (idx !== hoveredSegIdx) {
+                    hoveredSegIdx = idx;
+                    drawDonut(idx);
+                    highlightLegend(idx);
+                }
+
+                const tooltip = document.getElementById('donut-tooltip');
+                if (idx >= 0) {
+                    canvas.style.cursor = 'pointer';
+                    const seg = donutSegments[idx];
+                    const pct = ((seg.value / donutTotal) * 100).toFixed(1);
+                    tooltip.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <span style="width:10px;height:10px;border-radius:3px;background:${seg.color};display:inline-block;"></span>
+                            <strong>${seg.label}</strong>
+                        </div>
+                        <div style="color:#94a3b8; font-size:12px;">
+                            ${formatFullNum(Math.round(seg.value))} oDOLO · <span style="color:${seg.color};font-weight:600;">${pct}%</span> of supply
+                        </div>
+                    `;
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = (e.clientX + 14) + 'px';
+                    tooltip.style.top = (e.clientY - 20) + 'px';
+                } else {
+                    canvas.style.cursor = 'default';
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                hoveredSegIdx = -1;
+                drawDonut(-1);
+                highlightLegend(-1);
+                canvas.style.cursor = 'default';
+                document.getElementById('donut-tooltip').style.display = 'none';
+            });
+        }
+
+        function getHoveredSegment(mx, my) {
+            const dx = mx - donutCx;
+            const dy = my - donutCy;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < donutInnerR || dist > donutOuterR + 10) return -1;
+
+            let ang = Math.atan2(dy, dx);
+            // Normalize to match our start angle
+            if (ang < -Math.PI / 2) ang += Math.PI * 2;
+
+            for (let i = 0; i < donutSegments.length; i++) {
+                let start = donutSegments[i].startAngle;
+                let end = donutSegments[i].endAngle;
+                // Normalize angles
+                if (start < -Math.PI / 2) start += Math.PI * 2;
+                if (end < -Math.PI / 2) end += Math.PI * 2;
+
+                if (ang >= start && ang <= end) return i;
+            }
+            return -1;
+        }
+
+        function drawDonut(hoverIdx) {
+            const canvas = document.getElementById('dist-donut');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.scale(dpr, dpr);
+
+            const cx = donutCx, cy = donutCy;
+            const outerR = donutOuterR, innerR = donutInnerR;
+            const pushOut = 8;
+
+            donutSegments.forEach((seg, i) => {
+                const isHovered = (i === hoverIdx);
+                const midAngle = (seg.startAngle + seg.endAngle) / 2;
+                const offX = isHovered ? Math.cos(midAngle) * pushOut : 0;
+                const offY = isHovered ? Math.sin(midAngle) * pushOut : 0;
+                const r = isHovered ? outerR + 4 : outerR;
+
+                ctx.beginPath();
+                ctx.arc(cx + offX, cy + offY, r, seg.startAngle, seg.endAngle);
+                ctx.arc(cx + offX, cy + offY, innerR, seg.endAngle, seg.startAngle, true);
+                ctx.closePath();
+                ctx.fillStyle = seg.color;
+                ctx.globalAlpha = (hoverIdx >= 0 && !isHovered) ? 0.4 : 1;
+                ctx.fill();
+
+                if (isHovered) {
+                    ctx.shadowColor = seg.color;
+                    ctx.shadowBlur = 16;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            });
+
+            ctx.globalAlpha = 1;
+            ctx.restore();
+        }
+
+        function highlightLegend(hoverIdx) {
+            const items = document.querySelectorAll('#dist-legend .legend-item');
+            items.forEach((item, i) => {
+                if (hoverIdx >= 0 && i !== hoverIdx) {
+                    item.style.opacity = '0.4';
+                    item.style.background = 'transparent';
+                } else if (i === hoverIdx) {
+                    item.style.opacity = '1';
+                    item.style.background = 'rgba(99, 102, 241, 0.1)';
+                } else {
+                    item.style.opacity = '1';
+                    item.style.background = 'transparent';
+                }
+            });
+        }
+
+        // ===== INIT =====
+        async function init() {
+            const now = new Date();
+            document.getElementById('gen-time').textContent =
+                'Generated ' + now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+            const data = await fetchAllData();
+            renderMetrics(data);
+            renderDonut(data);
+        }
+
+        init();
+
+        // Redraw donut on resize (use cached data)
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (cachedData) renderDonut(cachedData);
+            }, 300);
+        });
+    </script>
+</body>
+
+</html>
