@@ -632,7 +632,6 @@
         .donut-svg {
             width: 170px;
             height: 170px;
-            transform: rotate(-90deg);
         }
 
         .donut-legend {
@@ -2841,6 +2840,17 @@
     `}).join('');
         }
 
+        // Arc helper: compute SVG arc path for a donut segment
+        function describeArc(cx, cy, r, startAngle, endAngle) {
+            const rad = Math.PI / 180;
+            const x1 = cx + r * Math.cos((startAngle - 90) * rad);
+            const y1 = cy + r * Math.sin((startAngle - 90) * rad);
+            const x2 = cx + r * Math.cos((endAngle - 90) * rad);
+            const y2 = cy + r * Math.sin((endAngle - 90) * rad);
+            const largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+            return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`;
+        }
+
         function renderDonut() {
             const svg = document.getElementById('donut-chart');
             const leg = document.getElementById('donut-legend');
@@ -2850,8 +2860,7 @@
             })).filter(s => s.nfts > 0);
 
             const total = segs.reduce((s, d) => s + d.nfts, 0);
-            let off = 0;
-            const r = 15.91549, circ = 2 * Math.PI * r;
+            const cx = 21, cy = 21, r = 15.91549;
 
             // Create tooltip element if not exists
             let tooltip = document.getElementById('donut-hover-tip');
@@ -2862,23 +2871,35 @@
                 document.body.appendChild(tooltip);
             }
 
-            let html = `<circle cx="21" cy="21" r="${r}" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="5"/>`;
-            let cumPct = 0;
+            // Background circle
+            let html = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="5"/>`;
+
+            let currentAngle = 0;
             segs.forEach((seg, i) => {
                 const pct = seg.nfts / total;
-                const dash = circ * pct;
-                const offset = circ * cumPct;
-                html += `<circle cx="21" cy="21" r="${r}" fill="none" stroke="${seg.color}" stroke-width="5"
-            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}"
-            style="transition:all 0.3s;cursor:pointer"
-            data-idx="${i}" data-label="${seg.label}" data-nfts="${seg.nfts}" data-pct="${(pct * 100).toFixed(1)}" data-color="${seg.color}"
-            onmouseenter="donutHover(this, event)" onmouseleave="donutUnhover(this)" onmousemove="donutMove(event)"/>`;
-                cumPct += pct;
+                const angle = pct * 360;
+                // Clamp to avoid floating-point overshoot
+                const endAngle = Math.min(currentAngle + angle, 360);
+                // For a full circle (single segment), use two half-arcs
+                if (angle >= 359.99) {
+                    html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="5"
+                    style="cursor:pointer"
+                    data-idx="${i}" data-label="${seg.label}" data-nfts="${seg.nfts}" data-pct="${(pct * 100).toFixed(1)}" data-color="${seg.color}"
+                    onmouseenter="donutHover(this, event)" onmouseleave="donutUnhover(this)" onmousemove="donutMove(event)"/>`;
+                } else {
+                    const d = describeArc(cx, cy, r, currentAngle, endAngle);
+                    html += `<path d="${d}" fill="none" stroke="${seg.color}" stroke-width="5"
+                    style="cursor:pointer"
+                    data-idx="${i}" data-label="${seg.label}" data-nfts="${seg.nfts}" data-pct="${(pct * 100).toFixed(1)}" data-color="${seg.color}"
+                    onmouseenter="donutHover(this, event)" onmouseleave="donutUnhover(this)" onmousemove="donutMove(event)"/>`;
+                }
+                currentAngle = endAngle;
             });
-            html += `<text x="21" y="20" text-anchor="middle" fill="var(--text-primary)" font-size="4" font-weight="700"
-        font-family="Inter" transform="rotate(90 21 21)">${total.toLocaleString('en-US')}</text>
-        <text x="21" y="24" text-anchor="middle" fill="var(--text-muted)" font-size="2"
-        font-family="Inter" transform="rotate(90 21 21)">NFT</text>`;
+
+            html += `<text x="${cx}" y="20" text-anchor="middle" fill="var(--text-primary)" font-size="4" font-weight="700"
+        font-family="Inter">${total.toLocaleString('en-US')}</text>
+        <text x="${cx}" y="24" text-anchor="middle" fill="var(--text-muted)" font-size="2"
+        font-family="Inter">NFT</text>`;
             svg.innerHTML = html;
 
             leg.innerHTML = segs.map((s, i) => {
@@ -2892,7 +2913,10 @@
     `}).join('');
         }
 
-        // Donut hover helpers
+        // Donut hover helpers — query both path and circle elements
+        function donutSegments() {
+            return document.querySelectorAll('#donut-chart path[data-idx], #donut-chart circle[data-idx]');
+        }
         function donutHover(el, e) {
             const idx = parseInt(el.dataset.idx);
             el.setAttribute('stroke-width', '7');
@@ -2915,8 +2939,7 @@
                 }
             });
             // Dim other segments
-            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
-            circles.forEach(c => {
+            donutSegments().forEach(c => {
                 if (parseInt(c.dataset.idx) !== idx) {
                     c.style.opacity = '0.3';
                 }
@@ -2937,8 +2960,7 @@
                 r.style.opacity = '1';
             });
             // Reset other segments
-            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
-            circles.forEach(c => {
+            donutSegments().forEach(c => {
                 c.style.opacity = '1';
             });
         }
@@ -2948,8 +2970,7 @@
             tip.style.top = (e.clientY - 10) + 'px';
         }
         function legendHover(idx, color) {
-            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
-            circles.forEach(c => {
+            donutSegments().forEach(c => {
                 if (parseInt(c.dataset.idx) === idx) {
                     c.setAttribute('stroke-width', '7');
                     c.style.filter = 'brightness(1.4) drop-shadow(0 0 6px ' + color + ')';
@@ -2972,8 +2993,7 @@
             });
         }
         function legendUnhover(idx) {
-            const circles = document.querySelectorAll('#donut-chart circle[data-idx]');
-            circles.forEach(c => {
+            donutSegments().forEach(c => {
                 c.setAttribute('stroke-width', '5');
                 c.style.filter = '';
                 c.style.opacity = '1';
