@@ -2577,11 +2577,8 @@
                                 <th data-sort="avg_lock" onclick="sortExercisers('avg_lock')">
                                     Avg Lock <span class="arrow">⇅</span>
                                 </th>
-                                <th data-sort="first" onclick="sortExercisers('first')">
-                                    First <span class="arrow">⇅</span>
-                                </th>
-                                <th data-sort="last" onclick="sortExercisers('last')">
-                                    Last <span class="arrow">⇅</span>
+                                <th data-sort="avg_price" onclick="sortExercisers('avg_price')">
+                                    Avg Price <span class="arrow">⇅</span>
                                 </th>
                             </tr>
                         </thead>
@@ -4064,10 +4061,16 @@
             } catch (e) { console.warn('exercisers error:', e); }
         }
 
-        const exFmtUsd = v => v >= 1000 ? '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '$' + v.toFixed(2);
-        const exShortAddr = a => a.slice(0, 6) + '\u2026' + a.slice(-4);
-        const exFmtDate = d => { if (!d) return '\u2014'; const p = d.split('-'); const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; return m[parseInt(p[1]) - 1] + ' ' + parseInt(p[2]) + ', ' + p[0].slice(2); };
-        const exFmtLock = days => { if (!days) return '\u2014'; if (days >= 365) return (days / 365).toFixed(1) + 'y'; if (days >= 30) return Math.round(days / 30) + 'mo'; return Math.round(days) + 'd'; };
+        const exFmtUsd = v => v >= 1000 ? '$' + v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '$' + v.toFixed(2);
+        const exShortAddr = a => a.slice(0,6) + '\u2026' + a.slice(-4);
+        const exFmtDate = d => { if (!d) return '\u2014'; const p = d.split('-'); const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return m[parseInt(p[1])-1]+' '+parseInt(p[2])+', '+p[0].slice(2); };
+        const exFmtLock = days => { if (!days) return '\u2014'; if (days >= 365) return (days/365).toFixed(1)+'y'; if (days >= 30) return Math.round(days/30)+'mo'; return Math.round(days)+'d'; };
+
+        function getExerciserAvgPrice(e) {
+            let totalVedolo = 0;
+            (e.txs || []).forEach(tx => { if (tx.vedolo) totalVedolo += tx.vedolo; });
+            return totalVedolo > 0 ? e.total_usdc / totalVedolo : null;
+        }
 
         function renderExercisersTable() {
             const tbody = document.getElementById('exercisers-tbody');
@@ -4084,6 +4087,10 @@
                 }
                 if (exerciserSortKey === 'exercises') { va = a.exercises; vb = b.exercises; return exerciserSortAsc ? va - vb : vb - va; }
                 if (exerciserSortKey === 'avg_lock') { va = a.avg_lock_days || 0; vb = b.avg_lock_days || 0; return exerciserSortAsc ? va - vb : vb - va; }
+                if (exerciserSortKey === 'avg_price') {
+                    va = getExerciserAvgPrice(a) || 0; vb = getExerciserAvgPrice(b) || 0;
+                    return exerciserSortAsc ? va - vb : vb - va;
+                }
                 if (exerciserSortKey === 'address') return exerciserSortAsc ? a.address.localeCompare(b.address) : b.address.localeCompare(a.address);
                 if (exerciserSortKey === 'first' || exerciserSortKey === 'last') {
                     va = a[exerciserSortKey] || ''; vb = b[exerciserSortKey] || '';
@@ -4096,14 +4103,25 @@
 
             let html = '';
             data.forEach((e, i) => {
-                html += '<tr class="exerciser-row" onclick="openExerciserModal(\'' + e.address + '\',' + (i + 1) + ')">';
-                html += '<td class="c-rank">' + (i + 1) + '</td>';
+                const rank = i + 1;
+                const isWhale = rank <= 10;
+                const rc = rank <= 3 ? 'rank-' + rank : '';
+                const avgPrice = getExerciserAvgPrice(e);
+                const rowClass = isWhale ? 'exerciser-row whale-row' : 'exerciser-row';
+
+                html += '<tr class="' + rowClass + '" onclick="openExerciserModal(\'' + e.address + '\',' + rank + ')">';
+                html += '<td class="c-rank"><div class="rank-cell-inner">';
+                if (rc) {
+                    html += '<span class="rank-medal ' + rc + '">' + rank + '</span>';
+                } else {
+                    html += rank;
+                }
+                html += '</div></td>';
                 html += '<td class="c-addr"><span class="addr-link">' + exShortAddr(e.address) + '</span></td>';
                 html += '<td class="c-num">' + exFmtUsd(e.total_usdc) + '</td>';
                 html += '<td class="c-num">' + e.exercises + '</td>';
                 html += '<td class="c-num">' + exFmtLock(e.avg_lock_days) + '</td>';
-                html += '<td class="c-date">' + exFmtDate(e.first) + '</td>';
-                html += '<td class="c-date">' + exFmtDate(e.last) + '</td>';
+                html += '<td class="c-num" style="color:var(--accent-pink,#f472b6)">' + (avgPrice ? '$' + avgPrice.toFixed(4) : '\u2014') + '</td>';
                 html += '</tr>';
             });
             tbody.innerHTML = html;
@@ -4114,7 +4132,6 @@
             if (!e) return;
             currentExerciserAddr = addr;
 
-            // Calculate avg price from all txs
             let totalVedolo = 0;
             (e.txs || []).forEach(tx => { if (tx.vedolo) totalVedolo += tx.vedolo; });
             const avgPrice = totalVedolo > 0 ? e.total_usdc / totalVedolo : null;
@@ -4128,7 +4145,6 @@
             document.getElementById('em-avgprice').textContent = avgPrice ? '$' + avgPrice.toFixed(4) : '\u2014';
             document.getElementById('em-berascan').href = 'https://berascan.com/address/' + addr;
 
-            // Build tx table with improved formatting
             const txs = e.txs || [];
             let html = '<table class="detail-table"><thead><tr>';
             html += '<th style="width:36px">#</th>';
@@ -4142,21 +4158,20 @@
             txs.forEach((tx, i) => {
                 const rowBg = i % 2 === 0 ? '' : ' style="background:rgba(255,255,255,0.02)"';
                 html += '<tr' + rowBg + '>';
-                html += '<td style="color:var(--text-muted)">' + (i + 1) + '</td>';
+                html += '<td style="color:var(--text-muted)">' + (i+1) + '</td>';
                 html += '<td>' + exFmtDate(tx.date) + '</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + exFmtUsd(tx.usdc) + '</td>';
-                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (tx.vedolo != null ? tx.vedolo.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '\u2014') + '</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (tx.vedolo != null ? tx.vedolo.toLocaleString('en-US', {maximumFractionDigits:0}) : '\u2014') + '</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--accent-pink,#f472b6)">' + (tx.price != null ? '$' + tx.price.toFixed(4) : '\u2014') + '</td>';
                 html += '<td style="text-align:center">' + exFmtLock(tx.lock_days) + '</td>';
-                html += '<td><a href="https://berascan.com/tx/' + tx.hash + '" target="_blank" class="tx-link">' + tx.hash.slice(0, 8) + '\u2026</a></td>';
+                html += '<td><a href="https://berascan.com/tx/' + tx.hash + '" target="_blank" class="tx-link">' + tx.hash.slice(0,8) + '\u2026</a></td>';
                 html += '</tr>';
             });
-            // Totals row
             if (txs.length > 1) {
                 html += '<tr style="border-top:2px solid var(--border-subtle);font-weight:600">';
                 html += '<td colspan="2" style="color:var(--text-muted)">Total (' + txs.length + ' txs)</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + exFmtUsd(e.total_usdc) + '</td>';
-                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (totalVedolo > 0 ? totalVedolo.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '\u2014') + '</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (totalVedolo > 0 ? totalVedolo.toLocaleString('en-US', {maximumFractionDigits:0}) : '\u2014') + '</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--accent-pink,#f472b6)">' + (avgPrice ? '$' + avgPrice.toFixed(4) : '\u2014') + '</td>';
                 html += '<td style="text-align:center">' + exFmtLock(e.avg_lock_days) + '</td>';
                 html += '<td></td>';
@@ -4184,14 +4199,14 @@
         function sortExercisers(key) {
             const th = document.querySelector('#exercisers-table th[data-sort="' + key + '"]');
             if (exerciserSortKey === key) { exerciserSortAsc = !exerciserSortAsc; }
-            else { exerciserSortKey = key; exerciserSortAsc = (key === 'rank' || key === 'total_usdc' || key === 'exercises' || key === 'avg_lock') ? false : true; if (key === 'rank') exerciserSortAsc = true; }
+            else { exerciserSortKey = key; exerciserSortAsc = (key === 'rank' || key === 'total_usdc' || key === 'exercises' || key === 'avg_lock' || key === 'avg_price') ? false : true; if (key === 'rank') exerciserSortAsc = true; }
             document.querySelectorAll('#exercisers-table th').forEach(t => { t.classList.remove('sorted'); t.querySelector('.arrow').textContent = '\u21c5'; });
             th.classList.add('sorted');
             th.querySelector('.arrow').textContent = exerciserSortAsc ? '\u25b2' : '\u25bc';
             renderExercisersTable();
         }
 
-        document.getElementById('exerciser-search')?.addEventListener('input', function () {
+        document.getElementById('exerciser-search')?.addEventListener('input', function() {
             exerciserSearchTerm = this.value.trim().toLowerCase();
             renderExercisersTable();
         });
