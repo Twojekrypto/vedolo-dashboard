@@ -2679,6 +2679,11 @@
                     <div class="modal-stat-value" id="em-avglock" style="color: var(--accent-cyan)"></div>
                     <div class="modal-stat-sub">duration</div>
                 </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Avg Price</div>
+                    <div class="modal-stat-value" id="em-avgprice" style="color: var(--accent-pink, #f472b6)"></div>
+                    <div class="modal-stat-sub">per veDOLO</div>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="modal-section-title">Exercise History</div>
@@ -4059,10 +4064,10 @@
             } catch (e) { console.warn('exercisers error:', e); }
         }
 
-        const exFmtUsd = v => v >= 1000 ? '$' + v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '$' + v.toFixed(2);
-        const exShortAddr = a => a.slice(0,6) + '\u2026' + a.slice(-4);
-        const exFmtDate = d => { if (!d) return '\u2014'; const p = d.split('-'); const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return m[parseInt(p[1])-1]+' '+parseInt(p[2])+', '+p[0].slice(2); };
-        const exFmtLock = days => { if (!days) return '\u2014'; if (days >= 365) return (days/365).toFixed(1)+'y'; if (days >= 30) return Math.round(days/30)+'mo'; return Math.round(days)+'d'; };
+        const exFmtUsd = v => v >= 1000 ? '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '$' + v.toFixed(2);
+        const exShortAddr = a => a.slice(0, 6) + '\u2026' + a.slice(-4);
+        const exFmtDate = d => { if (!d) return '\u2014'; const p = d.split('-'); const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; return m[parseInt(p[1]) - 1] + ' ' + parseInt(p[2]) + ', ' + p[0].slice(2); };
+        const exFmtLock = days => { if (!days) return '\u2014'; if (days >= 365) return (days / 365).toFixed(1) + 'y'; if (days >= 30) return Math.round(days / 30) + 'mo'; return Math.round(days) + 'd'; };
 
         function renderExercisersTable() {
             const tbody = document.getElementById('exercisers-tbody');
@@ -4091,8 +4096,8 @@
 
             let html = '';
             data.forEach((e, i) => {
-                html += '<tr class="exerciser-row" onclick="openExerciserModal(\'' + e.address + '\',' + (i+1) + ')">';
-                html += '<td class="c-rank">' + (i+1) + '</td>';
+                html += '<tr class="exerciser-row" onclick="openExerciserModal(\'' + e.address + '\',' + (i + 1) + ')">';
+                html += '<td class="c-rank">' + (i + 1) + '</td>';
                 html += '<td class="c-addr"><span class="addr-link">' + exShortAddr(e.address) + '</span></td>';
                 html += '<td class="c-num">' + exFmtUsd(e.total_usdc) + '</td>';
                 html += '<td class="c-num">' + e.exercises + '</td>';
@@ -4109,27 +4114,54 @@
             if (!e) return;
             currentExerciserAddr = addr;
 
+            // Calculate avg price from all txs
+            let totalVedolo = 0;
+            (e.txs || []).forEach(tx => { if (tx.vedolo) totalVedolo += tx.vedolo; });
+            const avgPrice = totalVedolo > 0 ? e.total_usdc / totalVedolo : null;
+
             document.getElementById('em-rank').textContent = '#' + rank;
             document.getElementById('em-addr').textContent = exShortAddr(addr);
             document.getElementById('em-usdc').textContent = exFmtUsd(e.total_usdc);
             document.getElementById('em-exercises').textContent = e.exercises;
             document.getElementById('em-period').textContent = exFmtDate(e.first) + ' \u2013 ' + exFmtDate(e.last);
             document.getElementById('em-avglock').textContent = exFmtLock(e.avg_lock_days);
+            document.getElementById('em-avgprice').textContent = avgPrice ? '$' + avgPrice.toFixed(4) : '\u2014';
             document.getElementById('em-berascan').href = 'https://berascan.com/address/' + addr;
 
-            // Build tx table
-            let html = '<table class="detail-table"><thead><tr><th>#</th><th>Date</th><th>USDC.e Paid</th><th>veDOLO</th><th>Price/veDOLO</th><th>Lock</th><th>Tx</th></tr></thead><tbody>';
-            (e.txs || []).forEach((tx, i) => {
-                html += '<tr>';
-                html += '<td>' + (i+1) + '</td>';
+            // Build tx table with improved formatting
+            const txs = e.txs || [];
+            let html = '<table class="detail-table"><thead><tr>';
+            html += '<th style="width:36px">#</th>';
+            html += '<th>Date</th>';
+            html += '<th style="text-align:right">USDC.e Paid</th>';
+            html += '<th style="text-align:right">veDOLO Received</th>';
+            html += '<th style="text-align:right">Price/veDOLO</th>';
+            html += '<th style="text-align:center">Lock</th>';
+            html += '<th>Tx</th>';
+            html += '</tr></thead><tbody>';
+            txs.forEach((tx, i) => {
+                const rowBg = i % 2 === 0 ? '' : ' style="background:rgba(255,255,255,0.02)"';
+                html += '<tr' + rowBg + '>';
+                html += '<td style="color:var(--text-muted)">' + (i + 1) + '</td>';
                 html += '<td>' + exFmtDate(tx.date) + '</td>';
-                html += '<td>' + exFmtUsd(tx.usdc) + '</td>';
-                html += '<td>' + (tx.vedolo != null ? tx.vedolo.toLocaleString('en-US', {maximumFractionDigits:2}) : '\u2014') + '</td>';
-                html += '<td>' + (tx.price != null ? '$' + tx.price.toFixed(4) : '\u2014') + '</td>';
-                html += '<td>' + exFmtLock(tx.lock_days) + '</td>';
-                html += '<td><a href="https://berascan.com/tx/' + tx.hash + '" target="_blank" class="tx-link">' + tx.hash.slice(0,10) + '\u2026</a></td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + exFmtUsd(tx.usdc) + '</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (tx.vedolo != null ? tx.vedolo.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '\u2014') + '</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--accent-pink,#f472b6)">' + (tx.price != null ? '$' + tx.price.toFixed(4) : '\u2014') + '</td>';
+                html += '<td style="text-align:center">' + exFmtLock(tx.lock_days) + '</td>';
+                html += '<td><a href="https://berascan.com/tx/' + tx.hash + '" target="_blank" class="tx-link">' + tx.hash.slice(0, 8) + '\u2026</a></td>';
                 html += '</tr>';
             });
+            // Totals row
+            if (txs.length > 1) {
+                html += '<tr style="border-top:2px solid var(--border-subtle);font-weight:600">';
+                html += '<td colspan="2" style="color:var(--text-muted)">Total (' + txs.length + ' txs)</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + exFmtUsd(e.total_usdc) + '</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (totalVedolo > 0 ? totalVedolo.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '\u2014') + '</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--accent-pink,#f472b6)">' + (avgPrice ? '$' + avgPrice.toFixed(4) : '\u2014') + '</td>';
+                html += '<td style="text-align:center">' + exFmtLock(e.avg_lock_days) + '</td>';
+                html += '<td></td>';
+                html += '</tr>';
+            }
             html += '</tbody></table>';
             document.getElementById('em-txs').innerHTML = html;
 
@@ -4159,7 +4191,7 @@
             renderExercisersTable();
         }
 
-        document.getElementById('exerciser-search')?.addEventListener('input', function() {
+        document.getElementById('exerciser-search')?.addEventListener('input', function () {
             exerciserSearchTerm = this.value.trim().toLowerCase();
             renderExercisersTable();
         });
