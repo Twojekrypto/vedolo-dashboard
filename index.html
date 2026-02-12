@@ -3470,8 +3470,7 @@
                 </div>
             </td>
             <td class="c-addr">
-                <a href="#address=${h.address}" onclick="event.preventDefault();event.stopPropagation();showProfile('${h.address}')">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>${addrLabel}
-                <a href="https://debank.com/profile/${h.address}?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
+                <span style="display:inline-flex;align-items:center;gap:4px"><a href="#address=${h.address}" onclick="event.preventDefault();event.stopPropagation();showProfile('${h.address}')">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>${addrLabel}<a href="https://debank.com/profile/${h.address}?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a></span>
             </td>
             <td class="c-nft">${h.nft_count}</td>
             <td class="c-dolo" title="${doloExact} DOLO">${fmtDolo(h.total_dolo || 0)}<span class="supply-pct">(${supplyPct}%)</span></td>
