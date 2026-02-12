@@ -2863,15 +2863,17 @@
             }
 
             let html = `<circle cx="21" cy="21" r="${r}" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="5"/>`;
+            let cumPct = 0;
             segs.forEach((seg, i) => {
                 const pct = seg.nfts / total;
                 const dash = circ * pct;
+                const offset = circ * cumPct;
                 html += `<circle cx="21" cy="21" r="${r}" fill="none" stroke="${seg.color}" stroke-width="5"
-            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-off}"
+            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}"
             style="transition:all 0.3s;cursor:pointer"
             data-idx="${i}" data-label="${seg.label}" data-nfts="${seg.nfts}" data-pct="${(pct * 100).toFixed(1)}" data-color="${seg.color}"
             onmouseenter="donutHover(this, event)" onmouseleave="donutUnhover(this)" onmousemove="donutMove(event)"/>`;
-                off += dash;
+                cumPct += pct;
             });
             html += `<text x="21" y="20" text-anchor="middle" fill="var(--text-primary)" font-size="4" font-weight="700"
         font-family="Inter" transform="rotate(90 21 21)">${total.toLocaleString('en-US')}</text>
