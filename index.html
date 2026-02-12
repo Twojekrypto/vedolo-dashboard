@@ -1565,12 +1565,15 @@
             align-items: center;
             margin-left: 6px;
             opacity: 0.5;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, transform 0.2s;
             vertical-align: middle;
+            position: relative;
+            top: -1px;
         }
 
         .debank-icon:hover {
             opacity: 1;
+            transform: scale(1.6);
         }
 
         .debank-icon img {
