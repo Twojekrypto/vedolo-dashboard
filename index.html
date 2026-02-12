@@ -3465,7 +3465,7 @@
             </td>
             <td class="c-nft">${h.nft_count}</td>
             <td class="c-dolo" title="${doloExact} DOLO">${fmtDolo(h.total_dolo || 0)}<span class="supply-pct">(${supplyPct}%)</span></td>
-            <td class="c-vote" title="${voteExact} veDOLO">${fmtDolo(h.total_vote_weight || 0)}</td>
+            <td class="c-vote" title="${voteExact} veDOLO" style="color:#f59e0b">${fmtDolo(h.total_vote_weight || 0)}</td>
             <td class="c-tokens"><div class="tokens-truncated" title="${h.token_ids.join(', ')}">${tokPrev}</div></td>
         </tr>`;
             }).join('');
