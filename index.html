@@ -2461,7 +2461,51 @@
                         document.querySelectorAll('.odolo-flow-icon-wrap.active').forEach(w => w.classList.remove('active'));
                     });
                 </script>
+
+                <!-- EXERCISERS TABLE -->
+                <div class="table-section anim anim-d3" id="exercisers-section" style="margin-top: 20px;">
+                    <div class="table-toolbar">
+                        <div class="search-input-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="exerciser-search" placeholder="Search exerciser address 0x…">
+                        </div>
+                        <div class="toolbar-count" id="exerciser-count"></div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table id="exercisers-table">
+                            <thead>
+                                <tr>
+                                    <th class="c-rank sorted" data-sort="rank" onclick="sortExercisers('rank')">
+                                        # <span class="arrow">▲</span>
+                                    </th>
+                                    <th data-sort="address" onclick="sortExercisers('address')">
+                                        Address <span class="arrow">⇅</span>
+                                    </th>
+                                    <th data-sort="total_usdc" onclick="sortExercisers('total_usdc')">
+                                        USDC.e Spent <span class="arrow">⇅</span>
+                                    </th>
+                                    <th data-sort="exercises" onclick="sortExercisers('exercises')">
+                                        Exercises <span class="arrow">⇅</span>
+                                    </th>
+                                    <th data-sort="first" onclick="sortExercisers('first')">
+                                        First <span class="arrow">⇅</span>
+                                    </th>
+                                    <th data-sort="last" onclick="sortExercisers('last')">
+                                        Last <span class="arrow">⇅</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="exercisers-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
 
         </div><!-- /view-odolo -->
 
@@ -3864,10 +3908,113 @@
             });
         }
 
+        // ===== EXERCISERS TABLE =====
+        let EXERCISER_DATA = [];
+        let exerciserSortKey = 'rank';
+        let exerciserSortAsc = true;
+        let exerciserSearchTerm = '';
+
+        async function loadExercisers() {
+            try {
+                const resp = await fetch('exercisers_by_address.json?t=' + Date.now());
+                if (!resp.ok) return;
+                const json = await resp.json();
+                EXERCISER_DATA = json.exercisers || [];
+                renderExercisersTable();
+            } catch (e) {
+                console.warn('⚠️ exercisers_by_address.json error:', e);
+            }
+        }
+
+        function renderExercisersTable() {
+            const tbody = document.getElementById('exercisers-tbody');
+            if (!tbody) return;
+
+            let data = [...EXERCISER_DATA];
+
+            // Search filter
+            if (exerciserSearchTerm) {
+                data = data.filter(e => e.address.toLowerCase().includes(exerciserSearchTerm));
+            }
+
+            // Sort
+            data.sort((a, b) => {
+                let va, vb;
+                if (exerciserSortKey === 'rank' || exerciserSortKey === 'total_usdc') {
+                    va = a.total_usdc; vb = b.total_usdc;
+                    // rank sorts by usdc desc by default
+                    if (exerciserSortKey === 'rank') return exerciserSortAsc ? vb - va : va - vb;
+                    return exerciserSortAsc ? va - vb : vb - va;
+                }
+                if (exerciserSortKey === 'exercises') {
+                    va = a.exercises; vb = b.exercises;
+                    return exerciserSortAsc ? va - vb : vb - va;
+                }
+                if (exerciserSortKey === 'address') {
+                    return exerciserSortAsc ? a.address.localeCompare(b.address) : b.address.localeCompare(a.address);
+                }
+                if (exerciserSortKey === 'first' || exerciserSortKey === 'last') {
+                    va = a[exerciserSortKey] || ''; vb = b[exerciserSortKey] || '';
+                    return exerciserSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+                }
+                return 0;
+            });
+
+            document.getElementById('exerciser-count').textContent = data.length + ' exercisers';
+
+            const formatUsd = v => v >= 1000 ? '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '$' + v.toFixed(2);
+            const shortAddr = a => a.slice(0, 6) + '…' + a.slice(-4);
+            const formatDate = d => {
+                if (!d) return '—';
+                const parts = d.split('-');
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return months[parseInt(parts[1]) - 1] + ' ' + parseInt(parts[2]) + ', ' + parts[0].slice(2);
+            };
+
+            let html = '';
+            data.forEach((e, i) => {
+                html += `<tr>
+                    <td class="c-rank">${i + 1}</td>
+                    <td class="c-addr"><a href="https://berascan.com/address/${e.address}" target="_blank" class="addr-link">${shortAddr(e.address)}</a></td>
+                    <td class="c-num">${formatUsd(e.total_usdc)}</td>
+                    <td class="c-num">${e.exercises}</td>
+                    <td class="c-date">${formatDate(e.first)}</td>
+                    <td class="c-date">${formatDate(e.last)}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function sortExercisers(key) {
+            const th = document.querySelector(`#exercisers-table th[data-sort="${key}"]`);
+            if (exerciserSortKey === key) {
+                exerciserSortAsc = !exerciserSortAsc;
+            } else {
+                exerciserSortKey = key;
+                exerciserSortAsc = key === 'rank' || key === 'total_usdc' || key === 'exercises' ? false : true;
+                if (key === 'rank') exerciserSortAsc = true;
+            }
+            // Update arrows
+            document.querySelectorAll('#exercisers-table th').forEach(t => {
+                t.classList.remove('sorted');
+                t.querySelector('.arrow').textContent = '⇅';
+            });
+            th.classList.add('sorted');
+            th.querySelector('.arrow').textContent = exerciserSortAsc ? '▲' : '▼';
+            renderExercisersTable();
+        }
+
+        // Search
+        document.getElementById('exerciser-search')?.addEventListener('input', function () {
+            exerciserSearchTerm = this.value.trim().toLowerCase();
+            renderExercisersTable();
+        });
+
         async function odolo_init() {
             const data = await odolo_fetchAllData();
             odolo_renderMetrics(data);
             odolo_renderDonut(data);
+            loadExercisers();
         }
 
         // Redraw oDOLO donut on resize

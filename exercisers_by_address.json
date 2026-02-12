@@ -1,0 +1,3123 @@
+{
+  "updated": "2026-02-12T08:54:36Z",
+  "total_addresses": 445,
+  "total_usdc": 1876694.57,
+  "total_exercises": 2892,
+  "exercisers": [
+    {
+      "address": "0xbb7a68fe5ebf13cc39773a95a12e7478bb134656",
+      "total_usdc": 460481.98,
+      "exercises": 4,
+      "first": "2025-07-10",
+      "last": "2025-10-01"
+    },
+    {
+      "address": "0x084caf1bf60e49aec07ec4148a3f1f0f57fd11eb",
+      "total_usdc": 191363.3,
+      "exercises": 10,
+      "first": "2025-09-09",
+      "last": "2025-11-20"
+    },
+    {
+      "address": "0x7bfee91193d9df2ac0bfe90191d40f23c773c060",
+      "total_usdc": 128079.2,
+      "exercises": 11,
+      "first": "2025-08-11",
+      "last": "2025-11-20"
+    },
+    {
+      "address": "0xc0bb26dce66f9befd500eb75842506025956d584",
+      "total_usdc": 100336.21,
+      "exercises": 7,
+      "first": "2025-07-17",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x416a3427414b6c98adab70f48a2a904d1cf3f446",
+      "total_usdc": 91916.96,
+      "exercises": 20,
+      "first": "2025-08-28",
+      "last": "2026-01-19"
+    },
+    {
+      "address": "0x8e49f27740cba1e6d5799d8562cdf580c66d666e",
+      "total_usdc": 61159.77,
+      "exercises": 38,
+      "first": "2025-08-01",
+      "last": "2026-02-12"
+    },
+    {
+      "address": "0x37d0371d17e5e587b236504515a4baabc08da619",
+      "total_usdc": 54863.25,
+      "exercises": 26,
+      "first": "2025-08-18",
+      "last": "2026-02-08"
+    },
+    {
+      "address": "0xe1ad30971b83c17e2a24c0334cb45f808abebc87",
+      "total_usdc": 51591.93,
+      "exercises": 1,
+      "first": "2025-10-28",
+      "last": "2025-10-28"
+    },
+    {
+      "address": "0x3cbf175ba7c1f5fbc16a52ce15b09fed60dd483c",
+      "total_usdc": 49816.16,
+      "exercises": 3,
+      "first": "2025-07-16",
+      "last": "2025-12-22"
+    },
+    {
+      "address": "0x62dfa6eba6a34e55c454894dd9b3e688f88cb09b",
+      "total_usdc": 46236.24,
+      "exercises": 29,
+      "first": "2025-06-28",
+      "last": "2026-01-31"
+    },
+    {
+      "address": "0x67d0a091f1f4c9e6a9b50ce4eaf203c9fc488ca3",
+      "total_usdc": 32468.97,
+      "exercises": 3,
+      "first": "2025-08-04",
+      "last": "2025-08-28"
+    },
+    {
+      "address": "0xd93bdecbed0ba6dfd32edc5b8610591f2533202c",
+      "total_usdc": 31202.16,
+      "exercises": 10,
+      "first": "2025-10-05",
+      "last": "2025-12-24"
+    },
+    {
+      "address": "0x54f8a6a355f4c4929e55524afa8671a3cfc960f3",
+      "total_usdc": 29303.31,
+      "exercises": 2,
+      "first": "2025-08-29",
+      "last": "2025-09-23"
+    },
+    {
+      "address": "0xd3f41cb0f4c3abda85845d00f10c6b11740509f8",
+      "total_usdc": 27265.69,
+      "exercises": 30,
+      "first": "2025-07-19",
+      "last": "2026-01-26"
+    },
+    {
+      "address": "0x4c4bc518b1050740f16ef0605ce682968c7b191a",
+      "total_usdc": 25637.08,
+      "exercises": 13,
+      "first": "2025-08-02",
+      "last": "2026-01-22"
+    },
+    {
+      "address": "0x32cd32b45277bf025c1df7bb4388e6a412b77fe5",
+      "total_usdc": 21301.08,
+      "exercises": 320,
+      "first": "2025-07-17",
+      "last": "2026-02-12"
+    },
+    {
+      "address": "0x8c39b7cb82b9d791adcc9387098944b635c17b32",
+      "total_usdc": 17994.14,
+      "exercises": 26,
+      "first": "2025-07-08",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x1955fb36e0f92b2518584b3ad31e59c2e8c7fcf7",
+      "total_usdc": 16046.8,
+      "exercises": 2,
+      "first": "2026-01-10",
+      "last": "2026-01-17"
+    },
+    {
+      "address": "0x83560d47550bb1d52e4da82560971fe03e52526a",
+      "total_usdc": 13954.74,
+      "exercises": 4,
+      "first": "2025-09-01",
+      "last": "2025-12-01"
+    },
+    {
+      "address": "0x2ce09cb3eb0fc5684eabaed02b71a53c58b6bd61",
+      "total_usdc": 13834.05,
+      "exercises": 27,
+      "first": "2025-07-06",
+      "last": "2025-11-13"
+    },
+    {
+      "address": "0x7e3d42cf88b70f8ff5920642140d66caf8634865",
+      "total_usdc": 13469.11,
+      "exercises": 18,
+      "first": "2025-07-25",
+      "last": "2026-01-16"
+    },
+    {
+      "address": "0x8bff50aad8b4e06c5e148eaeb9d7aef69e26cdc3",
+      "total_usdc": 12764.95,
+      "exercises": 1,
+      "first": "2025-09-11",
+      "last": "2025-09-11"
+    },
+    {
+      "address": "0xef532911656c39c6bc23fbabd05f816055949cf7",
+      "total_usdc": 12630.79,
+      "exercises": 56,
+      "first": "2025-08-17",
+      "last": "2025-10-12"
+    },
+    {
+      "address": "0x89ec941f01eec9c8d2e1e924cc807ca4a1233617",
+      "total_usdc": 12058.58,
+      "exercises": 23,
+      "first": "2025-08-12",
+      "last": "2026-01-27"
+    },
+    {
+      "address": "0xbd3df1969b930ac3521552af2947cef0c1638107",
+      "total_usdc": 11837.64,
+      "exercises": 33,
+      "first": "2025-06-26",
+      "last": "2026-01-29"
+    },
+    {
+      "address": "0xc3c606f0d97743935349f3dc2e3b47d4e8b47afb",
+      "total_usdc": 11419.62,
+      "exercises": 1,
+      "first": "2025-10-17",
+      "last": "2025-10-17"
+    },
+    {
+      "address": "0xaae8c50d76c76fb8947c9a203103d28b55862977",
+      "total_usdc": 11362.26,
+      "exercises": 1,
+      "first": "2025-09-23",
+      "last": "2025-09-23"
+    },
+    {
+      "address": "0x14c32a94d825b0fbfc1a7024282f6bcaaa3082d1",
+      "total_usdc": 11045.07,
+      "exercises": 4,
+      "first": "2025-10-15",
+      "last": "2026-01-22"
+    },
+    {
+      "address": "0x6cb90ab6c7de4028af86f15ae97c4df2b954f84c",
+      "total_usdc": 11011.84,
+      "exercises": 50,
+      "first": "2025-07-29",
+      "last": "2026-01-21"
+    },
+    {
+      "address": "0x24a6a6b5bcbc9c118f5aa1ed3f692099fb19d6a6",
+      "total_usdc": 10108.89,
+      "exercises": 1,
+      "first": "2025-09-21",
+      "last": "2025-09-21"
+    },
+    {
+      "address": "0x9c0d1f4a029c46265831d120dee9cdc72f0ab3c3",
+      "total_usdc": 9803.73,
+      "exercises": 7,
+      "first": "2025-06-28",
+      "last": "2025-09-16"
+    },
+    {
+      "address": "0xf0c09d91aa30e491e1a3a20c6fd35838257e2648",
+      "total_usdc": 9467.06,
+      "exercises": 1,
+      "first": "2025-10-24",
+      "last": "2025-10-24"
+    },
+    {
+      "address": "0xbf495fdfd3e2d29cc23923baa4b6bf1780227e65",
+      "total_usdc": 9176.74,
+      "exercises": 10,
+      "first": "2025-07-29",
+      "last": "2026-02-01"
+    },
+    {
+      "address": "0x4b17d596cf620f53bb1cea1142af90674dd164dc",
+      "total_usdc": 8725.1,
+      "exercises": 12,
+      "first": "2025-09-08",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0x50f27cdb650879a41fb07038bf2b818845c20e17",
+      "total_usdc": 8662.85,
+      "exercises": 9,
+      "first": "2025-07-08",
+      "last": "2025-09-06"
+    },
+    {
+      "address": "0x2a6334c30f36d1eefd64689c590dd199d3475972",
+      "total_usdc": 8143.29,
+      "exercises": 2,
+      "first": "2025-08-09",
+      "last": "2025-08-09"
+    },
+    {
+      "address": "0x1fafb618033fb07d3a99704a47451971976cb586",
+      "total_usdc": 8139.44,
+      "exercises": 16,
+      "first": "2025-07-20",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x276f49d212dcafad6d9012a7438a58266f5715e6",
+      "total_usdc": 7984.33,
+      "exercises": 10,
+      "first": "2025-08-01",
+      "last": "2025-11-24"
+    },
+    {
+      "address": "0x2a23d0650db1c536e71aeb63ecd3daa0b52e66e1",
+      "total_usdc": 7724.42,
+      "exercises": 123,
+      "first": "2025-07-03",
+      "last": "2026-02-08"
+    },
+    {
+      "address": "0xba69674066bbd3799d65794866b79916c092e062",
+      "total_usdc": 7679.99,
+      "exercises": 1,
+      "first": "2025-08-10",
+      "last": "2025-08-10"
+    },
+    {
+      "address": "0xdcb906044452856242401323e4c76df9f15690e1",
+      "total_usdc": 7658.96,
+      "exercises": 6,
+      "first": "2025-09-04",
+      "last": "2025-12-25"
+    },
+    {
+      "address": "0xa8b4c7f8b3d91b324f815252da74884e68fb4c4c",
+      "total_usdc": 6956.46,
+      "exercises": 1,
+      "first": "2025-08-07",
+      "last": "2025-08-07"
+    },
+    {
+      "address": "0x09afd91a8b1f64b257d82caa8f34ba93cb14b13a",
+      "total_usdc": 6024.0,
+      "exercises": 16,
+      "first": "2025-11-11",
+      "last": "2026-02-12"
+    },
+    {
+      "address": "0x29a031f1f19a04f341bc941fc84c093f22334a9c",
+      "total_usdc": 5763.84,
+      "exercises": 3,
+      "first": "2025-10-17",
+      "last": "2025-11-19"
+    },
+    {
+      "address": "0xda33e6230ecb4872d7f073cfc704b8279e18fab3",
+      "total_usdc": 5591.2,
+      "exercises": 53,
+      "first": "2025-06-27",
+      "last": "2026-02-12"
+    },
+    {
+      "address": "0xadeed59f446cb0a141837e8f7c22710d759cba65",
+      "total_usdc": 5395.74,
+      "exercises": 5,
+      "first": "2025-08-04",
+      "last": "2025-09-17"
+    },
+    {
+      "address": "0xe3a738d9ae0db0d372b05af92643d763a4776025",
+      "total_usdc": 5231.82,
+      "exercises": 19,
+      "first": "2025-08-03",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0xef34f0fad2bec63a7d47d4a2179b3c06fbe4abb3",
+      "total_usdc": 5105.46,
+      "exercises": 1,
+      "first": "2025-09-07",
+      "last": "2025-09-07"
+    },
+    {
+      "address": "0xeeb1dc2964e89183c84657a2f0101ca8b9ebe3fb",
+      "total_usdc": 4463.9,
+      "exercises": 2,
+      "first": "2025-07-16",
+      "last": "2025-07-17"
+    },
+    {
+      "address": "0x36f4e1803f6ff34562db567f347dea00dec87246",
+      "total_usdc": 3714.52,
+      "exercises": 5,
+      "first": "2025-10-10",
+      "last": "2025-11-19"
+    },
+    {
+      "address": "0x777538e9e6fb692420ecd63add56ae2e34227e94",
+      "total_usdc": 3627.42,
+      "exercises": 10,
+      "first": "2025-07-05",
+      "last": "2025-10-19"
+    },
+    {
+      "address": "0xfb74196eccf35a260dd5cfd300baa37ae058b6c0",
+      "total_usdc": 3574.93,
+      "exercises": 1,
+      "first": "2025-09-01",
+      "last": "2025-09-01"
+    },
+    {
+      "address": "0x18afa21b4752837327711593f8cb19241d311205",
+      "total_usdc": 3556.15,
+      "exercises": 4,
+      "first": "2025-08-21",
+      "last": "2026-01-23"
+    },
+    {
+      "address": "0x07757d335c644ede3e1d89a30c1234b4b08a82d3",
+      "total_usdc": 3318.36,
+      "exercises": 4,
+      "first": "2025-08-16",
+      "last": "2025-09-11"
+    },
+    {
+      "address": "0x092e6362c5e0213041876b3864ac8732418693a6",
+      "total_usdc": 3282.53,
+      "exercises": 5,
+      "first": "2025-09-03",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0xd516c9877578f3d21c4221fbd3cb8d2a17312ebe",
+      "total_usdc": 3193.59,
+      "exercises": 19,
+      "first": "2025-07-11",
+      "last": "2026-01-21"
+    },
+    {
+      "address": "0x1b72bac3772050fdcaf468cce7e20deb3cb02d89",
+      "total_usdc": 2988.28,
+      "exercises": 2,
+      "first": "2025-10-27",
+      "last": "2025-11-24"
+    },
+    {
+      "address": "0x67beb3dd509b88b706dc5a9f03f50006410b088b",
+      "total_usdc": 2957.92,
+      "exercises": 28,
+      "first": "2025-06-28",
+      "last": "2026-01-27"
+    },
+    {
+      "address": "0xf7b5fd0390442a768f7115c17fc23ae619b3645b",
+      "total_usdc": 2946.49,
+      "exercises": 7,
+      "first": "2025-08-12",
+      "last": "2025-10-23"
+    },
+    {
+      "address": "0xf7b680d4958e3404a29aa0b2789c9d6457895dd6",
+      "total_usdc": 2933.55,
+      "exercises": 3,
+      "first": "2025-08-22",
+      "last": "2025-09-16"
+    },
+    {
+      "address": "0x097adbe246858a0fa8f9492889ae00fd87638044",
+      "total_usdc": 2887.92,
+      "exercises": 24,
+      "first": "2025-06-27",
+      "last": "2026-02-07"
+    },
+    {
+      "address": "0xc018b9a9a1e881c0be9078c580e7b10041e33230",
+      "total_usdc": 2885.06,
+      "exercises": 14,
+      "first": "2025-07-02",
+      "last": "2026-02-08"
+    },
+    {
+      "address": "0x4a9026e6332b3dcb52e3d4d3ccbdfa3eeb73c23f",
+      "total_usdc": 2862.25,
+      "exercises": 19,
+      "first": "2025-07-26",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0xbec69dfce4c1fa8b7843fee1ca85788d84a86b06",
+      "total_usdc": 2854.53,
+      "exercises": 27,
+      "first": "2026-01-01",
+      "last": "2026-02-10"
+    },
+    {
+      "address": "0xaf4b80f380a920596fbd3465f8961b2246025b4c",
+      "total_usdc": 2841.05,
+      "exercises": 2,
+      "first": "2025-08-09",
+      "last": "2025-08-09"
+    },
+    {
+      "address": "0xdac2c5d760ff866bc796ddb88dffec3d9a90b7e5",
+      "total_usdc": 2679.83,
+      "exercises": 27,
+      "first": "2025-07-23",
+      "last": "2026-02-09"
+    },
+    {
+      "address": "0xaf4da3bec83da5bbdfcef872e16cd78b26a97477",
+      "total_usdc": 2658.5,
+      "exercises": 4,
+      "first": "2025-08-08",
+      "last": "2025-10-14"
+    },
+    {
+      "address": "0x666a741e710935923a2b6b59c59571e71c102999",
+      "total_usdc": 2540.01,
+      "exercises": 9,
+      "first": "2025-09-01",
+      "last": "2025-10-10"
+    },
+    {
+      "address": "0xeb16d7b30b901f515674a3d057f600d44449b87d",
+      "total_usdc": 2439.79,
+      "exercises": 20,
+      "first": "2025-08-16",
+      "last": "2026-01-11"
+    },
+    {
+      "address": "0xeb88207a3a0dd71ba1d2b2295471f6017d2fe6d7",
+      "total_usdc": 2346.87,
+      "exercises": 4,
+      "first": "2025-08-31",
+      "last": "2025-09-07"
+    },
+    {
+      "address": "0x8907bd00491d0b830c38276acc6d72e2419135a2",
+      "total_usdc": 2318.42,
+      "exercises": 16,
+      "first": "2025-08-03",
+      "last": "2025-12-26"
+    },
+    {
+      "address": "0x911ac2da73dd6dad40bea726dc265ebf225ac788",
+      "total_usdc": 2275.41,
+      "exercises": 9,
+      "first": "2025-07-27",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x703dfcd90b7003549dd89e97d541137ecb03c4d2",
+      "total_usdc": 2270.01,
+      "exercises": 5,
+      "first": "2026-01-16",
+      "last": "2026-02-09"
+    },
+    {
+      "address": "0x28da3dde285d8f1f87b2d858f89961bb8b9af180",
+      "total_usdc": 2247.14,
+      "exercises": 25,
+      "first": "2025-07-12",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0xe563b6450fb44317787857316ecb683d763d2347",
+      "total_usdc": 2028.89,
+      "exercises": 1,
+      "first": "2026-01-13",
+      "last": "2026-01-13"
+    },
+    {
+      "address": "0x82ce9c2019ccc27eb0fe3d6e0a42492678c284a7",
+      "total_usdc": 1997.74,
+      "exercises": 4,
+      "first": "2025-08-01",
+      "last": "2025-10-03"
+    },
+    {
+      "address": "0x4d0abff7aea667cc7a44a9fabdbb803eb547a8be",
+      "total_usdc": 1986.05,
+      "exercises": 14,
+      "first": "2025-08-05",
+      "last": "2025-11-13"
+    },
+    {
+      "address": "0xb9b4f5921dddd83313c5b70fe582f197c0d900a8",
+      "total_usdc": 1908.45,
+      "exercises": 34,
+      "first": "2025-07-03",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0xdb8d9a4fc8368dba0a527cf7c7c6d795c3e40971",
+      "total_usdc": 1870.07,
+      "exercises": 7,
+      "first": "2025-09-18",
+      "last": "2025-12-08"
+    },
+    {
+      "address": "0xd0b0ebfcc7b2386efcbfb70044ca20bf86014b14",
+      "total_usdc": 1839.59,
+      "exercises": 27,
+      "first": "2025-08-03",
+      "last": "2026-02-10"
+    },
+    {
+      "address": "0x0640b34aa370c2b4ac73184726a4a2aef8b52829",
+      "total_usdc": 1668.16,
+      "exercises": 16,
+      "first": "2025-11-14",
+      "last": "2026-02-04"
+    },
+    {
+      "address": "0xbeb69e7ac7f59bdb79b89fc94ed862c6b39f3c00",
+      "total_usdc": 1601.28,
+      "exercises": 1,
+      "first": "2025-10-11",
+      "last": "2025-10-11"
+    },
+    {
+      "address": "0x2b1f83b30c1a85e6f93723cbd5d4145f27fdb489",
+      "total_usdc": 1568.25,
+      "exercises": 3,
+      "first": "2025-08-24",
+      "last": "2026-01-02"
+    },
+    {
+      "address": "0x53430bde5e57ed878406a20ca101b0853f173acf",
+      "total_usdc": 1554.98,
+      "exercises": 1,
+      "first": "2025-08-12",
+      "last": "2025-08-12"
+    },
+    {
+      "address": "0x70fb402e73fefb025f93e70ead8cfa0ec8e092ba",
+      "total_usdc": 1460.65,
+      "exercises": 1,
+      "first": "2025-07-17",
+      "last": "2025-07-17"
+    },
+    {
+      "address": "0xbcc0e414edf349a1a11ec0ff6ad0828fa7c4c874",
+      "total_usdc": 1384.97,
+      "exercises": 2,
+      "first": "2025-06-29",
+      "last": "2025-07-03"
+    },
+    {
+      "address": "0x57124eb24f603a1005ab919a702c969156985e75",
+      "total_usdc": 1359.15,
+      "exercises": 3,
+      "first": "2025-07-19",
+      "last": "2025-10-27"
+    },
+    {
+      "address": "0x5c4201b4f4455a95d739ee58a141fb8ddb1dab4b",
+      "total_usdc": 1344.21,
+      "exercises": 1,
+      "first": "2025-10-14",
+      "last": "2025-10-14"
+    },
+    {
+      "address": "0x6a982f19caf0fbf58b0cc9163d9ef1f1519f1192",
+      "total_usdc": 1340.3,
+      "exercises": 1,
+      "first": "2025-08-18",
+      "last": "2025-08-18"
+    },
+    {
+      "address": "0xe08753f2caf86cfa29ce24b1ca765f6f3a25a68d",
+      "total_usdc": 1309.78,
+      "exercises": 25,
+      "first": "2025-07-03",
+      "last": "2026-01-03"
+    },
+    {
+      "address": "0x089b95152253b6af73e7f7267d749058d56ce231",
+      "total_usdc": 1199.09,
+      "exercises": 2,
+      "first": "2025-07-31",
+      "last": "2025-08-21"
+    },
+    {
+      "address": "0x188715f8b5371e5f8002edb6c9583aed78ebd096",
+      "total_usdc": 1185.04,
+      "exercises": 6,
+      "first": "2025-09-04",
+      "last": "2025-11-03"
+    },
+    {
+      "address": "0x61cd1eb8434aabdd38a0abd62dc8665e958e41d1",
+      "total_usdc": 1172.5,
+      "exercises": 7,
+      "first": "2025-07-17",
+      "last": "2026-01-29"
+    },
+    {
+      "address": "0xf50bc4876f7aeeee59d7f4a0fabdcf09136de795",
+      "total_usdc": 1110.94,
+      "exercises": 26,
+      "first": "2025-06-29",
+      "last": "2026-01-28"
+    },
+    {
+      "address": "0xc65c762fc8a7e1618529c1e49ea3fe572dbdc40b",
+      "total_usdc": 1083.82,
+      "exercises": 1,
+      "first": "2025-09-11",
+      "last": "2025-09-11"
+    },
+    {
+      "address": "0x45bd9654236f5ec14dbf9a946a3dde1ea52cbf76",
+      "total_usdc": 1031.72,
+      "exercises": 1,
+      "first": "2025-08-30",
+      "last": "2025-08-30"
+    },
+    {
+      "address": "0x9cf5dec27768855d478152128851ebde74f6a3ed",
+      "total_usdc": 1022.36,
+      "exercises": 12,
+      "first": "2025-07-16",
+      "last": "2025-12-04"
+    },
+    {
+      "address": "0x26b0eda5ffb12abb8495685c41d790c3c1ed2a77",
+      "total_usdc": 1012.61,
+      "exercises": 1,
+      "first": "2025-08-06",
+      "last": "2025-08-06"
+    },
+    {
+      "address": "0xfcc06f7f02f6ab02051f259db4f82f20d8d02112",
+      "total_usdc": 1000.65,
+      "exercises": 16,
+      "first": "2025-07-14",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0xfc47da77d3dae0c9395516805e81cc7c689b21bd",
+      "total_usdc": 995.98,
+      "exercises": 2,
+      "first": "2025-08-28",
+      "last": "2025-08-28"
+    },
+    {
+      "address": "0x2c1259a2c764dcc66241edfbdfd281afcb6d870a",
+      "total_usdc": 993.28,
+      "exercises": 8,
+      "first": "2025-08-03",
+      "last": "2025-10-07"
+    },
+    {
+      "address": "0x7ec5ca4921bd44c183265deba8add4b68ab75f63",
+      "total_usdc": 986.0,
+      "exercises": 1,
+      "first": "2026-01-27",
+      "last": "2026-01-27"
+    },
+    {
+      "address": "0x713564da6a54d6d105eea56baf2708ed062e20c2",
+      "total_usdc": 960.76,
+      "exercises": 2,
+      "first": "2025-10-12",
+      "last": "2025-10-26"
+    },
+    {
+      "address": "0xd4bf1af91763afea5a7f7dece13594d2523388a7",
+      "total_usdc": 889.29,
+      "exercises": 2,
+      "first": "2025-09-07",
+      "last": "2025-09-21"
+    },
+    {
+      "address": "0x719c4260007fd0ea3d1ea1bee07b9c0ba9535eed",
+      "total_usdc": 871.46,
+      "exercises": 5,
+      "first": "2025-09-18",
+      "last": "2025-11-10"
+    },
+    {
+      "address": "0xa38d9c3f896d6ebc11ff9ea8cd4554ee96700836",
+      "total_usdc": 793.75,
+      "exercises": 4,
+      "first": "2025-07-15",
+      "last": "2025-08-10"
+    },
+    {
+      "address": "0x2a48d3be1b3603af83ff5f72df5b14b8cfd37164",
+      "total_usdc": 791.93,
+      "exercises": 3,
+      "first": "2025-08-26",
+      "last": "2025-10-15"
+    },
+    {
+      "address": "0x9eb891da0e35488346d39d41bed182c03b842595",
+      "total_usdc": 759.63,
+      "exercises": 1,
+      "first": "2025-06-27",
+      "last": "2025-06-27"
+    },
+    {
+      "address": "0xf610d8c16f9b607642a9c5649078b445f48fcd31",
+      "total_usdc": 740.95,
+      "exercises": 5,
+      "first": "2025-09-08",
+      "last": "2025-12-29"
+    },
+    {
+      "address": "0x60931f62c4a80623df942d0e88feb34c67bcff13",
+      "total_usdc": 740.68,
+      "exercises": 4,
+      "first": "2025-08-09",
+      "last": "2025-09-08"
+    },
+    {
+      "address": "0xcdcdefcf200b66718403ccad3295a0ae6553d907",
+      "total_usdc": 719.67,
+      "exercises": 6,
+      "first": "2025-08-09",
+      "last": "2025-09-27"
+    },
+    {
+      "address": "0x8ff5bde0c42d97c83c77888b084448cdbb16db97",
+      "total_usdc": 719.31,
+      "exercises": 9,
+      "first": "2025-12-08",
+      "last": "2026-02-07"
+    },
+    {
+      "address": "0xca02e6c2f0633e15977951fed564f818f853887d",
+      "total_usdc": 712.63,
+      "exercises": 27,
+      "first": "2025-09-05",
+      "last": "2026-02-02"
+    },
+    {
+      "address": "0x50a852203b68861968786fa057b0716860775b3a",
+      "total_usdc": 707.57,
+      "exercises": 22,
+      "first": "2025-08-16",
+      "last": "2026-02-08"
+    },
+    {
+      "address": "0xe6caf898d70a0f0365ae8c6211ade489025aa1bb",
+      "total_usdc": 700.96,
+      "exercises": 2,
+      "first": "2025-08-24",
+      "last": "2025-08-31"
+    },
+    {
+      "address": "0x755a513d6adad8486c44e126abc3a739251b0aa6",
+      "total_usdc": 677.33,
+      "exercises": 13,
+      "first": "2025-07-06",
+      "last": "2025-12-02"
+    },
+    {
+      "address": "0xd069fa1e2d428f2580c553fa68c445640f281f79",
+      "total_usdc": 675.45,
+      "exercises": 10,
+      "first": "2025-08-10",
+      "last": "2025-12-01"
+    },
+    {
+      "address": "0x85204a5e932b69455822033f33e378dff4bb8960",
+      "total_usdc": 633.5,
+      "exercises": 4,
+      "first": "2025-08-22",
+      "last": "2025-10-06"
+    },
+    {
+      "address": "0x382a47e3ff60a10f7accddec1aa637ad25c1b204",
+      "total_usdc": 629.48,
+      "exercises": 3,
+      "first": "2025-07-25",
+      "last": "2025-09-13"
+    },
+    {
+      "address": "0x6953a35fc1a009a4c3b879d0416609e40231468a",
+      "total_usdc": 621.57,
+      "exercises": 10,
+      "first": "2025-08-10",
+      "last": "2026-01-30"
+    },
+    {
+      "address": "0xefcef7f134e8f24890ac57b333a8dc710d0e6b5f",
+      "total_usdc": 604.04,
+      "exercises": 2,
+      "first": "2025-09-10",
+      "last": "2025-09-14"
+    },
+    {
+      "address": "0xe63eb4131fe0d39f8b21c058fb5f029b8b8f5ab9",
+      "total_usdc": 599.69,
+      "exercises": 3,
+      "first": "2025-08-20",
+      "last": "2025-09-16"
+    },
+    {
+      "address": "0x90f15e09b8fb5bc080b968170c638920db3a3446",
+      "total_usdc": 576.09,
+      "exercises": 4,
+      "first": "2025-08-01",
+      "last": "2025-10-27"
+    },
+    {
+      "address": "0x9b643dd10a80ce87d7b43e773b5d97d576e7b1bc",
+      "total_usdc": 564.92,
+      "exercises": 2,
+      "first": "2025-07-26",
+      "last": "2025-08-10"
+    },
+    {
+      "address": "0x5afdd71ec312eda36663f72032f269bd9c950cb4",
+      "total_usdc": 540.19,
+      "exercises": 6,
+      "first": "2026-01-03",
+      "last": "2026-02-06"
+    },
+    {
+      "address": "0x60be889ee82fbcd49e2cbb798169119261bf58e1",
+      "total_usdc": 530.31,
+      "exercises": 1,
+      "first": "2025-10-04",
+      "last": "2025-10-04"
+    },
+    {
+      "address": "0x46c38155354791da32e8ca26fad5d84ff1bde945",
+      "total_usdc": 514.68,
+      "exercises": 3,
+      "first": "2025-08-20",
+      "last": "2025-10-21"
+    },
+    {
+      "address": "0x9e96f07ecf9e9326ee3696934e9666fdff9b2712",
+      "total_usdc": 483.81,
+      "exercises": 4,
+      "first": "2025-07-24",
+      "last": "2025-08-01"
+    },
+    {
+      "address": "0x5353d57398a1d5cc3f715df0a365d4b5f2a4044b",
+      "total_usdc": 470.29,
+      "exercises": 4,
+      "first": "2025-08-07",
+      "last": "2025-09-06"
+    },
+    {
+      "address": "0xde0aef70a7ae324045b7722c903aaaec2ac175f5",
+      "total_usdc": 466.73,
+      "exercises": 11,
+      "first": "2025-08-13",
+      "last": "2025-10-16"
+    },
+    {
+      "address": "0x68a8fb23e6fe18d29da22929c75be33e43bd81b3",
+      "total_usdc": 445.82,
+      "exercises": 15,
+      "first": "2025-08-09",
+      "last": "2026-01-03"
+    },
+    {
+      "address": "0x23a2ef14709d9621bd97446de9ba085a4626195d",
+      "total_usdc": 443.45,
+      "exercises": 5,
+      "first": "2025-08-16",
+      "last": "2025-09-22"
+    },
+    {
+      "address": "0x565f0939aa309a099a46fb6881800bcf17dbed3b",
+      "total_usdc": 434.57,
+      "exercises": 4,
+      "first": "2025-12-22",
+      "last": "2026-01-30"
+    },
+    {
+      "address": "0x10c0014602516a154f8883ae4cbf09322d84cb81",
+      "total_usdc": 419.29,
+      "exercises": 1,
+      "first": "2025-09-04",
+      "last": "2025-09-04"
+    },
+    {
+      "address": "0xbdc3ce52f9bbeb7ac6b67312944c21b2b45682b3",
+      "total_usdc": 418.27,
+      "exercises": 2,
+      "first": "2025-10-03",
+      "last": "2025-10-03"
+    },
+    {
+      "address": "0xdee4e935d47ca5e97025e92b96e74cc348553f99",
+      "total_usdc": 394.55,
+      "exercises": 4,
+      "first": "2025-10-02",
+      "last": "2025-12-26"
+    },
+    {
+      "address": "0xaaef0e2d684babd7c2c4bbdc280b82a680b9d3ca",
+      "total_usdc": 382.97,
+      "exercises": 15,
+      "first": "2025-10-02",
+      "last": "2026-01-29"
+    },
+    {
+      "address": "0xde9942f479e154066e1f1a36247e8b49de45ea90",
+      "total_usdc": 370.53,
+      "exercises": 6,
+      "first": "2025-08-14",
+      "last": "2025-10-20"
+    },
+    {
+      "address": "0x4614b16551a21f7e29b57a4f8a8a4b63579d3cf4",
+      "total_usdc": 361.77,
+      "exercises": 1,
+      "first": "2025-07-16",
+      "last": "2025-07-16"
+    },
+    {
+      "address": "0xd3c21358511976077697d872900bf282d8c34138",
+      "total_usdc": 352.9,
+      "exercises": 20,
+      "first": "2025-09-18",
+      "last": "2026-01-22"
+    },
+    {
+      "address": "0x4aa74ab603ab6343e2e2cfa71f21ec0d80ef3569",
+      "total_usdc": 351.69,
+      "exercises": 2,
+      "first": "2025-08-16",
+      "last": "2025-09-20"
+    },
+    {
+      "address": "0x52f871f7b16a9e17966ac40082e864726766802c",
+      "total_usdc": 351.36,
+      "exercises": 7,
+      "first": "2025-08-31",
+      "last": "2025-11-07"
+    },
+    {
+      "address": "0x372c50019fb522a96b24437dc8d981613c5e15ea",
+      "total_usdc": 351.05,
+      "exercises": 1,
+      "first": "2026-01-31",
+      "last": "2026-01-31"
+    },
+    {
+      "address": "0xf8c3aaca0012bc90dc382bbcb6f5577bfad22334",
+      "total_usdc": 349.13,
+      "exercises": 4,
+      "first": "2025-08-30",
+      "last": "2025-11-09"
+    },
+    {
+      "address": "0xa07d83334758af046dbcee6991e341c0e061d121",
+      "total_usdc": 347.85,
+      "exercises": 13,
+      "first": "2025-07-20",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0xb9523a615b7ebb9b0f2031eea992c8cf1c808c35",
+      "total_usdc": 346.57,
+      "exercises": 4,
+      "first": "2025-09-27",
+      "last": "2025-11-01"
+    },
+    {
+      "address": "0xb4bbccb27cd9b6ea71105cf20b3d755fa527a6f0",
+      "total_usdc": 337.13,
+      "exercises": 3,
+      "first": "2025-09-07",
+      "last": "2026-01-06"
+    },
+    {
+      "address": "0xb7a9fb1920f55ad9c90f588ccad3c8b0c560f77f",
+      "total_usdc": 335.3,
+      "exercises": 10,
+      "first": "2025-08-27",
+      "last": "2025-09-18"
+    },
+    {
+      "address": "0x952815ea349a0c10db5d854a16a27d768e85053e",
+      "total_usdc": 334.4,
+      "exercises": 3,
+      "first": "2025-07-26",
+      "last": "2025-09-02"
+    },
+    {
+      "address": "0x67a413e65a37a46109bd8f08a59fd96089f691d2",
+      "total_usdc": 331.43,
+      "exercises": 13,
+      "first": "2025-08-25",
+      "last": "2025-12-01"
+    },
+    {
+      "address": "0xd1b2e364ab706510344cd9ecf1711c1734147516",
+      "total_usdc": 329.54,
+      "exercises": 1,
+      "first": "2025-07-20",
+      "last": "2025-07-20"
+    },
+    {
+      "address": "0x54d0069ad0984c1489a0394dea3a14c908940c89",
+      "total_usdc": 328.91,
+      "exercises": 8,
+      "first": "2025-08-14",
+      "last": "2025-10-20"
+    },
+    {
+      "address": "0x9a1f7ad40486f19a913f03898eaa32e651639a85",
+      "total_usdc": 323.45,
+      "exercises": 2,
+      "first": "2025-08-09",
+      "last": "2025-10-12"
+    },
+    {
+      "address": "0x0442dd88a482833fe2ca98a6b66526aa640321f3",
+      "total_usdc": 323.12,
+      "exercises": 1,
+      "first": "2025-09-21",
+      "last": "2025-09-21"
+    },
+    {
+      "address": "0xa92baf957aadbe76e86f82c456401c268b9de7c3",
+      "total_usdc": 322.23,
+      "exercises": 4,
+      "first": "2025-11-06",
+      "last": "2026-01-24"
+    },
+    {
+      "address": "0x040125b6a9848f632661840d2efc4f2a271fed3d",
+      "total_usdc": 316.91,
+      "exercises": 1,
+      "first": "2025-12-15",
+      "last": "2025-12-15"
+    },
+    {
+      "address": "0x8a2fa09530f858d2b064d5539aa755e8b901033a",
+      "total_usdc": 310.73,
+      "exercises": 3,
+      "first": "2025-07-05",
+      "last": "2025-10-11"
+    },
+    {
+      "address": "0x03f7e8b18af7da4af7dba541ffd9df6ee7864dd0",
+      "total_usdc": 291.66,
+      "exercises": 2,
+      "first": "2025-08-15",
+      "last": "2025-09-03"
+    },
+    {
+      "address": "0x87d4cec292ccee380af07def216e7717141c2539",
+      "total_usdc": 290.91,
+      "exercises": 1,
+      "first": "2025-10-08",
+      "last": "2025-10-08"
+    },
+    {
+      "address": "0xc12de812ae612b6d514b52d529f97f6acb524c8e",
+      "total_usdc": 283.89,
+      "exercises": 9,
+      "first": "2025-07-08",
+      "last": "2026-02-04"
+    },
+    {
+      "address": "0x4d72d4269ab46962713ca19cab8161a87684a163",
+      "total_usdc": 283.14,
+      "exercises": 1,
+      "first": "2025-07-22",
+      "last": "2025-07-22"
+    },
+    {
+      "address": "0x2817601bb438f48655421f4a43974b40ae20cf72",
+      "total_usdc": 282.52,
+      "exercises": 1,
+      "first": "2025-09-17",
+      "last": "2025-09-17"
+    },
+    {
+      "address": "0x0347d229643a5521cfb844e9ef6cbce0a325e33b",
+      "total_usdc": 282.33,
+      "exercises": 2,
+      "first": "2025-08-09",
+      "last": "2025-10-12"
+    },
+    {
+      "address": "0x3df71a587a968a4d070f905eb2805e9d36c273e5",
+      "total_usdc": 281.5,
+      "exercises": 1,
+      "first": "2025-08-18",
+      "last": "2025-08-18"
+    },
+    {
+      "address": "0x9d7fc745d43ed51fb08d7bb7abb1a4fec62fb5c1",
+      "total_usdc": 279.29,
+      "exercises": 1,
+      "first": "2026-01-27",
+      "last": "2026-01-27"
+    },
+    {
+      "address": "0x981690ec51bb332ec6eed511c27df325104cb461",
+      "total_usdc": 269.07,
+      "exercises": 2,
+      "first": "2025-08-17",
+      "last": "2025-08-25"
+    },
+    {
+      "address": "0xcc0e6d05981d000bc8987c443ea909256bd1c8c7",
+      "total_usdc": 258.44,
+      "exercises": 1,
+      "first": "2025-08-24",
+      "last": "2025-08-24"
+    },
+    {
+      "address": "0xd6b9608036f292d218ba6cdc11f3ee4a0cbb1b88",
+      "total_usdc": 249.96,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0x06acdcd3c5c54201a322b6f87ba4dd7869a73bd9",
+      "total_usdc": 237.41,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0x57931d0b169328de8edfaee5bc6325011740268f",
+      "total_usdc": 236.15,
+      "exercises": 2,
+      "first": "2025-07-20",
+      "last": "2025-07-20"
+    },
+    {
+      "address": "0xa18ce9b63ac6cb0b30ed3fc97522688e432afae5",
+      "total_usdc": 234.99,
+      "exercises": 7,
+      "first": "2025-09-09",
+      "last": "2026-02-10"
+    },
+    {
+      "address": "0x19a79bdfd53a9cb9f626c40c9d500d6ad5523f24",
+      "total_usdc": 232.42,
+      "exercises": 1,
+      "first": "2025-12-18",
+      "last": "2025-12-18"
+    },
+    {
+      "address": "0x91b68488d4cfe0a2fbf8c2300770f7b1a9224edf",
+      "total_usdc": 229.9,
+      "exercises": 1,
+      "first": "2025-12-22",
+      "last": "2025-12-22"
+    },
+    {
+      "address": "0xd158301e120151d93eeb9a30d264858613a3fcd4",
+      "total_usdc": 228.35,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0xbb4157fd50402527d8e20a192ac09c596e3bfb44",
+      "total_usdc": 228.15,
+      "exercises": 1,
+      "first": "2025-08-07",
+      "last": "2025-08-07"
+    },
+    {
+      "address": "0xf286428ba6dec96a5fa42d082cd1e0bc7042f5e5",
+      "total_usdc": 223.54,
+      "exercises": 3,
+      "first": "2025-09-11",
+      "last": "2025-10-19"
+    },
+    {
+      "address": "0x2bcb9572d28ba09b9e565a30dee09bf5080e0ad5",
+      "total_usdc": 220.06,
+      "exercises": 2,
+      "first": "2025-09-11",
+      "last": "2025-09-24"
+    },
+    {
+      "address": "0x6d3e8657fd8480d26cc87e7afc0865b4c8f7796e",
+      "total_usdc": 218.68,
+      "exercises": 15,
+      "first": "2025-07-29",
+      "last": "2026-01-10"
+    },
+    {
+      "address": "0x2411d60f20434e44cfe89ae38513c6a595b8145a",
+      "total_usdc": 218.52,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0xeeaa0ca304f835a43a4b0e75830e66ee1e657152",
+      "total_usdc": 217.78,
+      "exercises": 2,
+      "first": "2025-08-28",
+      "last": "2025-09-07"
+    },
+    {
+      "address": "0x0b7b9733203c22f5a4982787ced13c6fbcba7bc0",
+      "total_usdc": 209.33,
+      "exercises": 16,
+      "first": "2025-10-27",
+      "last": "2025-11-21"
+    },
+    {
+      "address": "0xed38ea368888788a0d5939872676b5700e2fc52b",
+      "total_usdc": 204.36,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0xe21755b8c254bdcf32eefb1451d932c296054a25",
+      "total_usdc": 202.92,
+      "exercises": 2,
+      "first": "2025-09-26",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0x847d5305082da7edb28b11f5231ccd70dba3111a",
+      "total_usdc": 200.12,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0x5e88e6b7440b05a04dd04e0af9cc29d36ce411c6",
+      "total_usdc": 196.99,
+      "exercises": 4,
+      "first": "2025-10-09",
+      "last": "2026-02-08"
+    },
+    {
+      "address": "0xbd420ebdbf159c63fdd7171a5b233bf7d94c4d30",
+      "total_usdc": 192.88,
+      "exercises": 11,
+      "first": "2025-07-20",
+      "last": "2025-08-28"
+    },
+    {
+      "address": "0xb9f73a57a1d3a86748bc8fa92706aacf9e39728a",
+      "total_usdc": 183.1,
+      "exercises": 2,
+      "first": "2025-10-23",
+      "last": "2025-11-05"
+    },
+    {
+      "address": "0x2e598eb2703069ebaabec95adcf684bc12a3eafd",
+      "total_usdc": 182.27,
+      "exercises": 1,
+      "first": "2025-10-17",
+      "last": "2025-10-17"
+    },
+    {
+      "address": "0xc55863b0dd1cf89fb41563ade7ac12f840a507d2",
+      "total_usdc": 181.32,
+      "exercises": 9,
+      "first": "2025-09-17",
+      "last": "2025-12-13"
+    },
+    {
+      "address": "0x8b4feb2240c1552b123c3b5f1417b951ccf97e1a",
+      "total_usdc": 180.76,
+      "exercises": 1,
+      "first": "2025-10-13",
+      "last": "2025-10-13"
+    },
+    {
+      "address": "0xc6dd9976066f3364b4d6a72cd4f1fa0468327aa7",
+      "total_usdc": 177.76,
+      "exercises": 1,
+      "first": "2026-02-05",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0xde6d22b7b9ff1b05ad580e073bfc6fcc00ceb561",
+      "total_usdc": 173.94,
+      "exercises": 5,
+      "first": "2025-07-06",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0x6eb45dfcc44f0e66574f9c9e245a5497f89b146e",
+      "total_usdc": 172.51,
+      "exercises": 1,
+      "first": "2025-08-13",
+      "last": "2025-08-13"
+    },
+    {
+      "address": "0xe08a7d92ef88c8d0c87b8724943ce8c2d2b05261",
+      "total_usdc": 172.33,
+      "exercises": 9,
+      "first": "2025-09-02",
+      "last": "2025-10-11"
+    },
+    {
+      "address": "0x0bad9edade0eb1733281a3b484248d696a55fe6d",
+      "total_usdc": 170.89,
+      "exercises": 12,
+      "first": "2025-08-24",
+      "last": "2025-11-08"
+    },
+    {
+      "address": "0x8a6b6921c50d87a5ea828d1cfdf387dff1eef5db",
+      "total_usdc": 170.4,
+      "exercises": 8,
+      "first": "2025-07-11",
+      "last": "2026-01-01"
+    },
+    {
+      "address": "0xf9897204d330fcd729a65315f4a9773019495d86",
+      "total_usdc": 166.24,
+      "exercises": 2,
+      "first": "2025-09-11",
+      "last": "2025-09-18"
+    },
+    {
+      "address": "0x90273866879e75f678f1deed88fa37084b3bd547",
+      "total_usdc": 164.5,
+      "exercises": 3,
+      "first": "2025-12-05",
+      "last": "2025-12-20"
+    },
+    {
+      "address": "0x1900e40d1942df3afa3e34d3366cb17818a912c4",
+      "total_usdc": 156.66,
+      "exercises": 1,
+      "first": "2025-08-09",
+      "last": "2025-08-09"
+    },
+    {
+      "address": "0x87ee12898a2b9ee67f1b577c0b84d769c4844432",
+      "total_usdc": 155.88,
+      "exercises": 1,
+      "first": "2025-08-28",
+      "last": "2025-08-28"
+    },
+    {
+      "address": "0xdaed425e7e63dbf66e6835680d500591674f04db",
+      "total_usdc": 151.78,
+      "exercises": 3,
+      "first": "2026-01-24",
+      "last": "2026-02-08"
+    },
+    {
+      "address": "0xbfd81d494ad08fd2bc54b392c3bb9daf87812e5f",
+      "total_usdc": 151.3,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0x352245dd57423a176e582174e2ca76b1a3229502",
+      "total_usdc": 151.0,
+      "exercises": 5,
+      "first": "2025-08-28",
+      "last": "2025-11-06"
+    },
+    {
+      "address": "0x53778828c3afe8aec2958aa5269febcd7b91f867",
+      "total_usdc": 150.65,
+      "exercises": 2,
+      "first": "2025-07-27",
+      "last": "2025-09-12"
+    },
+    {
+      "address": "0x508e03d472812016f04da0a001d648af76d98c5b",
+      "total_usdc": 148.91,
+      "exercises": 1,
+      "first": "2025-07-25",
+      "last": "2025-07-25"
+    },
+    {
+      "address": "0xb20aab4cd244cf2645df2cdfbcd98ba7e2395927",
+      "total_usdc": 148.34,
+      "exercises": 4,
+      "first": "2025-08-02",
+      "last": "2025-08-21"
+    },
+    {
+      "address": "0x5a26755889a295111406ebd778c42b735214f42e",
+      "total_usdc": 144.4,
+      "exercises": 17,
+      "first": "2025-07-07",
+      "last": "2026-02-09"
+    },
+    {
+      "address": "0xf720a6b0dae1311d6a2869da7dbf100e8837cf33",
+      "total_usdc": 141.38,
+      "exercises": 5,
+      "first": "2025-09-10",
+      "last": "2026-01-27"
+    },
+    {
+      "address": "0xbdce6e36ff4abf0ee285a04331978e7c9ca2d49f",
+      "total_usdc": 136.51,
+      "exercises": 1,
+      "first": "2025-08-13",
+      "last": "2025-08-13"
+    },
+    {
+      "address": "0xcd0b67a61e5e8f4616c19e421e929813b6d947df",
+      "total_usdc": 133.52,
+      "exercises": 1,
+      "first": "2025-08-30",
+      "last": "2025-08-30"
+    },
+    {
+      "address": "0xc9f99ef6d60f83fa54c6be0610f8a136c6d02b5e",
+      "total_usdc": 126.2,
+      "exercises": 6,
+      "first": "2025-07-13",
+      "last": "2025-11-08"
+    },
+    {
+      "address": "0x652968c8e951709997418eb6b22b7f2f8e99fdfa",
+      "total_usdc": 120.99,
+      "exercises": 2,
+      "first": "2025-12-25",
+      "last": "2026-01-15"
+    },
+    {
+      "address": "0x10ba44df917fbbc67f3b5e7fd6320707b66000a6",
+      "total_usdc": 114.06,
+      "exercises": 14,
+      "first": "2025-07-25",
+      "last": "2025-12-14"
+    },
+    {
+      "address": "0xf134be93d238ef2f059336fd7788cc401fa86c89",
+      "total_usdc": 111.87,
+      "exercises": 1,
+      "first": "2025-09-01",
+      "last": "2025-09-01"
+    },
+    {
+      "address": "0x5ceca24c07a9192046b72a9904e800c1f59a35ab",
+      "total_usdc": 109.17,
+      "exercises": 2,
+      "first": "2025-08-31",
+      "last": "2025-09-11"
+    },
+    {
+      "address": "0xa23e234f748ed9da9a2d1b942afb84c466a6a034",
+      "total_usdc": 107.86,
+      "exercises": 1,
+      "first": "2025-08-23",
+      "last": "2025-08-23"
+    },
+    {
+      "address": "0xe87b6cd08411f261b168d07f3d031a0203f96f41",
+      "total_usdc": 107.75,
+      "exercises": 5,
+      "first": "2025-08-15",
+      "last": "2025-09-17"
+    },
+    {
+      "address": "0x190ac830b737acfbfa819f1d3ab0a6d702d72147",
+      "total_usdc": 107.75,
+      "exercises": 1,
+      "first": "2025-08-27",
+      "last": "2025-08-27"
+    },
+    {
+      "address": "0x56b6a3b413d0ecb5a6b0fd771e0735d7fd353819",
+      "total_usdc": 107.44,
+      "exercises": 1,
+      "first": "2025-08-16",
+      "last": "2025-08-16"
+    },
+    {
+      "address": "0x37859514b36ebb1cddb3603e3c340b019348a44b",
+      "total_usdc": 101.27,
+      "exercises": 12,
+      "first": "2025-09-10",
+      "last": "2025-11-20"
+    },
+    {
+      "address": "0x6ad94395afa6cff02c5a81f23d1772b47e59f65b",
+      "total_usdc": 100.82,
+      "exercises": 2,
+      "first": "2025-08-20",
+      "last": "2025-09-02"
+    },
+    {
+      "address": "0x44cdce3e92b8405be3973e7bb7b58242b98a99da",
+      "total_usdc": 99.96,
+      "exercises": 1,
+      "first": "2025-08-01",
+      "last": "2025-08-01"
+    },
+    {
+      "address": "0x7526b5bc46ed45eb31ce8c3a4518c5e2a10e3bd0",
+      "total_usdc": 94.29,
+      "exercises": 1,
+      "first": "2025-08-22",
+      "last": "2025-08-22"
+    },
+    {
+      "address": "0x237dc2d72371978045deae737fa3d6c292faa072",
+      "total_usdc": 94.14,
+      "exercises": 15,
+      "first": "2025-09-01",
+      "last": "2025-12-12"
+    },
+    {
+      "address": "0x0604e652a188931e245717d45feb26f583b92908",
+      "total_usdc": 93.43,
+      "exercises": 1,
+      "first": "2025-10-15",
+      "last": "2025-10-15"
+    },
+    {
+      "address": "0xf6103ad9f3b8a24f26a2b05ca651348d40607883",
+      "total_usdc": 92.97,
+      "exercises": 1,
+      "first": "2025-10-09",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0x42ca4609546e3c5010d664e6961cc79f6b466e5e",
+      "total_usdc": 92.39,
+      "exercises": 11,
+      "first": "2025-08-03",
+      "last": "2026-01-18"
+    },
+    {
+      "address": "0xdb786f073095c3915749114e227a27a81ef03a15",
+      "total_usdc": 87.36,
+      "exercises": 1,
+      "first": "2025-09-07",
+      "last": "2025-09-07"
+    },
+    {
+      "address": "0xe28bd436e6aa6215af33f195275485f6b521ebd0",
+      "total_usdc": 86.76,
+      "exercises": 1,
+      "first": "2025-09-18",
+      "last": "2025-09-18"
+    },
+    {
+      "address": "0xe18574afe358fae6f802b1fe57fd691e48a03ddf",
+      "total_usdc": 85.28,
+      "exercises": 1,
+      "first": "2025-10-09",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0x4e48bd7bb7d4a6ea48d900f1ad2527ee38b24949",
+      "total_usdc": 82.88,
+      "exercises": 15,
+      "first": "2025-07-30",
+      "last": "2026-01-20"
+    },
+    {
+      "address": "0x78aaacd130134a15a42a3791043f0040c733389b",
+      "total_usdc": 82.47,
+      "exercises": 2,
+      "first": "2025-10-02",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0x193641ea463c3b9244cf9f00b77ee5220d4154e9",
+      "total_usdc": 82.16,
+      "exercises": 3,
+      "first": "2025-11-07",
+      "last": "2026-02-04"
+    },
+    {
+      "address": "0xa1ebf2043e76446efa2724bd1ec18321776096ff",
+      "total_usdc": 74.47,
+      "exercises": 6,
+      "first": "2025-08-10",
+      "last": "2025-09-11"
+    },
+    {
+      "address": "0xf7e9caaaeeb6cc9657e1dd490f044114aecc31b2",
+      "total_usdc": 70.78,
+      "exercises": 9,
+      "first": "2025-08-22",
+      "last": "2025-11-11"
+    },
+    {
+      "address": "0x0480f1cbe27fd5eae8ae7c4d5ff764e30f91aa5f",
+      "total_usdc": 70.4,
+      "exercises": 5,
+      "first": "2025-07-18",
+      "last": "2025-10-14"
+    },
+    {
+      "address": "0xc47c4c896afe31e0c37ecdb54df7836313b6504c",
+      "total_usdc": 70.3,
+      "exercises": 3,
+      "first": "2025-08-22",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x4b35859d950c5a542438914d6853ef781da6fa3f",
+      "total_usdc": 68.99,
+      "exercises": 19,
+      "first": "2025-08-15",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0x0fc69c0b2739d1ddd58de4ba51f3bad42e6e6bf4",
+      "total_usdc": 67.36,
+      "exercises": 1,
+      "first": "2025-08-12",
+      "last": "2025-08-12"
+    },
+    {
+      "address": "0xd69c957aa14286fda986a12a40b4cb54eaaf76ea",
+      "total_usdc": 64.94,
+      "exercises": 19,
+      "first": "2025-07-03",
+      "last": "2025-11-28"
+    },
+    {
+      "address": "0x4139ceb2a87dc0fd9f58a4db92557f8a18f1d752",
+      "total_usdc": 64.38,
+      "exercises": 6,
+      "first": "2025-09-19",
+      "last": "2025-11-02"
+    },
+    {
+      "address": "0xb0e6686645136185390426b4a5c4083b2363337d",
+      "total_usdc": 64.38,
+      "exercises": 3,
+      "first": "2025-09-30",
+      "last": "2025-09-30"
+    },
+    {
+      "address": "0x088e82f346ceacd20f0dca8eff0b073697c6d5cd",
+      "total_usdc": 60.96,
+      "exercises": 1,
+      "first": "2025-08-10",
+      "last": "2025-08-10"
+    },
+    {
+      "address": "0xde845b18f83a3d41be953ef3316465a9cce09892",
+      "total_usdc": 60.48,
+      "exercises": 6,
+      "first": "2025-09-19",
+      "last": "2025-11-02"
+    },
+    {
+      "address": "0x12cda3e710b5c08e5fc771f23c3bc43f7351337b",
+      "total_usdc": 59.98,
+      "exercises": 1,
+      "first": "2025-09-15",
+      "last": "2025-09-15"
+    },
+    {
+      "address": "0xe7c080cd5c7a4c88ebd8939e2ae4fc98b1dfb839",
+      "total_usdc": 57.05,
+      "exercises": 1,
+      "first": "2025-08-16",
+      "last": "2025-08-16"
+    },
+    {
+      "address": "0x4dbddf8869a708b0884d535c05ef0cf904488c55",
+      "total_usdc": 55.42,
+      "exercises": 1,
+      "first": "2025-09-04",
+      "last": "2025-09-04"
+    },
+    {
+      "address": "0x10630c8130e44ed22d30d0a05488a10b44797a93",
+      "total_usdc": 53.56,
+      "exercises": 4,
+      "first": "2025-08-14",
+      "last": "2025-08-14"
+    },
+    {
+      "address": "0xb4ce66908ba84636f2b33d9bee364f362e7ed4c5",
+      "total_usdc": 53.54,
+      "exercises": 4,
+      "first": "2025-09-20",
+      "last": "2025-12-15"
+    },
+    {
+      "address": "0x87333e15b593e13d22ceb38046f3dee0b964ef37",
+      "total_usdc": 53.31,
+      "exercises": 3,
+      "first": "2025-07-19",
+      "last": "2025-08-03"
+    },
+    {
+      "address": "0x3a6cb57e87ba21f48304ff4a0f6ebf81d262a22c",
+      "total_usdc": 51.43,
+      "exercises": 15,
+      "first": "2025-10-23",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0x08607a205ea6f34d3faccd5fe12305c06ad39a5f",
+      "total_usdc": 50.48,
+      "exercises": 10,
+      "first": "2025-08-28",
+      "last": "2026-02-01"
+    },
+    {
+      "address": "0xf110589f7e02d4e643e6a5814cd69da667f4b127",
+      "total_usdc": 50.41,
+      "exercises": 2,
+      "first": "2025-10-12",
+      "last": "2025-10-12"
+    },
+    {
+      "address": "0x684bdb65c6d7558252eb7cb08d84efcfea86034a",
+      "total_usdc": 48.93,
+      "exercises": 6,
+      "first": "2025-09-19",
+      "last": "2025-11-02"
+    },
+    {
+      "address": "0xdb0132c875ea7a00c4a6283da592ae6500205396",
+      "total_usdc": 47.39,
+      "exercises": 1,
+      "first": "2026-02-09",
+      "last": "2026-02-09"
+    },
+    {
+      "address": "0xd97eca0566381b62c3d1d7e42a49633d2bb38ad7",
+      "total_usdc": 47.08,
+      "exercises": 5,
+      "first": "2025-08-28",
+      "last": "2025-11-30"
+    },
+    {
+      "address": "0x3faaffc01b79519b75ec52fd1726c7cf4208e979",
+      "total_usdc": 46.62,
+      "exercises": 4,
+      "first": "2026-01-12",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x71ce73552335414b2312c7d1581f9735aad5c71a",
+      "total_usdc": 45.25,
+      "exercises": 9,
+      "first": "2025-09-09",
+      "last": "2025-11-04"
+    },
+    {
+      "address": "0x4236cad967f018f4d87fd9c9aa0fb56e4f6fe9c2",
+      "total_usdc": 44.89,
+      "exercises": 1,
+      "first": "2025-07-19",
+      "last": "2025-07-19"
+    },
+    {
+      "address": "0xff538e3a94ec4539a6ca2d1d1bfb737db7f27afb",
+      "total_usdc": 41.61,
+      "exercises": 1,
+      "first": "2025-07-19",
+      "last": "2025-07-19"
+    },
+    {
+      "address": "0xaed0a189fe381d5bb35da6fa925ac36e54d84607",
+      "total_usdc": 41.1,
+      "exercises": 1,
+      "first": "2025-08-31",
+      "last": "2025-08-31"
+    },
+    {
+      "address": "0xe8d8bb57edf69e4daf806ba60bf2658c81eb91db",
+      "total_usdc": 40.84,
+      "exercises": 1,
+      "first": "2025-06-30",
+      "last": "2025-06-30"
+    },
+    {
+      "address": "0x7fc7fffd5e98250ffef0c9949cecd30274c1df1b",
+      "total_usdc": 40.78,
+      "exercises": 4,
+      "first": "2025-09-18",
+      "last": "2025-11-03"
+    },
+    {
+      "address": "0x119b04a501d870dcf177326c1c0b32f84c2c56de",
+      "total_usdc": 39.21,
+      "exercises": 5,
+      "first": "2025-08-06",
+      "last": "2025-08-29"
+    },
+    {
+      "address": "0x44c6988ae9dd86be7e30306f4ef0fbbd716bf0d0",
+      "total_usdc": 38.41,
+      "exercises": 5,
+      "first": "2025-07-29",
+      "last": "2025-09-26"
+    },
+    {
+      "address": "0xd5de81e7e5e4f740a26ebb254d6052e1d03b4787",
+      "total_usdc": 36.64,
+      "exercises": 1,
+      "first": "2025-10-07",
+      "last": "2025-10-07"
+    },
+    {
+      "address": "0x67dd646ef1866f4314951c9704535cbbc9db7c92",
+      "total_usdc": 36.57,
+      "exercises": 10,
+      "first": "2025-08-20",
+      "last": "2025-09-30"
+    },
+    {
+      "address": "0xa654c370254da6a932230308be045ea4dfcc5e20",
+      "total_usdc": 35.68,
+      "exercises": 17,
+      "first": "2025-07-06",
+      "last": "2026-02-12"
+    },
+    {
+      "address": "0xad49042919a43ac92a8a42aa10735c7260dd48c8",
+      "total_usdc": 35.46,
+      "exercises": 1,
+      "first": "2025-09-15",
+      "last": "2025-09-15"
+    },
+    {
+      "address": "0xc7666afe71d4699a9331092ccfd055846f9c6c54",
+      "total_usdc": 35.45,
+      "exercises": 2,
+      "first": "2025-09-06",
+      "last": "2025-09-14"
+    },
+    {
+      "address": "0x66322a0f0ef69afb3f9d41b4f6ea657592578330",
+      "total_usdc": 35.33,
+      "exercises": 8,
+      "first": "2025-08-16",
+      "last": "2026-01-15"
+    },
+    {
+      "address": "0x76ceb0f9dae2cd5ecaf07d977aefaa82d3d2d082",
+      "total_usdc": 35.27,
+      "exercises": 3,
+      "first": "2025-09-29",
+      "last": "2025-10-16"
+    },
+    {
+      "address": "0x443d1321e2433d6f5e1985b8fe102da4eb9305fa",
+      "total_usdc": 35.12,
+      "exercises": 2,
+      "first": "2026-01-09",
+      "last": "2026-01-16"
+    },
+    {
+      "address": "0xeb791396fba1b638082a2f2bdaa6f0b0c4947b7d",
+      "total_usdc": 34.87,
+      "exercises": 4,
+      "first": "2025-08-25",
+      "last": "2025-10-31"
+    },
+    {
+      "address": "0x61e3a9ed8bc7a682de9e6028e6e4d60f19e7faef",
+      "total_usdc": 34.18,
+      "exercises": 1,
+      "first": "2026-01-30",
+      "last": "2026-01-30"
+    },
+    {
+      "address": "0x10e3ea6e39582556d0728c85ff773db5bc41ee0e",
+      "total_usdc": 33.01,
+      "exercises": 1,
+      "first": "2025-10-19",
+      "last": "2025-10-19"
+    },
+    {
+      "address": "0x01d2bb4d3d1de52c9a10dd86aa97e77842f3d9a5",
+      "total_usdc": 32.88,
+      "exercises": 3,
+      "first": "2025-10-16",
+      "last": "2025-12-06"
+    },
+    {
+      "address": "0x3e537bf67d2348d9a5763094888764e07e1e3d3c",
+      "total_usdc": 31.6,
+      "exercises": 2,
+      "first": "2025-12-03",
+      "last": "2025-12-03"
+    },
+    {
+      "address": "0x09cd6679698d84d8d3d93c4ad5865241acd274b5",
+      "total_usdc": 31.22,
+      "exercises": 2,
+      "first": "2025-08-09",
+      "last": "2025-08-18"
+    },
+    {
+      "address": "0x1db2eb2f24e81421fe88a2d2316a6f7a7efe708b",
+      "total_usdc": 30.54,
+      "exercises": 1,
+      "first": "2025-09-08",
+      "last": "2025-09-08"
+    },
+    {
+      "address": "0xe4fd9c650f06e2c09982ba22ca655b7dfd13fe38",
+      "total_usdc": 29.8,
+      "exercises": 1,
+      "first": "2025-08-21",
+      "last": "2025-08-21"
+    },
+    {
+      "address": "0x0e9bf3d85d2aa2a357d8a72be6dff26984f4aa2f",
+      "total_usdc": 29.72,
+      "exercises": 1,
+      "first": "2025-09-28",
+      "last": "2025-09-28"
+    },
+    {
+      "address": "0x0b1a89664970ebeb16d6a1a039017049eea45a20",
+      "total_usdc": 29.62,
+      "exercises": 4,
+      "first": "2025-12-22",
+      "last": "2026-01-23"
+    },
+    {
+      "address": "0x66c42b20551d449bce40b3dc8fc62207a27d579f",
+      "total_usdc": 29.5,
+      "exercises": 2,
+      "first": "2025-08-31",
+      "last": "2025-09-14"
+    },
+    {
+      "address": "0x7ea2a095de3f382c67e8125be35199817ac4af54",
+      "total_usdc": 29.02,
+      "exercises": 1,
+      "first": "2025-08-03",
+      "last": "2025-08-03"
+    },
+    {
+      "address": "0xf4cae903dc1698bb309c650685f69cd84b45bc3c",
+      "total_usdc": 27.72,
+      "exercises": 5,
+      "first": "2025-07-18",
+      "last": "2026-01-05"
+    },
+    {
+      "address": "0x355e5ab1780ba3d88ef8feed0b29cb0d825a49a4",
+      "total_usdc": 25.23,
+      "exercises": 8,
+      "first": "2025-08-23",
+      "last": "2026-01-26"
+    },
+    {
+      "address": "0x0ddd623ffc393f32bb4bffe3510434799ab64018",
+      "total_usdc": 25.13,
+      "exercises": 16,
+      "first": "2025-09-27",
+      "last": "2026-01-29"
+    },
+    {
+      "address": "0x3d170616c9402a2ff5771d85f38bd8f87f97d297",
+      "total_usdc": 25.03,
+      "exercises": 14,
+      "first": "2025-11-15",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x9050ccdc68bba8b9101c6e41063eca753d9f1c0d",
+      "total_usdc": 24.83,
+      "exercises": 4,
+      "first": "2025-09-24",
+      "last": "2025-11-13"
+    },
+    {
+      "address": "0x4db8291c8a79954618a764e11adfb6222c67bd92",
+      "total_usdc": 24.77,
+      "exercises": 1,
+      "first": "2025-08-21",
+      "last": "2025-08-21"
+    },
+    {
+      "address": "0x757b53549c5723d7689f4e228187886bc8be9ed2",
+      "total_usdc": 24.19,
+      "exercises": 1,
+      "first": "2025-09-02",
+      "last": "2025-09-02"
+    },
+    {
+      "address": "0xd2cd7204f4bd213dac745b2ac50c376dde2c5391",
+      "total_usdc": 24.15,
+      "exercises": 12,
+      "first": "2025-08-24",
+      "last": "2025-10-31"
+    },
+    {
+      "address": "0x4d35dd2e1c7673bf08de47e1a46f3d05a9e7ceeb",
+      "total_usdc": 24.07,
+      "exercises": 3,
+      "first": "2025-08-11",
+      "last": "2025-09-17"
+    },
+    {
+      "address": "0xcf6862511797537ebf04ea5b16e08ce1826ed413",
+      "total_usdc": 23.81,
+      "exercises": 1,
+      "first": "2025-09-04",
+      "last": "2025-09-04"
+    },
+    {
+      "address": "0xfd9d2041d6934fd2f844e9f1f090573d8967f2ab",
+      "total_usdc": 23.32,
+      "exercises": 3,
+      "first": "2025-11-26",
+      "last": "2025-12-05"
+    },
+    {
+      "address": "0x51442ba52a0ff09371853625e01c6d77350820e6",
+      "total_usdc": 23.15,
+      "exercises": 1,
+      "first": "2025-09-13",
+      "last": "2025-09-13"
+    },
+    {
+      "address": "0x198bb932d6ba75a0c72501257558db859f7ead19",
+      "total_usdc": 22.95,
+      "exercises": 2,
+      "first": "2026-01-14",
+      "last": "2026-01-14"
+    },
+    {
+      "address": "0x5e53ce97fcd3abe46f1ab45abb3e9a9c5e19f193",
+      "total_usdc": 22.89,
+      "exercises": 1,
+      "first": "2025-09-30",
+      "last": "2025-09-30"
+    },
+    {
+      "address": "0xa12dec8a97284ff5a07f7cd2c61c309bb746a434",
+      "total_usdc": 22.22,
+      "exercises": 1,
+      "first": "2025-09-10",
+      "last": "2025-09-10"
+    },
+    {
+      "address": "0xf5d95ed1dd309de59552306cd7de3da5b4e2b119",
+      "total_usdc": 22.07,
+      "exercises": 3,
+      "first": "2025-11-13",
+      "last": "2025-11-29"
+    },
+    {
+      "address": "0xd4e73022924e96dd2c98d61621a25b2a63011791",
+      "total_usdc": 21.82,
+      "exercises": 13,
+      "first": "2025-07-14",
+      "last": "2025-10-07"
+    },
+    {
+      "address": "0x7a9287178cab99b0666359e146450de21b855e83",
+      "total_usdc": 21.31,
+      "exercises": 1,
+      "first": "2025-08-10",
+      "last": "2025-08-10"
+    },
+    {
+      "address": "0x8a041643cabccce7a5e24f4ee4fec664e1e36d24",
+      "total_usdc": 20.25,
+      "exercises": 3,
+      "first": "2025-11-21",
+      "last": "2025-12-11"
+    },
+    {
+      "address": "0xd5b807540ca933ba8c065dfe2ff5055b77d87646",
+      "total_usdc": 19.92,
+      "exercises": 2,
+      "first": "2025-08-30",
+      "last": "2026-01-26"
+    },
+    {
+      "address": "0xd9dc13f3286c15eba48ff55e9f39020a6b1a8591",
+      "total_usdc": 19.91,
+      "exercises": 2,
+      "first": "2025-09-05",
+      "last": "2025-11-26"
+    },
+    {
+      "address": "0xec15fbebd5dc1438eb54fb7c0e28bf2cbd79cf87",
+      "total_usdc": 19.85,
+      "exercises": 1,
+      "first": "2025-10-12",
+      "last": "2025-10-12"
+    },
+    {
+      "address": "0x2e8fba7125cfad75b8bc750832b06acae9729b16",
+      "total_usdc": 19.7,
+      "exercises": 3,
+      "first": "2025-06-27",
+      "last": "2025-07-08"
+    },
+    {
+      "address": "0x4c5d97f02d0774b114f3c9f5d2b433c41cbe7b7d",
+      "total_usdc": 19.55,
+      "exercises": 1,
+      "first": "2025-12-29",
+      "last": "2025-12-29"
+    },
+    {
+      "address": "0x25bdd79e534fa73a0e71a1525c9c244b2c79b21a",
+      "total_usdc": 19.53,
+      "exercises": 2,
+      "first": "2025-06-30",
+      "last": "2025-08-04"
+    },
+    {
+      "address": "0x46232cbdb0512ca7b00b8271e285bf8447f1330b",
+      "total_usdc": 19.26,
+      "exercises": 2,
+      "first": "2025-06-27",
+      "last": "2025-07-08"
+    },
+    {
+      "address": "0xc1232a72489419558c98fb186da69e152dd761f6",
+      "total_usdc": 18.8,
+      "exercises": 1,
+      "first": "2025-10-07",
+      "last": "2025-10-07"
+    },
+    {
+      "address": "0xa33d993b8b2e95d9ca1cad463afc63c9d51bc2d9",
+      "total_usdc": 18.63,
+      "exercises": 1,
+      "first": "2025-08-20",
+      "last": "2025-08-20"
+    },
+    {
+      "address": "0x00c18f9a048a52828c156ec71b76fae4d80b6d87",
+      "total_usdc": 18.4,
+      "exercises": 1,
+      "first": "2025-11-02",
+      "last": "2025-11-02"
+    },
+    {
+      "address": "0xe9d22623d59e4763927dc824b195384e46b35254",
+      "total_usdc": 17.26,
+      "exercises": 1,
+      "first": "2025-09-02",
+      "last": "2025-09-02"
+    },
+    {
+      "address": "0x4b670646aee81273780be150ccd03e7436a36ab1",
+      "total_usdc": 17.12,
+      "exercises": 3,
+      "first": "2025-08-27",
+      "last": "2025-09-11"
+    },
+    {
+      "address": "0x1fc46d86890cb931432ba21e0fa05c70ff9b0ff0",
+      "total_usdc": 15.83,
+      "exercises": 3,
+      "first": "2025-07-11",
+      "last": "2025-10-19"
+    },
+    {
+      "address": "0x4bc4aa1a1f43137a80136cf7a040aae6a85f151d",
+      "total_usdc": 15.83,
+      "exercises": 6,
+      "first": "2025-10-11",
+      "last": "2026-02-03"
+    },
+    {
+      "address": "0x4950ab279a968016ba1a852c7888b64154d65dd3",
+      "total_usdc": 15.82,
+      "exercises": 10,
+      "first": "2025-09-04",
+      "last": "2025-11-21"
+    },
+    {
+      "address": "0xe0b96df74918daac6b4a713ffe51261b92148635",
+      "total_usdc": 15.23,
+      "exercises": 1,
+      "first": "2025-08-16",
+      "last": "2025-08-16"
+    },
+    {
+      "address": "0xe80859feb98a1c6b8e1cd20960c347ed1e514816",
+      "total_usdc": 15.23,
+      "exercises": 1,
+      "first": "2026-02-07",
+      "last": "2026-02-07"
+    },
+    {
+      "address": "0xab9cde6b97fc31278fe1e496bcc96c157692c17f",
+      "total_usdc": 14.58,
+      "exercises": 1,
+      "first": "2025-11-01",
+      "last": "2025-11-01"
+    },
+    {
+      "address": "0xb09951a767735efb3fb4168206eb946d5dc05f63",
+      "total_usdc": 14.06,
+      "exercises": 1,
+      "first": "2025-11-07",
+      "last": "2025-11-07"
+    },
+    {
+      "address": "0x249025bd74e42faecb5f7c63b889f511581a8546",
+      "total_usdc": 13.94,
+      "exercises": 11,
+      "first": "2025-08-21",
+      "last": "2025-11-20"
+    },
+    {
+      "address": "0x11ff733783e63f040fc158d414ad45f5f2870d7a",
+      "total_usdc": 13.35,
+      "exercises": 1,
+      "first": "2025-07-11",
+      "last": "2025-07-11"
+    },
+    {
+      "address": "0x78e787a4dad856d08b5acc2fa8a93644d4e65434",
+      "total_usdc": 13.33,
+      "exercises": 9,
+      "first": "2025-07-06",
+      "last": "2025-09-04"
+    },
+    {
+      "address": "0x4dd6e84e6707baaa3744037648d76a9be537459e",
+      "total_usdc": 13.1,
+      "exercises": 1,
+      "first": "2025-08-23",
+      "last": "2025-08-23"
+    },
+    {
+      "address": "0x1cf3c43c857042328189763341492c8cb99a7453",
+      "total_usdc": 12.56,
+      "exercises": 1,
+      "first": "2025-10-10",
+      "last": "2025-10-10"
+    },
+    {
+      "address": "0xf234cd5e91ea2c6a3f5c5359862a7c08b97324e8",
+      "total_usdc": 12.51,
+      "exercises": 1,
+      "first": "2025-09-23",
+      "last": "2025-09-23"
+    },
+    {
+      "address": "0x282be19f0d9870879ffbd4065fa35a9fa02560b8",
+      "total_usdc": 12.45,
+      "exercises": 1,
+      "first": "2025-10-27",
+      "last": "2025-10-27"
+    },
+    {
+      "address": "0x07978fdd8149f2303f6853ffea41289542c7703f",
+      "total_usdc": 11.78,
+      "exercises": 1,
+      "first": "2025-08-14",
+      "last": "2025-08-14"
+    },
+    {
+      "address": "0x581ff042aa46905922869612ad82a4de98db04f5",
+      "total_usdc": 10.99,
+      "exercises": 5,
+      "first": "2025-07-24",
+      "last": "2025-08-23"
+    },
+    {
+      "address": "0x37488a31adafe0253de1e94de9fe9cf23f67774c",
+      "total_usdc": 10.9,
+      "exercises": 1,
+      "first": "2025-11-23",
+      "last": "2025-11-23"
+    },
+    {
+      "address": "0x6e5f7bd9b940287f6c9ae8a2ecfb93224a09cba5",
+      "total_usdc": 10.85,
+      "exercises": 2,
+      "first": "2025-09-18",
+      "last": "2025-10-06"
+    },
+    {
+      "address": "0x16ec5ee1cc431ca95de00b6c88d21d0b4d3fc2a6",
+      "total_usdc": 10.54,
+      "exercises": 1,
+      "first": "2025-07-10",
+      "last": "2025-07-10"
+    },
+    {
+      "address": "0x8352b758111accdc52663061e4dd5899588b2653",
+      "total_usdc": 10.24,
+      "exercises": 12,
+      "first": "2025-11-03",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0x186b4e576e34974c776ab8048970aefd9c71468e",
+      "total_usdc": 10.05,
+      "exercises": 2,
+      "first": "2025-08-12",
+      "last": "2026-01-14"
+    },
+    {
+      "address": "0x50d4df2878e44f0d4ba02502f0a3646f9daf5d5f",
+      "total_usdc": 9.84,
+      "exercises": 1,
+      "first": "2026-01-14",
+      "last": "2026-01-14"
+    },
+    {
+      "address": "0xbce49959edb00ebc509e6a9e11dce059582e7756",
+      "total_usdc": 9.69,
+      "exercises": 1,
+      "first": "2025-08-16",
+      "last": "2025-08-16"
+    },
+    {
+      "address": "0xcd683652b864e72f77b43f6ea2b9cd244e627f33",
+      "total_usdc": 9.65,
+      "exercises": 2,
+      "first": "2025-11-20",
+      "last": "2025-11-20"
+    },
+    {
+      "address": "0xff020680284f9e941aba0cbafcd57de78e01c828",
+      "total_usdc": 9.62,
+      "exercises": 2,
+      "first": "2025-07-20",
+      "last": "2025-08-03"
+    },
+    {
+      "address": "0xf15d690d9cdec7bcf21393deadaab660f000850c",
+      "total_usdc": 9.55,
+      "exercises": 5,
+      "first": "2025-12-16",
+      "last": "2026-01-08"
+    },
+    {
+      "address": "0x38d2dfc2f67ce4a9daefe6c2f2e3882042f5e439",
+      "total_usdc": 9.46,
+      "exercises": 1,
+      "first": "2025-09-02",
+      "last": "2025-09-02"
+    },
+    {
+      "address": "0xf7f1f47ec265f64cc5f569ff87da572a5ab51fa6",
+      "total_usdc": 9.01,
+      "exercises": 1,
+      "first": "2026-01-25",
+      "last": "2026-01-25"
+    },
+    {
+      "address": "0xb4b9119d5a968799dbab80d8dd12fb509a5d00e2",
+      "total_usdc": 8.68,
+      "exercises": 4,
+      "first": "2025-08-10",
+      "last": "2025-09-19"
+    },
+    {
+      "address": "0xc57ba3e1d508db99ac4afc45969cd853fe6e0f6c",
+      "total_usdc": 8.61,
+      "exercises": 5,
+      "first": "2025-09-20",
+      "last": "2025-10-26"
+    },
+    {
+      "address": "0x2e88e29234dd5599c675b4a05f1d815bf567d6e7",
+      "total_usdc": 8.45,
+      "exercises": 3,
+      "first": "2025-11-07",
+      "last": "2025-12-25"
+    },
+    {
+      "address": "0x19bf4fe746c370e2930cd8c1b3dcfa55270c8ed7",
+      "total_usdc": 8.21,
+      "exercises": 2,
+      "first": "2025-08-23",
+      "last": "2025-09-01"
+    },
+    {
+      "address": "0xb84174ce1b56ac70bf812ad50b23559cedb0da1d",
+      "total_usdc": 8.04,
+      "exercises": 2,
+      "first": "2025-09-15",
+      "last": "2025-09-15"
+    },
+    {
+      "address": "0x30d8277f61c6c04c599bce5b05face06cdb63268",
+      "total_usdc": 7.9,
+      "exercises": 2,
+      "first": "2025-07-11",
+      "last": "2025-10-19"
+    },
+    {
+      "address": "0x5f80ac2f1562c82193692c6eb16d6c3a23852c1a",
+      "total_usdc": 7.72,
+      "exercises": 2,
+      "first": "2025-10-18",
+      "last": "2025-12-31"
+    },
+    {
+      "address": "0xd231f09f898b89a5ba27d49c932d935421c0858c",
+      "total_usdc": 7.69,
+      "exercises": 1,
+      "first": "2025-09-24",
+      "last": "2025-09-24"
+    },
+    {
+      "address": "0x4e90da1ddcd5b0fb295b6a69251b5d04d5bcca7a",
+      "total_usdc": 7.48,
+      "exercises": 2,
+      "first": "2025-10-08",
+      "last": "2026-02-09"
+    },
+    {
+      "address": "0xaf850a2f5d3cc1acd47e2920ea5ed21e03b2788c",
+      "total_usdc": 7.09,
+      "exercises": 1,
+      "first": "2025-09-18",
+      "last": "2025-09-18"
+    },
+    {
+      "address": "0x9302d35786643f680b617b03bcde983db6a7319d",
+      "total_usdc": 6.69,
+      "exercises": 2,
+      "first": "2026-01-09",
+      "last": "2026-01-16"
+    },
+    {
+      "address": "0x2b7b6bedfae21b0cb46b73633192f6577b733026",
+      "total_usdc": 6.68,
+      "exercises": 2,
+      "first": "2026-01-27",
+      "last": "2026-02-05"
+    },
+    {
+      "address": "0x9f94a10307602d13443c5004f683b4f470afaf1e",
+      "total_usdc": 6.67,
+      "exercises": 2,
+      "first": "2025-12-27",
+      "last": "2026-01-03"
+    },
+    {
+      "address": "0x418769f79771aae38d7cd4911543b03976b2c925",
+      "total_usdc": 6.25,
+      "exercises": 1,
+      "first": "2026-01-09",
+      "last": "2026-01-09"
+    },
+    {
+      "address": "0xa431f2022fc80c6694b1fc70de503e475e8b9f9f",
+      "total_usdc": 6.23,
+      "exercises": 3,
+      "first": "2026-01-23",
+      "last": "2026-02-09"
+    },
+    {
+      "address": "0xdd0cdf8d98d9ad3adfaa49aaecd444bfa01d9c9a",
+      "total_usdc": 5.8,
+      "exercises": 2,
+      "first": "2025-09-14",
+      "last": "2025-11-17"
+    },
+    {
+      "address": "0x8d21da0046903e99406b5680449085188082e3f5",
+      "total_usdc": 5.5,
+      "exercises": 10,
+      "first": "2025-08-29",
+      "last": "2025-12-29"
+    },
+    {
+      "address": "0x4630a1f8d41fd321de12af9b5818e0380dc2c737",
+      "total_usdc": 5.25,
+      "exercises": 1,
+      "first": "2025-10-01",
+      "last": "2025-10-01"
+    },
+    {
+      "address": "0x094e59706d52e2f95a57e7d399871522a4037923",
+      "total_usdc": 5.17,
+      "exercises": 13,
+      "first": "2025-08-23",
+      "last": "2026-01-27"
+    },
+    {
+      "address": "0xed20bc9f8be737572d7e40237023c7a8fea3449e",
+      "total_usdc": 5.05,
+      "exercises": 1,
+      "first": "2025-08-01",
+      "last": "2025-08-01"
+    },
+    {
+      "address": "0x47cd48b937a348550994ad440fc43d973a56ce6b",
+      "total_usdc": 4.67,
+      "exercises": 2,
+      "first": "2025-10-30",
+      "last": "2026-01-19"
+    },
+    {
+      "address": "0x6d693ba72274aad567ec5beef88b861e08092eb5",
+      "total_usdc": 4.33,
+      "exercises": 1,
+      "first": "2025-11-01",
+      "last": "2025-11-01"
+    },
+    {
+      "address": "0x01a825a4505cd8b862b26e345b718c39edd98ede",
+      "total_usdc": 4.05,
+      "exercises": 1,
+      "first": "2025-10-03",
+      "last": "2025-10-03"
+    },
+    {
+      "address": "0xc72e316d149367babe1234697e390ed43f77d23e",
+      "total_usdc": 3.97,
+      "exercises": 1,
+      "first": "2025-09-08",
+      "last": "2025-09-08"
+    },
+    {
+      "address": "0x466df379837fbb2ac07c4ea151eca92de16d8a14",
+      "total_usdc": 3.92,
+      "exercises": 2,
+      "first": "2025-11-04",
+      "last": "2025-11-04"
+    },
+    {
+      "address": "0xf4aa5925c0ba56b6ef75d1edd65ff4278beed366",
+      "total_usdc": 3.86,
+      "exercises": 1,
+      "first": "2025-09-02",
+      "last": "2025-09-02"
+    },
+    {
+      "address": "0xe7e55b2efe24421982e1bc3a38c63c9adb8bf5ae",
+      "total_usdc": 3.74,
+      "exercises": 6,
+      "first": "2025-09-27",
+      "last": "2025-12-19"
+    },
+    {
+      "address": "0x3dfcb16b9e8e44640ea647baae41ccd01ad45051",
+      "total_usdc": 3.67,
+      "exercises": 3,
+      "first": "2025-11-12",
+      "last": "2026-01-02"
+    },
+    {
+      "address": "0x3d120e03cb6d2730a4b11071b4fe454f0f7a475c",
+      "total_usdc": 3.6,
+      "exercises": 1,
+      "first": "2025-08-17",
+      "last": "2025-08-17"
+    },
+    {
+      "address": "0xf96e80117d01a6031e71a20ad423060f2841d38f",
+      "total_usdc": 3.59,
+      "exercises": 5,
+      "first": "2025-09-03",
+      "last": "2026-02-03"
+    },
+    {
+      "address": "0x99f1ce9d0b95d5d9b3929d0079bdb27628e7efd7",
+      "total_usdc": 3.55,
+      "exercises": 1,
+      "first": "2025-11-01",
+      "last": "2025-11-01"
+    },
+    {
+      "address": "0x0d46dc4f79a5b5df4175200f80125e7311d2ef99",
+      "total_usdc": 3.27,
+      "exercises": 1,
+      "first": "2025-11-18",
+      "last": "2025-11-18"
+    },
+    {
+      "address": "0x7543a019485120de06ad60db19fbd06dd50312cb",
+      "total_usdc": 3.18,
+      "exercises": 1,
+      "first": "2025-07-23",
+      "last": "2025-07-23"
+    },
+    {
+      "address": "0xd0393824150e9bc00853557123d72391448745a4",
+      "total_usdc": 3.08,
+      "exercises": 4,
+      "first": "2025-07-08",
+      "last": "2026-01-23"
+    },
+    {
+      "address": "0xc17a00b9b57ae98ea188728b8806cfccbe2774e0",
+      "total_usdc": 2.88,
+      "exercises": 1,
+      "first": "2025-09-07",
+      "last": "2025-09-07"
+    },
+    {
+      "address": "0x27da984fcd8bdd8249d5669bf223d57fb3678832",
+      "total_usdc": 2.76,
+      "exercises": 1,
+      "first": "2025-08-10",
+      "last": "2025-08-10"
+    },
+    {
+      "address": "0x622cbe555c364beb70b10f1ba3952f29944381f0",
+      "total_usdc": 2.72,
+      "exercises": 2,
+      "first": "2025-09-29",
+      "last": "2025-09-29"
+    },
+    {
+      "address": "0x9655fee9d7b48b6965a81d84f62f0c4a086385b3",
+      "total_usdc": 2.53,
+      "exercises": 9,
+      "first": "2025-09-11",
+      "last": "2026-01-30"
+    },
+    {
+      "address": "0x111e318936660aaf49d485c74a77ffccb997d030",
+      "total_usdc": 2.37,
+      "exercises": 18,
+      "first": "2025-08-07",
+      "last": "2026-02-04"
+    },
+    {
+      "address": "0xdfe66b7dd823531f32e002209d6ccd5552c6c356",
+      "total_usdc": 2.22,
+      "exercises": 1,
+      "first": "2025-08-29",
+      "last": "2025-08-29"
+    },
+    {
+      "address": "0x1f9dbf4fa19ad799122f649256fc8ca6e4e33599",
+      "total_usdc": 2.18,
+      "exercises": 1,
+      "first": "2025-06-27",
+      "last": "2025-06-27"
+    },
+    {
+      "address": "0x9c57027b1eca93093a6f446422c59c85a5a3fa52",
+      "total_usdc": 2.15,
+      "exercises": 1,
+      "first": "2026-01-08",
+      "last": "2026-01-08"
+    },
+    {
+      "address": "0x970256a45681a36c4f21e5c9ce100dbe464a0b2f",
+      "total_usdc": 1.68,
+      "exercises": 11,
+      "first": "2025-07-11",
+      "last": "2026-01-12"
+    },
+    {
+      "address": "0xe8a204e487a026c353cb1438c8d43aaf1e47d644",
+      "total_usdc": 1.45,
+      "exercises": 1,
+      "first": "2026-01-16",
+      "last": "2026-01-16"
+    },
+    {
+      "address": "0xea073ff8020fb407f94533ddb42ab63241feb00d",
+      "total_usdc": 1.41,
+      "exercises": 1,
+      "first": "2026-01-22",
+      "last": "2026-01-22"
+    },
+    {
+      "address": "0xf4f009c27ee140d4dd4403597c4d9d72706747d6",
+      "total_usdc": 1.36,
+      "exercises": 6,
+      "first": "2025-09-09",
+      "last": "2026-01-10"
+    },
+    {
+      "address": "0xadb7ec53f76a1d2b1c623582947e676ba3716656",
+      "total_usdc": 1.21,
+      "exercises": 1,
+      "first": "2025-08-04",
+      "last": "2025-08-04"
+    },
+    {
+      "address": "0xdd631053ed8930b44c494f777d28c6afa0d0efd5",
+      "total_usdc": 1.16,
+      "exercises": 1,
+      "first": "2025-08-02",
+      "last": "2025-08-02"
+    },
+    {
+      "address": "0x95a89b3a9287423c11e526cac0b10c9701893586",
+      "total_usdc": 1.11,
+      "exercises": 1,
+      "first": "2025-10-09",
+      "last": "2025-10-09"
+    },
+    {
+      "address": "0x61c2a01221315ddaf8aa4d4f20a1a65a3e4f0924",
+      "total_usdc": 1.1,
+      "exercises": 1,
+      "first": "2025-09-21",
+      "last": "2025-09-21"
+    },
+    {
+      "address": "0x8316b1356cb7290aacf5aac9302e18462edaff98",
+      "total_usdc": 1.09,
+      "exercises": 3,
+      "first": "2025-08-09",
+      "last": "2025-08-23"
+    },
+    {
+      "address": "0x9a8e17813b98b97f989cad119d9e5f0b1671c70f",
+      "total_usdc": 1.06,
+      "exercises": 1,
+      "first": "2025-07-08",
+      "last": "2025-07-08"
+    },
+    {
+      "address": "0xe3f49120ecc198f26dd376c1841c3ed1e98666cd",
+      "total_usdc": 1.06,
+      "exercises": 2,
+      "first": "2026-01-12",
+      "last": "2026-01-20"
+    },
+    {
+      "address": "0x705e54faaa515bc86c83fb4803000eebeccbf167",
+      "total_usdc": 1.01,
+      "exercises": 1,
+      "first": "2025-07-04",
+      "last": "2025-07-04"
+    },
+    {
+      "address": "0xda8307020bef2b3017db2e2e8aa655d4ac162b5a",
+      "total_usdc": 1.0,
+      "exercises": 1,
+      "first": "2025-11-15",
+      "last": "2025-11-15"
+    },
+    {
+      "address": "0x57e61a64d21afe3837028b5783bd7332436e2c7b",
+      "total_usdc": 0.98,
+      "exercises": 2,
+      "first": "2025-10-22",
+      "last": "2025-10-30"
+    },
+    {
+      "address": "0x1151c997acb214b31a148b24a0b10fb80da9f7a8",
+      "total_usdc": 0.98,
+      "exercises": 2,
+      "first": "2025-10-22",
+      "last": "2025-10-30"
+    },
+    {
+      "address": "0xbc4f22d7bccc2c3b928c6b85f4021cac3a47963f",
+      "total_usdc": 0.97,
+      "exercises": 1,
+      "first": "2025-09-18",
+      "last": "2025-09-18"
+    },
+    {
+      "address": "0x5c0c8d1cf51ac8e8d970051ac69dbdb1315b6036",
+      "total_usdc": 0.95,
+      "exercises": 1,
+      "first": "2025-09-27",
+      "last": "2025-09-27"
+    },
+    {
+      "address": "0xd6b220f3210f77637559a0ceda62e9f7ff1dabef",
+      "total_usdc": 0.87,
+      "exercises": 1,
+      "first": "2025-08-24",
+      "last": "2025-08-24"
+    },
+    {
+      "address": "0xa136d3f79ec445d749d3905702cac790c79046e1",
+      "total_usdc": 0.87,
+      "exercises": 3,
+      "first": "2025-11-06",
+      "last": "2025-11-20"
+    },
+    {
+      "address": "0x622bd232481e51d4cfab990a911d43b3ef709cc2",
+      "total_usdc": 0.83,
+      "exercises": 11,
+      "first": "2025-10-30",
+      "last": "2026-02-02"
+    },
+    {
+      "address": "0x25a29b20ceb6a369d707a4af766dfc646f46fce2",
+      "total_usdc": 0.82,
+      "exercises": 1,
+      "first": "2025-12-06",
+      "last": "2025-12-06"
+    },
+    {
+      "address": "0xd393c836514b251144fdf13d2fa5169cc31e0122",
+      "total_usdc": 0.77,
+      "exercises": 1,
+      "first": "2025-10-08",
+      "last": "2025-10-08"
+    },
+    {
+      "address": "0xcbb1cb42c2833d49a4e1a902054e216c25498879",
+      "total_usdc": 0.7,
+      "exercises": 1,
+      "first": "2026-01-27",
+      "last": "2026-01-27"
+    },
+    {
+      "address": "0xf05c11a15aca92c7f8864d20d9edc845c02e9a30",
+      "total_usdc": 0.63,
+      "exercises": 1,
+      "first": "2025-08-22",
+      "last": "2025-08-22"
+    },
+    {
+      "address": "0x9328c78fda563b91b97d6b7a27d179ea7585a116",
+      "total_usdc": 0.55,
+      "exercises": 1,
+      "first": "2025-10-18",
+      "last": "2025-10-18"
+    },
+    {
+      "address": "0x8e2625778ac3159accfd3cdd1d6a7846d7a9be4e",
+      "total_usdc": 0.51,
+      "exercises": 2,
+      "first": "2025-11-20",
+      "last": "2025-12-04"
+    },
+    {
+      "address": "0x615beb70c521da47c692a55cb2f022238a26a9c8",
+      "total_usdc": 0.5,
+      "exercises": 1,
+      "first": "2025-08-15",
+      "last": "2025-08-15"
+    },
+    {
+      "address": "0x4a1b88c916aa34fec3210b88e31a248caac15535",
+      "total_usdc": 0.45,
+      "exercises": 1,
+      "first": "2025-09-18",
+      "last": "2025-09-18"
+    },
+    {
+      "address": "0x240e609a8d1a1afce8f875a9981ad7419cc0aa1e",
+      "total_usdc": 0.4,
+      "exercises": 4,
+      "first": "2025-09-06",
+      "last": "2025-10-15"
+    },
+    {
+      "address": "0x435b7d470767cb121f37dd296b2ac7913fdf5427",
+      "total_usdc": 0.34,
+      "exercises": 1,
+      "first": "2025-10-10",
+      "last": "2025-10-10"
+    },
+    {
+      "address": "0xe84738ceefb23541197dbee0f1e00d0047bf3d7d",
+      "total_usdc": 0.3,
+      "exercises": 1,
+      "first": "2025-11-26",
+      "last": "2025-11-26"
+    },
+    {
+      "address": "0x8bdd197176d38504a091c0f79b8b456197fe82b4",
+      "total_usdc": 0.27,
+      "exercises": 1,
+      "first": "2025-11-30",
+      "last": "2025-11-30"
+    },
+    {
+      "address": "0x43037263b92b01b5f95d25b918bce8c31b01885e",
+      "total_usdc": 0.22,
+      "exercises": 1,
+      "first": "2025-07-25",
+      "last": "2025-07-25"
+    },
+    {
+      "address": "0xd9b49a81ee72af3c026a2c144c9ffd678a78c8b1",
+      "total_usdc": 0.2,
+      "exercises": 1,
+      "first": "2025-08-09",
+      "last": "2025-08-09"
+    },
+    {
+      "address": "0xc3a03c3f58c674fc41756744bf2210c8bdbc4081",
+      "total_usdc": 0.19,
+      "exercises": 2,
+      "first": "2025-09-11",
+      "last": "2025-10-20"
+    },
+    {
+      "address": "0x7692a4436f8252f34258c2bfa846ec5e840d5e55",
+      "total_usdc": 0.19,
+      "exercises": 2,
+      "first": "2025-11-13",
+      "last": "2025-11-13"
+    },
+    {
+      "address": "0x1e582f30a2b08352ee9b3fa1e31c5cb8a64255ff",
+      "total_usdc": 0.17,
+      "exercises": 1,
+      "first": "2025-09-14",
+      "last": "2025-09-14"
+    },
+    {
+      "address": "0x27bf350cd9ec8c7671aff1a96ff9758943d72b5a",
+      "total_usdc": 0.16,
+      "exercises": 2,
+      "first": "2025-09-15",
+      "last": "2025-09-18"
+    },
+    {
+      "address": "0x20c4beef016f8b3d99c03e3612d20b43ec21d18f",
+      "total_usdc": 0.15,
+      "exercises": 1,
+      "first": "2025-07-10",
+      "last": "2025-07-10"
+    },
+    {
+      "address": "0x3ec825dc7eef0db1e1ea2d5ce21504586fcdd807",
+      "total_usdc": 0.15,
+      "exercises": 4,
+      "first": "2025-09-24",
+      "last": "2026-02-03"
+    },
+    {
+      "address": "0xcfd9733663428e392ab9cfa793c4dac1d0556d18",
+      "total_usdc": 0.11,
+      "exercises": 5,
+      "first": "2025-08-27",
+      "last": "2025-12-29"
+    },
+    {
+      "address": "0x18a428ce0c31584a21cf8cefdb8849d8013e1994",
+      "total_usdc": 0.1,
+      "exercises": 21,
+      "first": "2025-09-21",
+      "last": "2026-02-12"
+    },
+    {
+      "address": "0x41dafd612e26efdbafba57da7583eae26976d2c4",
+      "total_usdc": 0.09,
+      "exercises": 1,
+      "first": "2025-06-27",
+      "last": "2025-06-27"
+    },
+    {
+      "address": "0x9a7d31c6f986dffeef9ce81dcff100bdb485f05f",
+      "total_usdc": 0.07,
+      "exercises": 2,
+      "first": "2026-01-28",
+      "last": "2026-02-12"
+    },
+    {
+      "address": "0x432fcd67815d5cc72808a7815a02373fdee7d740",
+      "total_usdc": 0.04,
+      "exercises": 1,
+      "first": "2025-06-28",
+      "last": "2025-06-28"
+    },
+    {
+      "address": "0x337af98699de50f4e6ce3e643d37c5f5f1360938",
+      "total_usdc": 0.03,
+      "exercises": 1,
+      "first": "2025-07-01",
+      "last": "2025-07-01"
+    },
+    {
+      "address": "0xefce38f31ebeb9637e85d3487595261fdf6ebeeb",
+      "total_usdc": 0.03,
+      "exercises": 1,
+      "first": "2025-07-17",
+      "last": "2025-07-17"
+    },
+    {
+      "address": "0x4f5f9db14e195484cf7790fd3946cf6e66a166b0",
+      "total_usdc": 0.03,
+      "exercises": 1,
+      "first": "2025-09-25",
+      "last": "2025-09-25"
+    },
+    {
+      "address": "0x6adf6f753e0f668702aa260b4679e0c9a2c84a71",
+      "total_usdc": 0.03,
+      "exercises": 1,
+      "first": "2025-11-23",
+      "last": "2025-11-23"
+    },
+    {
+      "address": "0x8c37c9bd8da8fce93ee638383467b1bcb6bde160",
+      "total_usdc": 0.03,
+      "exercises": 1,
+      "first": "2026-01-14",
+      "last": "2026-01-14"
+    },
+    {
+      "address": "0x6c81822400b17854770c27f31b7d831da4b592b2",
+      "total_usdc": 0.02,
+      "exercises": 1,
+      "first": "2025-08-28",
+      "last": "2025-08-28"
+    },
+    {
+      "address": "0x7d7628ffe75b017d6c8235f7567c68dcad10c78d",
+      "total_usdc": 0.02,
+      "exercises": 5,
+      "first": "2025-09-26",
+      "last": "2025-12-05"
+    },
+    {
+      "address": "0x5a09e3fdb828ec32af3b4216bbda060de51ee72a",
+      "total_usdc": 0.01,
+      "exercises": 1,
+      "first": "2025-08-28",
+      "last": "2025-08-28"
+    },
+    {
+      "address": "0x3b2342bfb31ef769c5c1c7457565053749e6845c",
+      "total_usdc": 0.01,
+      "exercises": 5,
+      "first": "2025-09-26",
+      "last": "2025-12-05"
+    },
+    {
+      "address": "0xc48fe631f06aad34f712ce931435b9ac6f3aeab4",
+      "total_usdc": 0.01,
+      "exercises": 4,
+      "first": "2025-10-02",
+      "last": "2025-11-16"
+    },
+    {
+      "address": "0x5221fe845a6eb381af787196d70cda5cda6dece4",
+      "total_usdc": 0.01,
+      "exercises": 1,
+      "first": "2025-10-05",
+      "last": "2025-10-05"
+    },
+    {
+      "address": "0x009c82ec2dc81fe2f761891165d5c9eb52953ef3",
+      "total_usdc": 0.01,
+      "exercises": 1,
+      "first": "2026-02-11",
+      "last": "2026-02-11"
+    },
+    {
+      "address": "0x825b59a1f6c7d12a569c75b2f8f57bd9d4288ae7",
+      "total_usdc": 0.0,
+      "exercises": 1,
+      "first": "2025-09-07",
+      "last": "2025-09-07"
+    },
+    {
+      "address": "0x28c974c18c6553b445c4b77f35d83f3499acf58f",
+      "total_usdc": 0.0,
+      "exercises": 1,
+      "first": "2026-01-21",
+      "last": "2026-01-21"
+    }
+  ]
+}
