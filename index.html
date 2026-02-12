@@ -781,6 +781,13 @@
             background: rgba(99, 102, 241, 0.06);
         }
 
+        .exerciser-row:hover td,
+        .exerciser-row:hover td span,
+        .exerciser-row:hover td .addr-link,
+        .exerciser-row:hover td a:not(.debank-icon) {
+            font-size: 15px !important;
+        }
+
         .exerciser-row.expanded {
             background: rgba(99, 102, 241, 0.1);
         }
@@ -905,7 +912,21 @@
         }
 
         tbody tr:hover {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(99, 102, 241, 0.06);
+        }
+
+        tbody tr:hover td,
+        tbody tr:hover td span,
+        tbody tr:hover td .mini-bar span,
+        tbody tr:hover td .addr-link,
+        tbody tr:hover td a:not(.debank-icon) {
+            color: var(--accent-cyan) !important;
+            font-size: 14px;
+        }
+
+        tbody tr:hover td .tokens-truncated {
+            color: #ffffff !important;
+            font-size: 14px;
         }
 
         tbody tr:last-child {
@@ -973,6 +994,16 @@
             color: var(--accent-cyan);
         }
 
+        .addr-link {
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color var(--transition);
+        }
+
+        .addr-link:hover {
+            color: var(--accent-cyan);
+        }
+
         .c-nft {
             font-weight: 600;
             font-variant-numeric: tabular-nums;
@@ -995,6 +1026,7 @@
         .mini-bar-fill {
             height: 100%;
             border-radius: 2px;
+            transition: background 0.2s;
         }
 
         .mini-bar-fill.purple {
@@ -1526,6 +1558,23 @@
         .addr-label.dead {
             background: rgba(239, 68, 68, 0.15);
             color: #ef4444;
+        }
+
+        .debank-icon {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 6px;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            vertical-align: middle;
+        }
+
+        .debank-icon:hover {
+            opacity: 1;
+        }
+
+        .debank-icon img {
+            border-radius: 3px;
         }
 
         /* ===== SUPPLY % IN TABLE ===== */
@@ -2670,6 +2719,12 @@
                     </svg>
                     View on BeraScan
                 </a>
+                <a class="modal-link" id="pm-debank" target="_blank" style="color:#fe815f">
+                    <img src="https://debank.com/favicon.ico" width="14" height="14"
+                        style="vertical-align:middle;margin-right:4px;border-radius:3px"
+                        onerror="this.style.display='none'">
+                    View on DeBank
+                </a>
                 <a class="modal-link" id="pm-copy" onclick="copyFromModal()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2" />
@@ -2725,6 +2780,12 @@
                         <line x1="10" y1="14" x2="21" y2="3" />
                     </svg>
                     View on BeraScan
+                </a>
+                <a class="modal-link" id="em-debank" target="_blank" style="color:#fe815f">
+                    <img src="https://debank.com/favicon.ico" width="14" height="14"
+                        style="vertical-align:middle;margin-right:4px;border-radius:3px"
+                        onerror="this.style.display='none'">
+                    View on DeBank
                 </a>
                 <a class="modal-link" id="em-copy" onclick="copyExerciserAddr()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -3288,14 +3349,15 @@
                 const addrLabel = getAddrLabel(h.address);
                 const checked = compareSet.has(h.address) ? 'checked' : '';
 
-                return `<tr class="${isWhale ? 'whale-row' : ''}">
+                return `<tr class="${isWhale ? 'whale-row' : ''}" style="cursor:pointer" onclick="showProfile('${h.address}')">
             <td class="c-rank">
                 <div class="rank-cell-inner">
                     ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}
                 </div>
             </td>
             <td class="c-addr">
-                <a href="#address=${h.address}" onclick="event.preventDefault();showProfile('${h.address}')">${h.address}</a>${addrLabel}
+                <a href="#address=${h.address}" onclick="event.preventDefault();event.stopPropagation();showProfile('${h.address}')">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>${addrLabel}
+                <a href="https://debank.com/profile/${h.address}?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
             </td>
             <td class="c-nft">
                 <div class="mini-bar">
@@ -3527,6 +3589,7 @@
             document.getElementById('pm-locks').innerHTML = renderLockCards(details, currentLockSort);
 
             document.getElementById('pm-berascan').href = `https://berascan.com/address/${holder.address}`;
+            document.getElementById('pm-debank').href = `https://debank.com/profile/${holder.address}?chain=bera`;
 
             document.getElementById('profile-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -4171,7 +4234,7 @@
                     html += rank;
                 }
                 html += '</div></td>';
-                html += '<td class="c-addr"><span class="addr-link">' + exShortAddr(e.address) + '</span></td>';
+                html += '<td class="c-addr"><span class="addr-link">' + exShortAddr(e.address) + '</span><a href="https://debank.com/profile/' + e.address + '?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display=\'none\'"></a></td>';
                 html += '<td class="c-num">' + exFmtUsd(e.total_usdc) + '</td>';
                 html += '<td class="c-num">' + e.exercises + '</td>';
                 html += '<td class="c-num">' + exFmtLock(e.avg_lock_days) + '</td>';
@@ -4198,6 +4261,7 @@
             document.getElementById('em-avglock').textContent = exFmtLock(e.avg_lock_days);
             document.getElementById('em-avgprice').textContent = avgPrice ? '$' + avgPrice.toFixed(4) : '\u2014';
             document.getElementById('em-berascan').href = 'https://berascan.com/address/' + addr;
+            document.getElementById('em-debank').href = 'https://debank.com/profile/' + addr + '?chain=bera';
 
             const txs = e.txs || [];
             let html = '<table class="detail-table"><thead><tr>';
