@@ -2461,51 +2461,50 @@
                         document.querySelectorAll('.odolo-flow-icon-wrap.active').forEach(w => w.classList.remove('active'));
                     });
                 </script>
+            </div><!-- /odolo-analytics-grid -->
 
-                <!-- EXERCISERS TABLE -->
-                <div class="table-section anim anim-d3" id="exercisers-section" style="margin-top: 20px;">
-                    <div class="table-toolbar">
-                        <div class="search-input-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                            <input type="text" id="exerciser-search" placeholder="Search exerciser address 0x…">
-                        </div>
-                        <div class="toolbar-count" id="exerciser-count"></div>
+            <!-- EXERCISERS TABLE -->
+            <div class="table-section anim anim-d3" id="exercisers-section" style="margin-top: 20px;">
+                <div class="table-toolbar">
+                    <div class="search-input-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" id="exerciser-search" placeholder="Search exerciser address 0x…">
                     </div>
+                    <div class="toolbar-count" id="exerciser-count"></div>
+                </div>
 
-                    <div class="table-scroll">
-                        <table id="exercisers-table">
-                            <thead>
-                                <tr>
-                                    <th class="c-rank sorted" data-sort="rank" onclick="sortExercisers('rank')">
-                                        # <span class="arrow">▲</span>
-                                    </th>
-                                    <th data-sort="address" onclick="sortExercisers('address')">
-                                        Address <span class="arrow">⇅</span>
-                                    </th>
-                                    <th data-sort="total_usdc" onclick="sortExercisers('total_usdc')">
-                                        USDC.e Spent <span class="arrow">⇅</span>
-                                    </th>
-                                    <th data-sort="exercises" onclick="sortExercisers('exercises')">
-                                        Exercises <span class="arrow">⇅</span>
-                                    </th>
-                                    <th data-sort="first" onclick="sortExercisers('first')">
-                                        First <span class="arrow">⇅</span>
-                                    </th>
-                                    <th data-sort="last" onclick="sortExercisers('last')">
-                                        Last <span class="arrow">⇅</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="exercisers-tbody"></tbody>
-                        </table>
-                    </div>
+                <div class="table-scroll">
+                    <table id="exercisers-table">
+                        <thead>
+                            <tr>
+                                <th class="c-rank sorted" data-sort="rank" onclick="sortExercisers('rank')">
+                                    # <span class="arrow">▲</span>
+                                </th>
+                                <th data-sort="address" onclick="sortExercisers('address')">
+                                    Address <span class="arrow">⇅</span>
+                                </th>
+                                <th data-sort="total_usdc" onclick="sortExercisers('total_usdc')">
+                                    USDC.e Spent <span class="arrow">⇅</span>
+                                </th>
+                                <th data-sort="exercises" onclick="sortExercisers('exercises')">
+                                    Exercises <span class="arrow">⇅</span>
+                                </th>
+                                <th data-sort="first" onclick="sortExercisers('first')">
+                                    First <span class="arrow">⇅</span>
+                                </th>
+                                <th data-sort="last" onclick="sortExercisers('last')">
+                                    Last <span class="arrow">⇅</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="exercisers-tbody"></tbody>
+                    </table>
                 </div>
             </div>
-
 
         </div><!-- /view-odolo -->
 
