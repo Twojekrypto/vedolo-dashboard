@@ -773,6 +773,87 @@
             overflow-y: auto;
         }
 
+        .exerciser-row {
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+
+        .exerciser-row:hover {
+            background: rgba(99, 102, 241, 0.06);
+        }
+
+        .exerciser-row.expanded {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .detail-row td {
+            padding: 0 !important;
+            background: var(--bg-base);
+        }
+
+        .detail-row td>div,
+        .detail-row td>table {
+            padding: 16px 20px;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .detail-addr {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent-indigo);
+            text-decoration: none;
+        }
+
+        .detail-addr:hover {
+            text-decoration: underline;
+        }
+
+        .detail-summary {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .detail-table th {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--border-subtle);
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .detail-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+        }
+
+        .tx-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        .tx-link:hover {
+            text-decoration: underline;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -2493,6 +2574,9 @@
                                 <th data-sort="exercises" onclick="sortExercisers('exercises')">
                                     Exercises <span class="arrow">⇅</span>
                                 </th>
+                                <th data-sort="avg_lock" onclick="sortExercisers('avg_lock')">
+                                    Avg Lock <span class="arrow">⇅</span>
+                                </th>
                                 <th data-sort="first" onclick="sortExercisers('first')">
                                     First <span class="arrow">⇅</span>
                                 </th>
@@ -3912,6 +3996,7 @@
         let exerciserSortKey = 'rank';
         let exerciserSortAsc = true;
         let exerciserSearchTerm = '';
+        let expandedExerciser = null;
 
         async function loadExercisers() {
             try {
@@ -3920,38 +4005,25 @@
                 const json = await resp.json();
                 EXERCISER_DATA = json.exercisers || [];
                 renderExercisersTable();
-            } catch (e) {
-                console.warn('⚠️ exercisers_by_address.json error:', e);
-            }
+            } catch (e) { console.warn('exercisers error:', e); }
         }
 
         function renderExercisersTable() {
             const tbody = document.getElementById('exercisers-tbody');
             if (!tbody) return;
-
             let data = [...EXERCISER_DATA];
+            if (exerciserSearchTerm) data = data.filter(e => e.address.toLowerCase().includes(exerciserSearchTerm));
 
-            // Search filter
-            if (exerciserSearchTerm) {
-                data = data.filter(e => e.address.toLowerCase().includes(exerciserSearchTerm));
-            }
-
-            // Sort
             data.sort((a, b) => {
                 let va, vb;
                 if (exerciserSortKey === 'rank' || exerciserSortKey === 'total_usdc') {
                     va = a.total_usdc; vb = b.total_usdc;
-                    // rank sorts by usdc desc by default
                     if (exerciserSortKey === 'rank') return exerciserSortAsc ? vb - va : va - vb;
                     return exerciserSortAsc ? va - vb : vb - va;
                 }
-                if (exerciserSortKey === 'exercises') {
-                    va = a.exercises; vb = b.exercises;
-                    return exerciserSortAsc ? va - vb : vb - va;
-                }
-                if (exerciserSortKey === 'address') {
-                    return exerciserSortAsc ? a.address.localeCompare(b.address) : b.address.localeCompare(a.address);
-                }
+                if (exerciserSortKey === 'exercises') { va = a.exercises; vb = b.exercises; return exerciserSortAsc ? va - vb : vb - va; }
+                if (exerciserSortKey === 'avg_lock') { va = a.avg_lock_days || 0; vb = b.avg_lock_days || 0; return exerciserSortAsc ? va - vb : vb - va; }
+                if (exerciserSortKey === 'address') return exerciserSortAsc ? a.address.localeCompare(b.address) : b.address.localeCompare(a.address);
                 if (exerciserSortKey === 'first' || exerciserSortKey === 'last') {
                     va = a[exerciserSortKey] || ''; vb = b[exerciserSortKey] || '';
                     return exerciserSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
@@ -3960,52 +4032,67 @@
             });
 
             document.getElementById('exerciser-count').textContent = data.length + ' exercisers';
-
-            const formatUsd = v => v >= 1000 ? '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '$' + v.toFixed(2);
-            const shortAddr = a => a.slice(0, 6) + '…' + a.slice(-4);
-            const formatDate = d => {
-                if (!d) return '—';
-                const parts = d.split('-');
-                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                return months[parseInt(parts[1]) - 1] + ' ' + parseInt(parts[2]) + ', ' + parts[0].slice(2);
-            };
+            const fmtUsd = v => v >= 1000 ? '$' + v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '$' + v.toFixed(2);
+            const shortAddr = a => a.slice(0,6) + '\u2026' + a.slice(-4);
+            const fmtDate = d => { if (!d) return '\u2014'; const p = d.split('-'); const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return m[parseInt(p[1])-1]+' '+parseInt(p[2])+', '+p[0].slice(2); };
+            const fmtLock = days => { if (!days) return '\u2014'; if (days >= 365) return (days/365).toFixed(1)+'y'; if (days >= 30) return Math.round(days/30)+'mo'; return Math.round(days)+'d'; };
 
             let html = '';
             data.forEach((e, i) => {
-                html += `<tr>
-                    <td class="c-rank">${i + 1}</td>
-                    <td class="c-addr"><a href="https://berascan.com/address/${e.address}" target="_blank" class="addr-link">${shortAddr(e.address)}</a></td>
-                    <td class="c-num">${formatUsd(e.total_usdc)}</td>
-                    <td class="c-num">${e.exercises}</td>
-                    <td class="c-date">${formatDate(e.first)}</td>
-                    <td class="c-date">${formatDate(e.last)}</td>
-                </tr>`;
+                const exp = expandedExerciser === e.address;
+                html += '<tr class="exerciser-row' + (exp ? ' expanded' : '') + '" onclick="toggleExerciserDetail(\'' + e.address + '\')">';
+                html += '<td class="c-rank">' + (i+1) + '</td>';
+                html += '<td class="c-addr"><span class="addr-link">' + shortAddr(e.address) + '</span></td>';
+                html += '<td class="c-num">' + fmtUsd(e.total_usdc) + '</td>';
+                html += '<td class="c-num">' + e.exercises + '</td>';
+                html += '<td class="c-num">' + fmtLock(e.avg_lock_days) + '</td>';
+                html += '<td class="c-date">' + fmtDate(e.first) + '</td>';
+                html += '<td class="c-date">' + fmtDate(e.last) + '</td>';
+                html += '</tr>';
+
+                if (exp && e.txs && e.txs.length > 0) {
+                    html += '<tr class="detail-row"><td colspan="7">';
+                    html += '<div class="detail-header">';
+                    html += '<a href="https://berascan.com/address/' + e.address + '" target="_blank" class="detail-addr">' + e.address + '</a>';
+                    html += '<span class="detail-summary">' + e.exercises + ' exercises \u00b7 ' + fmtUsd(e.total_usdc) + ' total</span>';
+                    html += '</div>';
+                    html += '<table class="detail-table"><thead><tr><th>#</th><th>Date</th><th>USDC.e Paid</th><th>veDOLO</th><th>Price/veDOLO</th><th>Lock</th><th>Tx</th></tr></thead><tbody>';
+                    e.txs.forEach((tx, ti) => {
+                        html += '<tr>';
+                        html += '<td>' + (ti+1) + '</td>';
+                        html += '<td>' + fmtDate(tx.date) + '</td>';
+                        html += '<td>' + fmtUsd(tx.usdc) + '</td>';
+                        html += '<td>' + (tx.vedolo != null ? tx.vedolo.toLocaleString('en-US', {maximumFractionDigits:2}) : '\u2014') + '</td>';
+                        html += '<td>' + (tx.price != null ? '$' + tx.price.toFixed(4) : '\u2014') + '</td>';
+                        html += '<td>' + fmtLock(tx.lock_days) + '</td>';
+                        html += '<td><a href="https://berascan.com/tx/' + tx.hash + '" target="_blank" class="tx-link" onclick="event.stopPropagation()">' + tx.hash.slice(0,10) + '\u2026</a></td>';
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table></td></tr>';
+                }
             });
             tbody.innerHTML = html;
         }
 
-        function sortExercisers(key) {
-            const th = document.querySelector(`#exercisers-table th[data-sort="${key}"]`);
-            if (exerciserSortKey === key) {
-                exerciserSortAsc = !exerciserSortAsc;
-            } else {
-                exerciserSortKey = key;
-                exerciserSortAsc = key === 'rank' || key === 'total_usdc' || key === 'exercises' ? false : true;
-                if (key === 'rank') exerciserSortAsc = true;
-            }
-            // Update arrows
-            document.querySelectorAll('#exercisers-table th').forEach(t => {
-                t.classList.remove('sorted');
-                t.querySelector('.arrow').textContent = '⇅';
-            });
-            th.classList.add('sorted');
-            th.querySelector('.arrow').textContent = exerciserSortAsc ? '▲' : '▼';
+        function toggleExerciserDetail(addr) {
+            expandedExerciser = expandedExerciser === addr ? null : addr;
             renderExercisersTable();
         }
 
-        // Search
-        document.getElementById('exerciser-search')?.addEventListener('input', function () {
+        function sortExercisers(key) {
+            const th = document.querySelector('#exercisers-table th[data-sort="' + key + '"]');
+            if (exerciserSortKey === key) { exerciserSortAsc = !exerciserSortAsc; }
+            else { exerciserSortKey = key; exerciserSortAsc = (key === 'rank' || key === 'total_usdc' || key === 'exercises' || key === 'avg_lock') ? false : true; if (key === 'rank') exerciserSortAsc = true; }
+            document.querySelectorAll('#exercisers-table th').forEach(t => { t.classList.remove('sorted'); t.querySelector('.arrow').textContent = '\u21c5'; });
+            th.classList.add('sorted');
+            th.querySelector('.arrow').textContent = exerciserSortAsc ? '\u25b2' : '\u25bc';
+            expandedExerciser = null;
+            renderExercisersTable();
+        }
+
+        document.getElementById('exerciser-search')?.addEventListener('input', function() {
             exerciserSearchTerm = this.value.trim().toLowerCase();
+            expandedExerciser = null;
             renderExercisersTable();
         });
 
