@@ -4192,11 +4192,11 @@
             });
             if (txs.length > 1) {
                 html += '<tr style="border-top:2px solid var(--border-subtle);font-weight:600;color:#fff">';
-                html += '<td colspan="2">Total (' + txs.length + ' txs)</td>';
-                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + exFmtUsd(e.total_usdc) + '</td>';
-                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px">' + (totalVedolo > 0 ? totalVedolo.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '\u2014') + '</td>';
+                html += '<td colspan="2" style="color:#fff">Total (' + txs.length + ' txs)</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:#fff">' + exFmtUsd(e.total_usdc) + '</td>';
+                html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:#fff">' + (totalVedolo > 0 ? totalVedolo.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '\u2014') + '</td>';
                 html += '<td style="text-align:right;font-family:JetBrains Mono,monospace;font-size:11px;color:#34d399">' + (avgPrice ? '$' + avgPrice.toFixed(4) : '\u2014') + '</td>';
-                html += '<td style="text-align:center">' + exFmtLock(e.avg_lock_days) + '</td>';
+                html += '<td style="text-align:center;color:#fff">' + exFmtLock(e.avg_lock_days) + '</td>';
                 html += '<td></td>';
                 html += '</tr>';
             }
