@@ -3463,24 +3463,9 @@
                 <a href="#address=${h.address}" onclick="event.preventDefault();event.stopPropagation();showProfile('${h.address}')">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>${addrLabel}
                 <a href="https://debank.com/profile/${h.address}?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
             </td>
-            <td class="c-nft">
-                <div class="mini-bar">
-                    <span>${h.nft_count}</span>
-                    <div class="mini-bar-track"><div class="mini-bar-fill purple" style="width:${nftPct}%"></div></div>
-                </div>
-            </td>
-            <td class="c-dolo" title="${doloExact} DOLO">
-                <div class="mini-bar">
-                    <span>${fmtDolo(h.total_dolo || 0)}<span class="supply-pct">(${supplyPct}%)</span></span>
-                    <div class="mini-bar-track"><div class="mini-bar-fill green" style="width:${doloPct}%"></div></div>
-                </div>
-            </td>
-            <td class="c-vote" title="${voteExact} veDOLO">
-                <div class="mini-bar">
-                    <span>${fmtDolo(h.total_vote_weight || 0)}</span>
-                    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${votePct}%;background:linear-gradient(90deg,#f59e0b,#f97316)"></div></div>
-                </div>
-            </td>
+            <td class="c-nft">${h.nft_count}</td>
+            <td class="c-dolo" title="${doloExact} DOLO">${fmtDolo(h.total_dolo || 0)}<span class="supply-pct">(${supplyPct}%)</span></td>
+            <td class="c-vote" title="${voteExact} veDOLO">${fmtDolo(h.total_vote_weight || 0)}</td>
             <td class="c-tokens"><div class="tokens-truncated" title="${h.token_ids.join(', ')}">${tokPrev}</div></td>
         </tr>`;
             }).join('');
