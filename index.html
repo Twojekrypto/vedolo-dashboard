@@ -1392,6 +1392,7 @@
 
             .modal-addr {
                 font-size: 12px;
+                word-break: break-all;
             }
 
             .modal-close {
@@ -1399,28 +1400,52 @@
             }
 
             .modal-stat {
-                padding: 16px 12px;
+                padding: 14px 10px;
             }
 
             .modal-stat-label {
-                font-size: 10px;
-                letter-spacing: 0.5px;
+                font-size: 9px;
+                letter-spacing: 0.4px;
             }
 
             .modal-stat-value {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .modal-stat-sub {
-                font-size: 11px;
+                font-size: 10px;
             }
 
             .modal-body {
-                padding: 14px 16px;
+                padding: 12px 0;
             }
 
             .modal-section-title {
                 font-size: 13px;
+                padding: 0 14px;
+            }
+
+            /* Exercise History table — horizontal scroll */
+            #em-txs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 0 4px;
+            }
+
+            #em-txs .detail-table {
+                min-width: 520px;
+                font-size: 11px;
+            }
+
+            #em-txs .detail-table th {
+                font-size: 9px;
+                padding: 5px 6px;
+                white-space: nowrap;
+            }
+
+            #em-txs .detail-table td {
+                padding: 5px 6px;
+                font-size: 11px;
             }
 
             .lock-card {
@@ -1818,6 +1843,12 @@
 
             .expiry-canvas {
                 height: 240px;
+                min-width: 500px;
+            }
+
+            .expiry-chart-card {
+                padding: 16px;
+                overflow: hidden;
             }
 
             /* When odd number of metric cells, last one spans full width */
