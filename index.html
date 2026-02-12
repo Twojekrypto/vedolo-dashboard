@@ -985,6 +985,16 @@
             color: #fef3c7;
         }
 
+        .rank-plain {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
         .c-addr {
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
@@ -3447,7 +3457,7 @@
                 const doloPct = Math.max(3, ((h.total_dolo || 0) / maxDolo) * 100);
                 const votePct = Math.max(3, ((h.total_vote_weight || 0) / maxVote) * 100);
                 const supplyPct = ((h.total_dolo || 0) / totalDolo * 100).toFixed(1);
-                const tokPrev = h.token_ids.slice(0, 6).join(', ') + (h.token_ids.length > 6 ? ` … +${h.token_ids.length - 6}` : '');
+                const tokPrev = h.token_ids.slice(0, 3).join(', ') + (h.token_ids.length > 3 ? ` …+${h.token_ids.length - 3}` : '');
                 const doloExact = (h.total_dolo || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
                 const voteExact = (h.total_vote_weight || 0).toLocaleString('en-US', { maximumFractionDigits: 4 });
                 const addrLabel = getAddrLabel(h.address);
@@ -3456,7 +3466,7 @@
                 return `<tr class="${isWhale ? 'whale-row' : ''}" style="cursor:pointer" onclick="showProfile('${h.address}')">
             <td class="c-rank">
                 <div class="rank-cell-inner">
-                    ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : h.rank}
+                    ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : `<span class="rank-plain">${h.rank}</span>`}
                 </div>
             </td>
             <td class="c-addr">
@@ -4321,7 +4331,7 @@
                 if (rc) {
                     html += '<span class="rank-medal ' + rc + '">' + rank + '</span>';
                 } else {
-                    html += rank;
+                    html += '<span class="rank-plain">' + rank + '</span>';
                 }
                 html += '</div></td>';
                 html += '<td class="c-addr"><span class="addr-link">' + exShortAddr(e.address) + '</span><a href="https://debank.com/profile/' + e.address + '?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display=\'none\'"></a></td>';
