@@ -3043,12 +3043,22 @@
                             </svg>
                             <input type="text" id="dolo-holder-search" placeholder="Search address 0x…">
                         </div>
-                        <select class="filter-dropdown" id="dolo-holder-chain-filter">
-                            <option value="all">All Chains</option>
-                            <option value="eth">Ethereum</option>
-                            <option value="bera">Berachain</option>
-                            <option value="both">Both Chains</option>
-                        </select>
+                        <div style="display:flex;align-items:center;gap:12px">
+                            <label
+                                style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;color:var(--text-secondary);user-select:none">
+                                <input type="checkbox" id="dolo-filter-eth" checked onchange="dolo_applyHolderFilters()"
+                                    style="accent-color:#687de3;cursor:pointer">
+                                <img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg" width="16" height="16"
+                                    style="border-radius:50%" alt="ETH"> ETH
+                            </label>
+                            <label
+                                style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;color:var(--text-secondary);user-select:none">
+                                <input type="checkbox" id="dolo-filter-bera" checked
+                                    onchange="dolo_applyHolderFilters()" style="accent-color:#f59e0b;cursor:pointer">
+                                <img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg" width="16" height="16"
+                                    style="border-radius:50%" alt="BERA"> BERA
+                            </label>
+                        </div>
                         <div class="toolbar-count" id="dolo-holder-results-count"></div>
                     </div>
 
@@ -4916,8 +4926,8 @@
             let dolo_holderSortAsc = true;
             const DOLO_HOLDER_PER_PAGE = 50;
 
-            const ETH_CHAIN_ICON = `<img src="https://icons.llama.fi/ethereum.png" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="ETH">`;
-            const BERA_CHAIN_ICON = `<img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="BERA">`;
+            const ETH_CHAIN_ICON = `<img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="ETH">`;
+            const BERA_CHAIN_ICON = `<img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="BERA">`;
 
             async function dolo_loadHolders() {
                 try {
@@ -4931,8 +4941,6 @@
 
                     document.getElementById('dolo-holder-search').addEventListener('input',
                         debounce(dolo_applyHolderFilters, 200));
-                    document.getElementById('dolo-holder-chain-filter').addEventListener('change',
-                        dolo_applyHolderFilters);
 
                     document.getElementById('dolo-holders-card').style.display = '';
                 } catch (e) {
@@ -4975,7 +4983,9 @@
                     // DeBank chain param
                     const dbChain = (h.chains && h.chains.includes('bera')) ? 'bera' : 'eth';
 
-                    return `<tr class="${isWhale ? 'whale-row' : ''}">
+                    const dbUrl = `https://debank.com/profile/${h.address}?chain=${dbChain}`;
+
+                    return `<tr class="${isWhale ? 'whale-row' : ''}" style="cursor:pointer" onclick="window.open('${dbUrl}','_blank')">
                         <td class="c-rank">
                             <div class="rank-cell-inner">
                                 ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : `<span class="rank-plain">${h.rank}</span>`}
@@ -4983,8 +4993,8 @@
                         </td>
                         <td class="c-addr">
                             <span style="display:inline-flex;align-items:center;gap:4px">
-                                <a href="https://debank.com/profile/${h.address}" target="_blank" style="color:var(--accent-indigo);text-decoration:none" title="${h.address}">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>
-                                <a href="https://debank.com/profile/${h.address}?chain=${dbChain}" target="_blank" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
+                                <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent-indigo);text-decoration:none" title="${h.address}">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>
+                                <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
                             </span>
                         </td>
                         <td style="text-align:center">${chainHtml}</td>
@@ -5062,13 +5072,17 @@
 
             function dolo_applyHolderFilters() {
                 const q = document.getElementById('dolo-holder-search').value.toLowerCase().trim();
-                const cf = document.getElementById('dolo-holder-chain-filter').value;
+                const showEth = document.getElementById('dolo-filter-eth').checked;
+                const showBera = document.getElementById('dolo-filter-bera').checked;
 
                 dolo_holderFiltered = dolo_holderData.filter(h => {
                     if (q && !h.address.toLowerCase().includes(q)) return false;
-                    if (cf === 'eth' && !(h.chains && h.chains.includes('eth'))) return false;
-                    if (cf === 'bera' && !(h.chains && h.chains.includes('bera'))) return false;
-                    if (cf === 'both' && !(h.chains && h.chains.length === 2)) return false;
+                    const hasEth = h.chains && h.chains.includes('eth');
+                    const hasBera = h.chains && h.chains.includes('bera');
+                    if (!showEth && !showBera) return false;
+                    if (showEth && showBera) return true; // show all
+                    if (showEth && !showBera) return hasEth;
+                    if (!showEth && showBera) return hasBera;
                     return true;
                 });
 
