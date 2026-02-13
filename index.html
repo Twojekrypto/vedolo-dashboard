@@ -947,16 +947,19 @@
 
         /* Column specific */
         .c-rank {
-            width: 80px;
+            width: 40px;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
             color: var(--text-muted);
+            text-align: center;
+            padding-right: 0 !important;
         }
 
         .rank-cell-inner {
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            gap: 0;
         }
 
         .rank-medal {
@@ -965,9 +968,12 @@
             justify-content: center;
             width: 28px;
             height: 28px;
+            min-width: 28px;
+            min-height: 28px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 800;
+            flex-shrink: 0;
         }
 
         .rank-1 {
@@ -991,6 +997,7 @@
             justify-content: center;
             width: 28px;
             height: 28px;
+            min-width: 28px;
             font-size: 12px;
             font-weight: 600;
         }
@@ -1999,6 +2006,11 @@
 
             /* Force table min-width so it scrolls horizontally instead of cramping */
             .table-scroll table {
+                min-width: 650px;
+            }
+
+            /* DOLO holders table needs more width for 5 columns */
+            #dolo-holders-table {
                 min-width: 700px;
             }
 
@@ -2451,6 +2463,35 @@
                 font-size: 10px;
                 min-width: 28px;
             }
+
+            /* Pagination — larger tap area on phones */
+            .table-footer {
+                gap: 4px;
+                padding: 10px 8px;
+                justify-content: center;
+            }
+
+            .pg-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+                min-width: 32px;
+                min-height: 32px;
+            }
+
+            /* Rank column tight on mobile */
+            .c-rank {
+                width: 32px;
+            }
+
+            .rank-medal,
+            .rank-plain {
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+                font-size: 11px;
+                border-radius: 6px;
+            }
         }
     </style>
 </head>
@@ -2609,7 +2650,7 @@
                 <div class="table-scroll">
                     <table style="table-layout:fixed;width:100%">
                         <colgroup>
-                            <col style="width:50px">
+                            <col style="width:40px">
                             <col style="width:25%">
                             <col style="width:15%">
                             <col style="width:20%">
@@ -2885,7 +2926,15 @@
                 </div>
 
                 <div class="table-scroll">
-                    <table id="exercisers-table">
+                    <table id="exercisers-table" style="table-layout:fixed;width:100%">
+                        <colgroup>
+                            <col style="width:40px">
+                            <col style="width:25%">
+                            <col style="width:20%">
+                            <col style="width:15%">
+                            <col style="width:20%">
+                            <col style="width:20%">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th class="c-rank sorted" data-sort="rank" onclick="sortExercisers('rank')">
@@ -3057,7 +3106,7 @@
                     <div class="table-scroll">
                         <table style="table-layout:fixed;width:100%" id="dolo-holders-table">
                             <colgroup>
-                                <col style="width:50px">
+                                <col style="width:40px">
                                 <col style="width:30%">
                                 <col style="width:20%" class="dolo-col-eth">
                                 <col style="width:20%" class="dolo-col-bera">
