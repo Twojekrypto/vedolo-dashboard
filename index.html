@@ -4961,7 +4961,7 @@
                 if (!brushCanvas || !dolo_allTvlPoints.length) return;
 
                 const allPts = dolo_allTvlPoints.slice(-dolo_currentRange);
-                const rect = brushCanvas.parentElement.getBoundingClientRect();
+                const rect = brushCanvas.getBoundingClientRect();
                 const dpr = window.devicePixelRatio || 1;
                 brushCanvas.width = rect.width * dpr;
                 brushCanvas.height = 40 * dpr;
