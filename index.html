@@ -2818,7 +2818,9 @@
             <!-- DOLO METRICS -->
             <div class="metrics-strip anim anim-d1">
                 <div class="metric-cell">
-                    <div class="metric-label">DOLO Price</div>
+                    <div class="metric-label" style="display:flex;align-items:center;gap:5px"><img
+                            src="https://icons.llama.fi/dolomite.jpg" alt=""
+                            style="width:14px;height:14px;border-radius:50%">DOLO Price</div>
                     <div class="metric-value" id="dolo-price">—</div>
                     <div class="metric-sub" id="dolo-change"></div>
                 </div>
@@ -2839,7 +2841,9 @@
                     <div class="metric-value" id="dolo-vol">—</div>
                 </div>
                 <div class="metric-cell">
-                    <div class="metric-label">Circulating Supply</div>
+                    <div class="metric-label" style="display:flex;align-items:center;gap:5px"><img
+                            src="https://icons.llama.fi/dolomite.jpg" alt=""
+                            style="width:14px;height:14px;border-radius:50%">Circulating Supply</div>
                     <div class="metric-value" id="dolo-circ-supply">—</div>
                 </div>
             </div>
@@ -2934,8 +2938,8 @@
                     <h3>Protocol Info</h3>
                 </div>
                 <div style="padding:20px" id="dolo-protocol-info">
-                    <div style="display:flex;flex-wrap:wrap;gap:10px" id="dolo-links"></div>
-                    <div style="margin-top:16px" id="dolo-contracts"></div>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-start" id="dolo-links"></div>
+                    <div style="margin-top:16px;text-align:left" id="dolo-contracts"></div>
                 </div>
             </div>
 
@@ -5373,7 +5377,7 @@
             const contractsEl = document.getElementById('dolo-contracts');
             const dolomiteAddr = '0x0f81001ef0a83ecce5ccebf63eb302c70a39a654';
             const BERA_SVG = '<img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%">';
-            contractsEl.innerHTML = `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500">Contract Address (DOLO)</div>
+            contractsEl.innerHTML = `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="https://icons.llama.fi/dolomite.jpg" alt="" style="width:14px;height:14px;border-radius:50%">Contract Address</div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px">
                     <a href="https://etherscan.io/token/${dolomiteAddr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#627EEA'" onmouseout="this.style.borderColor='var(--border-default)'">
                         ${ETH_SVG} ETH: ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
