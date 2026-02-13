@@ -1606,6 +1606,17 @@
             border-radius: 3px;
         }
 
+        /* DOLO holder address styling */
+        .dolo-holder-addr {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .dolo-holder-addr:hover {
+            color: #22d3ee;
+        }
+
         /* ===== SUPPLY % IN TABLE ===== */
         .supply-pct {
             font-size: 11px;
@@ -3043,22 +3054,6 @@
                             </svg>
                             <input type="text" id="dolo-holder-search" placeholder="Search address 0x…">
                         </div>
-                        <div style="display:flex;align-items:center;gap:12px">
-                            <label
-                                style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;color:var(--text-secondary);user-select:none">
-                                <input type="checkbox" id="dolo-filter-eth" checked onchange="dolo_applyHolderFilters()"
-                                    style="accent-color:#687de3;cursor:pointer">
-                                <img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg" width="16" height="16"
-                                    style="border-radius:50%" alt="ETH"> ETH
-                            </label>
-                            <label
-                                style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;color:var(--text-secondary);user-select:none">
-                                <input type="checkbox" id="dolo-filter-bera" checked
-                                    onchange="dolo_applyHolderFilters()" style="accent-color:#f59e0b;cursor:pointer">
-                                <img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg" width="16" height="16"
-                                    style="border-radius:50%" alt="BERA"> BERA
-                            </label>
-                        </div>
                         <div class="toolbar-count" id="dolo-holder-results-count"></div>
                     </div>
 
@@ -3072,11 +3067,30 @@
                                     <th data-sort="dolo-address" onclick="dolo_sortHolders('address')">
                                         Address <span class="arrow">⇅</span>
                                     </th>
-                                    <th data-sort="dolo-chains" onclick="dolo_sortHolders('chains')">
-                                        Chain <span class="arrow">⇅</span>
+                                    <th style="min-width:90px">
+                                        <div style="display:flex;align-items:center;gap:8px;justify-content:center">
+                                            <label
+                                                style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;user-select:none;opacity:0.9"
+                                                title="Show Ethereum holders">
+                                                <input type="checkbox" id="dolo-filter-eth" checked
+                                                    onchange="dolo_applyHolderFilters()"
+                                                    style="accent-color:#687de3;cursor:pointer;width:13px;height:13px">
+                                                <img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg"
+                                                    width="14" height="14" style="border-radius:50%" alt="ETH">
+                                            </label>
+                                            <label
+                                                style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;user-select:none;opacity:0.9"
+                                                title="Show Berachain holders">
+                                                <input type="checkbox" id="dolo-filter-bera" checked
+                                                    onchange="dolo_applyHolderFilters()"
+                                                    style="accent-color:#f59e0b;cursor:pointer;width:13px;height:13px">
+                                                <img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg"
+                                                    width="14" height="14" style="border-radius:50%" alt="BERA">
+                                            </label>
+                                        </div>
                                     </th>
                                     <th data-sort="dolo-balance" onclick="dolo_sortHolders('balance')">
-                                        Balance <span class="arrow">⇅</span>
+                                        <span id="dolo-balance-header">Balance</span> <span class="arrow">⇅</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -4958,17 +4972,38 @@
                 return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
             }
 
+            function dolo_getDisplayBalance(h) {
+                const showEth = document.getElementById('dolo-filter-eth')?.checked ?? true;
+                const showBera = document.getElementById('dolo-filter-bera')?.checked ?? true;
+                if (showEth && !showBera) return h.balance_eth || 0;
+                if (!showEth && showBera) return h.balance_bera || 0;
+                return h.balance;
+            }
+
             function dolo_renderHoldersTable() {
                 const tbody = document.getElementById('dolo-holder-tbody');
                 const start = (dolo_holderPage - 1) * DOLO_HOLDER_PER_PAGE;
                 const page = dolo_holderFiltered.slice(start, start + DOLO_HOLDER_PER_PAGE);
-                const totalSupply = dolo_holderData.reduce((s, h) => s + h.balance, 0) || 1;
+                const showEth = document.getElementById('dolo-filter-eth')?.checked ?? true;
+                const showBera = document.getElementById('dolo-filter-bera')?.checked ?? true;
 
-                tbody.innerHTML = page.map(h => {
-                    const rc = h.rank <= 3 ? `rank-${h.rank}` : '';
-                    const isWhale = h.rank <= 10;
-                    const supplyPct = ((h.balance / totalSupply) * 100).toFixed(2);
-                    const balExact = h.balance.toLocaleString('en-US', { maximumFractionDigits: 2 });
+                // Update balance header text
+                const balHeader = document.getElementById('dolo-balance-header');
+                if (balHeader) {
+                    if (showEth && !showBera) balHeader.textContent = 'Balance (ETH)';
+                    else if (!showEth && showBera) balHeader.textContent = 'Balance (BERA)';
+                    else balHeader.textContent = 'Balance';
+                }
+
+                const totalSupply = dolo_holderFiltered.reduce((s, h) => s + dolo_getDisplayBalance(h), 0) || 1;
+
+                tbody.innerHTML = page.map((h, idx) => {
+                    const dispRank = start + idx + 1;
+                    const rc = dispRank <= 3 ? `rank-${dispRank}` : '';
+                    const isWhale = dispRank <= 10;
+                    const dispBal = dolo_getDisplayBalance(h);
+                    const supplyPct = ((dispBal / totalSupply) * 100).toFixed(2);
+                    const balExact = dispBal.toLocaleString('en-US', { maximumFractionDigits: 2 });
 
                     // Chain icons
                     let chainHtml = '';
@@ -4980,25 +5015,22 @@
                         chainHtml = BERA_CHAIN_ICON;
                     }
 
-                    // DeBank chain param
-                    const dbChain = (h.chains && h.chains.includes('bera')) ? 'bera' : 'eth';
-
-                    const dbUrl = `https://debank.com/profile/${h.address}?chain=${dbChain}`;
+                    const dbUrl = `https://debank.com/profile/${h.address}`;
 
                     return `<tr class="${isWhale ? 'whale-row' : ''}" style="cursor:pointer" onclick="window.open('${dbUrl}','_blank')">
                         <td class="c-rank">
                             <div class="rank-cell-inner">
-                                ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : `<span class="rank-plain">${h.rank}</span>`}
+                                ${rc ? `<span class="rank-medal ${rc}">${dispRank}</span>` : `<span class="rank-plain">${dispRank}</span>`}
                             </div>
                         </td>
                         <td class="c-addr">
                             <span style="display:inline-flex;align-items:center;gap:4px">
-                                <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent-indigo);text-decoration:none" title="${h.address}">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>
+                                <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" class="dolo-holder-addr" title="${h.address}">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>
                                 <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
                             </span>
                         </td>
                         <td style="text-align:center">${chainHtml}</td>
-                        <td class="c-dolo" title="${balExact} DOLO">${dolo_fmtBal(h.balance)}<span class="supply-pct">(${supplyPct}%)</span></td>
+                        <td class="c-dolo" title="${balExact} DOLO">${dolo_fmtBal(dispBal)}<span class="supply-pct">(${supplyPct}%)</span></td>
                     </tr>`;
                 }).join('');
 
@@ -5058,7 +5090,8 @@
                     th.querySelector('.arrow').textContent = dolo_holderSortAsc ? '▲' : '▼';
                 }
 
-                const key = field === 'chains' ? (h => h.chains.length) : (h => h[field]);
+                const balKey = (h) => dolo_getDisplayBalance(h);
+                const key = field === 'balance' ? balKey : (h => h[field]);
                 dolo_holderFiltered.sort((a, b) => {
                     let va = key(a), vb = key(b);
                     if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
@@ -5080,20 +5113,22 @@
                     const hasEth = h.chains && h.chains.includes('eth');
                     const hasBera = h.chains && h.chains.includes('bera');
                     if (!showEth && !showBera) return false;
-                    if (showEth && showBera) return true; // show all
+                    if (showEth && showBera) return true;
                     if (showEth && !showBera) return hasEth;
                     if (!showEth && showBera) return hasBera;
                     return true;
                 });
 
-                if (dolo_holderSortField !== 'rank') {
-                    const key = dolo_holderSortField === 'chains' ? (h => h.chains.length) : (h => h[dolo_holderSortField]);
-                    dolo_holderFiltered.sort((a, b) => {
-                        let va = key(a), vb = key(b);
-                        if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
-                        return va < vb ? (dolo_holderSortAsc ? -1 : 1) : va > vb ? (dolo_holderSortAsc ? 1 : -1) : 0;
-                    });
-                }
+                // Sort by display balance (chain-specific) descending by default
+                dolo_holderFiltered.sort((a, b) => dolo_getDisplayBalance(b) - dolo_getDisplayBalance(a));
+
+                // Reset sort state to rank-like order
+                dolo_holderSortField = 'rank';
+                dolo_holderSortAsc = true;
+                const card = document.getElementById('dolo-holders-card');
+                card.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted'));
+                const rankTh = card.querySelector('th[data-sort="dolo-rank"]');
+                if (rankTh) { rankTh.classList.add('sorted'); rankTh.querySelector('.arrow').textContent = '▲'; }
 
                 dolo_holderPage = 1;
                 dolo_renderHoldersTable();
