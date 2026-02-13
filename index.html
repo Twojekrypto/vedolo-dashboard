@@ -2357,6 +2357,90 @@
             border-color: var(--accent-indigo);
             color: #fff;
         }
+
+        /* ===== MOBILE RESPONSIVENESS — DOLO TAB & GLOBAL ===== */
+        @media (max-width: 768px) {
+
+            /* Prevent horizontal overflow globally */
+            html,
+            body {
+                overflow-x: hidden;
+            }
+
+            /* DOLO analytics grid — stack on mobile */
+            #view-dolo .analytics-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* TVL History card header — wrap title + range buttons */
+            .card-header {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            /* Range buttons smaller on mobile */
+            .dolo-range-btn {
+                padding: 3px 7px;
+                font-size: 10px;
+            }
+
+            /* Brush navigator — less left padding for smaller screens */
+            #dolo-brush-wrap {
+                padding-left: 8px !important;
+            }
+
+            #dolo-brush-overlay {
+                left: 8px !important;
+            }
+
+            /* Pagination — wrap buttons */
+            .table-footer {
+                flex-wrap: wrap;
+                gap: 4px;
+                padding: 10px 12px;
+            }
+
+            .pg-btn {
+                padding: 5px 9px;
+                font-size: 11px;
+            }
+
+            /* Cards — reduced padding */
+            .card {
+                border-radius: var(--radius-md);
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            /* Range buttons even smaller */
+            .dolo-range-btn {
+                padding: 3px 6px;
+                font-size: 9px;
+            }
+
+            /* Protocol Info — stack address pills vertically */
+            #dolo-contracts div[style*="flex-wrap"] {
+                flex-direction: column !important;
+            }
+
+            /* Card headers */
+            .card-header h3 {
+                font-size: 16px;
+            }
+
+            /* Pagination — tighter */
+            .table-footer {
+                gap: 3px;
+                padding: 8px 8px;
+            }
+
+            .pg-btn {
+                padding: 4px 7px;
+                font-size: 10px;
+                min-width: 28px;
+            }
+        }
     </style>
 </head>
 
