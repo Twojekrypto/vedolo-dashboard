@@ -2353,6 +2353,10 @@
                         <img src="odolo-logo-official.svg" alt="oDOLO">
                         oDOLO Stats
                     </button>
+                    <button class="nav-tab" id="tab-dolo" onclick="switchView('dolo')">
+                        <img src="https://icons.llama.fi/dolomite.jpg" alt="DOLO" style="border-radius:50%">
+                        DOLO Token
+                    </button>
                 </div>
             </nav>
         </header>
@@ -2782,6 +2786,90 @@
             </div>
 
         </div><!-- /view-odolo -->
+
+        <!-- DOLO TOKEN VIEW -->
+        <div id="view-dolo" class="view-section">
+
+            <!-- DOLO METRICS -->
+            <div class="metrics-strip anim anim-d1">
+                <div class="metric-cell">
+                    <div class="metric-label">DOLO Price</div>
+                    <div class="metric-value" id="dolo-price">—</div>
+                    <div class="metric-sub" id="dolo-change"></div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value" id="dolo-mcap">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">24h Volume</div>
+                    <div class="metric-value" id="dolo-vol">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Total TVL</div>
+                    <div class="metric-value" style="color:var(--accent-green)" id="dolo-tvl">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Active Chains</div>
+                    <div class="metric-value" id="dolo-chains">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Category</div>
+                    <div class="metric-value" id="dolo-category">—</div>
+                </div>
+            </div>
+
+            <!-- DOLO ANALYTICS -->
+            <div class="analytics-grid anim anim-d2" style="grid-template-columns:1fr 1fr">
+                <!-- TVL by Chain -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>TVL by Chain</h3>
+                    </div>
+                    <div id="dolo-chain-bars" style="padding:20px"></div>
+                </div>
+
+                <!-- Token Composition Donut -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Token Composition</h3>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:center;padding:20px">
+                        <canvas id="dolo-token-donut" width="260" height="260"></canvas>
+                        <div id="dolo-token-legend"
+                            style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TVL History Chart -->
+            <div class="card anim anim-d3" style="margin-top:24px">
+                <div class="card-header">
+                    <h3>TVL History (90 days)</h3>
+                    <span class="metric-sub" id="dolo-tvl-range"></span>
+                </div>
+                <div style="padding:16px;position:relative">
+                    <canvas id="dolo-tvl-chart" height="220" style="width:100%"></canvas>
+                    <div id="dolo-tvl-tooltip"
+                        style="display:none;position:absolute;background:var(--bg-card);border:1px solid var(--border-default);border-radius:8px;padding:8px 12px;pointer-events:none;font-size:12px;z-index:10;box-shadow:var(--shadow-elevated)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Protocol Info -->
+            <div class="card anim anim-d4" style="margin-top:24px">
+                <div class="card-header">
+                    <h3>Protocol Info</h3>
+                </div>
+                <div style="padding:20px" id="dolo-protocol-info">
+                    <p style="color:var(--text-secondary);line-height:1.6" id="dolo-description">Loading...</p>
+                    <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:10px" id="dolo-links"></div>
+                    <div style="margin-top:16px" id="dolo-contracts"></div>
+                </div>
+            </div>
+
+        </div><!-- /view-dolo -->
 
         <footer class="site-footer anim anim-d4">
             Generated <span id="footer-date"></span> · Data from <a href="https://berascan.com"
@@ -3835,23 +3923,21 @@
         // ===== TAB SWITCHING =====
         let currentView = 'vedolo';
         let odoloLoaded = false;
+        let doloLoaded = false;
 
         function switchView(view) {
             if (view === currentView) return;
             currentView = view;
 
             // Toggle view sections
-            document.getElementById('view-vedolo').classList.toggle('active', view === 'vedolo');
-            document.getElementById('view-odolo').classList.toggle('active', view === 'odolo');
-
-            // Toggle tab active states
-            document.getElementById('tab-vedolo').classList.toggle('active', view === 'vedolo');
-            document.getElementById('tab-odolo').classList.toggle('active', view === 'odolo');
+            ['vedolo', 'odolo', 'dolo'].forEach(v => {
+                document.getElementById('view-' + v).classList.toggle('active', view === v);
+                document.getElementById('tab-' + v).classList.toggle('active', view === v);
+            });
 
             // Update page title
-            document.title = view === 'vedolo'
-                ? 'veDOLO Holders — Berachain Dashboard'
-                : 'oDOLO Stats — Berachain Dashboard';
+            const titles = { vedolo: 'veDOLO Holders', odolo: 'oDOLO Stats', dolo: 'DOLO Token' };
+            document.title = (titles[view] || 'Dashboard') + ' — Berachain Dashboard';
 
             // Lazy load oDOLO data on first switch
             if (view === 'odolo' && !odoloLoaded) {
@@ -3859,9 +3945,23 @@
                 odolo_init();
             }
 
+            // Lazy load DOLO data on first switch
+            if (view === 'dolo' && !doloLoaded) {
+                doloLoaded = true;
+                dolo_init();
+            }
+
             // Re-render oDOLO donut on switch (canvas needs visible dimensions)
             if (view === 'odolo' && odolo_cachedData) {
                 setTimeout(() => odolo_renderDonut(odolo_cachedData), 50);
+            }
+
+            // Re-render DOLO charts on switch
+            if (view === 'dolo' && dolo_cachedData) {
+                setTimeout(() => {
+                    dolo_renderTvlChart(dolo_cachedData);
+                    dolo_renderTokenDonut(dolo_cachedData);
+                }, 50);
             }
 
             // Scroll to top
@@ -4441,6 +4541,371 @@
             clearTimeout(odolo_resizeTimer);
             odolo_resizeTimer = setTimeout(() => {
                 if (odolo_cachedData && currentView === 'odolo') odolo_renderDonut(odolo_cachedData);
+            }, 300);
+        });
+
+        // ===== DOLO TOKEN NAMESPACE =====
+        let dolo_cachedData = null;
+        let dolo_tvlPoints = [];
+        let dolo_refreshTimer = null;
+
+        const DOLO_CHAIN_COLORS = {
+            'Ethereum': '#627EEA', 'Berachain': '#D4A843', 'Arbitrum': '#28A0F0',
+            'Botanix': '#4CAF50', 'Mantle': '#000', 'X Layer': '#8B5CF6', 'BoB': '#FF6B00'
+        };
+        const DOLO_TOKEN_COLORS = ['#6366f1', '#22d3ee', '#34d399', '#fbbf24', '#fb7185', '#fb923c', '#a78bfa', '#f472b6', '#38bdf8', '#4ade80'];
+
+        function dolo_fmt(n) {
+            if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
+            if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+            if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
+            return '$' + n.toFixed(2);
+        }
+
+        async function dolo_init() {
+            try {
+                const [cgRes, llRes] = await Promise.all([
+                    fetch('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true').then(r => r.json()),
+                    fetch('https://api.llama.fi/protocol/dolomite').then(r => r.json())
+                ]);
+
+                const cg = cgRes.dolomite || {};
+                dolo_cachedData = { cg, ll: llRes };
+
+                // --- Metrics ---
+                const price = cg.usd || 0;
+                const change = cg.usd_24h_change || 0;
+                document.getElementById('dolo-price').textContent = '$' + price.toFixed(4);
+                const changeEl = document.getElementById('dolo-change');
+                const sign = change >= 0 ? '+' : '';
+                changeEl.innerHTML = `<span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;background:${change >= 0 ? 'rgba(52,211,153,0.15)' : 'rgba(251,113,133,0.15)'};color:${change >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)'}">${sign}${change.toFixed(2)}% 24h</span>`;
+
+                document.getElementById('dolo-mcap').textContent = dolo_fmt(cg.usd_market_cap || 0);
+                document.getElementById('dolo-vol').textContent = dolo_fmt(cg.usd_24h_vol || 0);
+
+                // --- DeFiLlama data ---
+                const tvl = llRes.currentChainTvls || {};
+                let totalTvl = 0;
+                const chainTvls = [];
+                const NON_CHAINS = ['borrowed', 'staking', 'pool2', 'vesting', 'offers', 'treasury', 'cex', 'governance'];
+                for (const [chain, val] of Object.entries(tvl)) {
+                    if (!chain.includes('-') && typeof val === 'number' && val > 0 && !NON_CHAINS.includes(chain.toLowerCase())) {
+                        chainTvls.push({ chain, tvl: val });
+                        totalTvl += val;
+                    }
+                }
+                chainTvls.sort((a, b) => b.tvl - a.tvl);
+
+                document.getElementById('dolo-tvl').textContent = dolo_fmt(totalTvl);
+                document.getElementById('dolo-chains').textContent = chainTvls.length;
+                document.getElementById('dolo-category').textContent = llRes.category || 'Lending';
+
+                // --- TVL by Chain bars ---
+                dolo_renderChainBars(chainTvls, totalTvl);
+
+                // --- TVL History ---
+                const tvlHist = llRes.tvl || [];
+                dolo_tvlPoints = tvlHist.slice(-90).map(p => ({ date: new Date(p.date * 1000), tvl: p.totalLiquidityUSD }));
+                dolo_renderTvlChart(dolo_cachedData);
+
+                // --- Token Composition ---
+                dolo_renderTokenDonut(dolo_cachedData);
+
+                // --- Protocol Info ---
+                dolo_renderProtocolInfo(llRes);
+
+                // Auto-refresh price every 60s
+                if (dolo_refreshTimer) clearInterval(dolo_refreshTimer);
+                dolo_refreshTimer = setInterval(dolo_refreshPrice, 60000);
+
+            } catch (err) {
+                console.error('DOLO init error:', err);
+                document.getElementById('dolo-price').textContent = 'Error';
+            }
+        }
+
+        async function dolo_refreshPrice() {
+            if (currentView !== 'dolo') return;
+            try {
+                const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_24hr_change=true').then(r => r.json());
+                const d = r.dolomite || {};
+                if (d.usd) {
+                    document.getElementById('dolo-price').textContent = '$' + d.usd.toFixed(4);
+                    const ch = d.usd_24h_change || 0;
+                    const sign = ch >= 0 ? '+' : '';
+                    document.getElementById('dolo-change').innerHTML = `<span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;background:${ch >= 0 ? 'rgba(52,211,153,0.15)' : 'rgba(251,113,133,0.15)'};color:${ch >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)'}">${sign}${ch.toFixed(2)}% 24h</span>`;
+                }
+            } catch (e) { /* silent */ }
+        }
+
+        function dolo_renderChainBars(chains, total) {
+            const container = document.getElementById('dolo-chain-bars');
+            container.innerHTML = chains.map(c => {
+                const pct = ((c.tvl / total) * 100).toFixed(1);
+                const color = DOLO_CHAIN_COLORS[c.chain] || '#6366f1';
+                return `<div style="margin-bottom:14px;cursor:default" class="dolo-chain-row">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px">
+                        <span style="color:var(--text-primary);font-weight:500">${c.chain}</span>
+                        <span style="color:var(--text-secondary)">${dolo_fmt(c.tvl)} <span style="color:var(--text-muted);font-size:11px">(${pct}%)</span></span>
+                    </div>
+                    <div style="height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden;position:relative">
+                        <div class="dolo-bar-fill" style="height:100%;width:0%;background:${color};border-radius:4px;transition:width 1s cubic-bezier(0.4,0,0.2,1)" data-width="${pct}%"></div>
+                    </div>
+                </div>`;
+            }).join('');
+            // Animate bars in
+            requestAnimationFrame(() => {
+                container.querySelectorAll('.dolo-bar-fill').forEach(el => {
+                    el.style.width = el.dataset.width;
+                });
+            });
+        }
+
+        function dolo_renderTvlChart(data) {
+            const canvas = document.getElementById('dolo-tvl-chart');
+            if (!canvas) return;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = 220 * dpr;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = '220px';
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+            const W = rect.width, H = 220;
+            ctx.clearRect(0, 0, W, H);
+
+            if (!dolo_tvlPoints.length) return;
+
+            const pad = { top: 10, right: 10, bottom: 30, left: 60 };
+            const cw = W - pad.left - pad.right;
+            const ch = H - pad.top - pad.bottom;
+
+            const vals = dolo_tvlPoints.map(p => p.tvl);
+            const minV = Math.min(...vals) * 0.95;
+            const maxV = Math.max(...vals) * 1.02;
+            const range = maxV - minV || 1;
+
+            // Y axis
+            ctx.fillStyle = '#555770';
+            ctx.font = '11px Inter';
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const v = minV + (range * i / 4);
+                const y = pad.top + ch - (ch * (v - minV) / range);
+                ctx.fillText(dolo_fmt(v), pad.left - 8, y + 4);
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(W - pad.right, y);
+                ctx.stroke();
+            }
+
+            // X axis dates
+            ctx.textAlign = 'center';
+            const step = Math.max(1, Math.floor(dolo_tvlPoints.length / 6));
+            for (let i = 0; i < dolo_tvlPoints.length; i += step) {
+                const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
+                const d = dolo_tvlPoints[i].date;
+                ctx.fillText(d.toLocaleDateString('en', { month: 'short', day: 'numeric' }), x, H - 6);
+            }
+
+            // Gradient fill
+            const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+            grad.addColorStop(0, 'rgba(99,102,241,0.3)');
+            grad.addColorStop(1, 'rgba(99,102,241,0)');
+            ctx.beginPath();
+            dolo_tvlPoints.forEach((p, i) => {
+                const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
+                const y = pad.top + ch - (ch * (p.tvl - minV) / range);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            });
+            ctx.lineTo(pad.left + cw, pad.top + ch);
+            ctx.lineTo(pad.left, pad.top + ch);
+            ctx.closePath();
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Line
+            ctx.beginPath();
+            dolo_tvlPoints.forEach((p, i) => {
+                const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
+                const y = pad.top + ch - (ch * (p.tvl - minV) / range);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            });
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Date range label
+            if (dolo_tvlPoints.length > 1) {
+                const first = dolo_tvlPoints[0].date.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+                const last = dolo_tvlPoints[dolo_tvlPoints.length - 1].date.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+                document.getElementById('dolo-tvl-range').textContent = first + ' — ' + last;
+            }
+
+            // Interactive tooltip on hover
+            canvas.onmousemove = function (e) {
+                const cRect = canvas.getBoundingClientRect();
+                const mx = e.clientX - cRect.left;
+                const idx = Math.round(((mx - pad.left) / cw) * (dolo_tvlPoints.length - 1));
+                if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); return; }
+                const pt = dolo_tvlPoints[idx];
+                const x = pad.left + (cw * idx / (dolo_tvlPoints.length - 1));
+                const y = pad.top + ch - (ch * (pt.tvl - minV) / range);
+
+                // Draw crosshair dot
+                const ctx2 = canvas.getContext('2d');
+                dolo_renderTvlChart.__redraw = false;
+                // Just show tooltip div
+                const tip = document.getElementById('dolo-tvl-tooltip');
+                tip.style.display = 'block';
+                tip.innerHTML = `<div style="color:var(--text-primary);font-weight:600">${dolo_fmt(pt.tvl)}</div><div style="color:var(--text-muted);font-size:11px">${pt.date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}</div>`;
+                const tipW = 150;
+                let left = x - tipW / 2;
+                if (left < 0) left = 0;
+                if (left + tipW > W) left = W - tipW;
+                tip.style.left = left + 'px';
+                tip.style.top = (y - 60) + 'px';
+            };
+            canvas.onmouseleave = dolo_hideTvlTooltip;
+        }
+
+        function dolo_hideTvlTooltip() {
+            const tip = document.getElementById('dolo-tvl-tooltip');
+            if (tip) tip.style.display = 'none';
+        }
+
+        function dolo_renderTokenDonut(data) {
+            const canvas = document.getElementById('dolo-token-donut');
+            if (!canvas || !data.ll) return;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 260 * dpr;
+            canvas.height = 260 * dpr;
+            canvas.style.width = '260px';
+            canvas.style.height = '260px';
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+
+            // Get token breakdown from tokensInUsd if available
+            let tokens = [];
+            const tokensInUsd = data.ll.tokensInUsd || [];
+            if (tokensInUsd.length > 0) {
+                // Use latest snapshot
+                const latest = tokensInUsd[tokensInUsd.length - 1];
+                const tokenMap = latest.tokens || {};
+                for (const [name, val] of Object.entries(tokenMap)) {
+                    if (typeof val === 'number' && val > 0) tokens.push({ name, value: val });
+                }
+            }
+            if (!tokens.length) {
+                // Fallback: chain TVLs as tokens
+                const tvl = data.ll.currentChainTvls || {};
+                for (const [c, v] of Object.entries(tvl)) {
+                    if (!c.includes('-') && typeof v === 'number' && v > 0) tokens.push({ name: c, value: v });
+                }
+            }
+            tokens.sort((a, b) => b.value - a.value);
+            // Top 8 + "Other"
+            if (tokens.length > 8) {
+                const top = tokens.slice(0, 8);
+                const otherVal = tokens.slice(8).reduce((s, t) => s + t.value, 0);
+                top.push({ name: 'Other', value: otherVal });
+                tokens = top;
+            }
+            const total = tokens.reduce((s, t) => s + t.value, 0);
+            if (!total) return;
+
+            const cx = 130, cy = 130, r = 110, innerR = 70;
+            let angle = -Math.PI / 2;
+            const sliceData = [];
+
+            tokens.forEach((t, i) => {
+                const sweep = (t.value / total) * Math.PI * 2;
+                const color = DOLO_TOKEN_COLORS[i % DOLO_TOKEN_COLORS.length];
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, angle, angle + sweep);
+                ctx.arc(cx, cy, innerR, angle + sweep, angle, true);
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+                sliceData.push({ name: t.name, value: t.value, pct: ((t.value / total) * 100).toFixed(1), color, startAngle: angle, endAngle: angle + sweep });
+                angle += sweep;
+            });
+
+            // Center text
+            ctx.fillStyle = '#f0f0f6';
+            ctx.font = '600 16px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(dolo_fmt(total), cx, cy - 2);
+            ctx.font = '11px Inter';
+            ctx.fillStyle = '#555770';
+            ctx.fillText('Total Value', cx, cy + 16);
+
+            // Legend
+            const legend = document.getElementById('dolo-token-legend');
+            legend.innerHTML = sliceData.map(s => `<div style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:default" title="${s.name}: ${dolo_fmt(s.value)}">
+                <span style="width:10px;height:10px;border-radius:3px;background:${s.color};flex-shrink:0"></span>
+                <span style="color:var(--text-secondary)">${s.name}</span>
+                <span style="color:var(--text-muted)">${s.pct}%</span>
+            </div>`).join('');
+
+            // Interactive hover on donut
+            canvas.onmousemove = function (e) {
+                const cRect = canvas.getBoundingClientRect();
+                const mx = (e.clientX - cRect.left) * (260 / cRect.width);
+                const my = (e.clientY - cRect.top) * (260 / cRect.height);
+                const dx = mx - cx, dy = my - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < innerR || dist > r) { canvas.style.cursor = 'default'; canvas.title = ''; return; }
+                let a = Math.atan2(dy, dx);
+                if (a < -Math.PI / 2) a += Math.PI * 2;
+                const hit = sliceData.find(s => a >= s.startAngle && a < s.endAngle);
+                if (hit) {
+                    canvas.style.cursor = 'pointer';
+                    canvas.title = `${hit.name}: ${dolo_fmt(hit.value)} (${hit.pct}%)`;
+                } else {
+                    canvas.style.cursor = 'default';
+                    canvas.title = '';
+                }
+            };
+        }
+
+        function dolo_renderProtocolInfo(ll) {
+            document.getElementById('dolo-description').textContent = ll.description || 'Dolomite is a decentralized money market protocol.';
+
+            const linksEl = document.getElementById('dolo-links');
+            const linkData = [
+                { label: '🌐 Website', url: ll.url },
+                { label: '🐦 Twitter', url: ll.twitter ? 'https://twitter.com/' + ll.twitter : null },
+                { label: '💻 GitHub', url: ll.openSource ? ll.github?.[0] : null },
+                { label: '🔒 Audits', url: ll.audits ? ll.audit_links?.[0] : null },
+            ].filter(l => l.url);
+            linksEl.innerHTML = linkData.map(l => `<a href="${l.url}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:13px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='var(--accent-indigo)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-default)';this.style.color='var(--text-secondary)'">${l.label}</a>`).join('');
+
+            // Contract addresses
+            const contractsEl = document.getElementById('dolo-contracts');
+            const dolomiteAddr = '0x0f81001ef0a83ecce5ccebf63eb302c70a39a654';
+            contractsEl.innerHTML = `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500">Contract Address (DOLO)</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                    <a href="https://etherscan.io/token/${dolomiteAddr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#627EEA'" onmouseout="this.style.borderColor='var(--border-default)'">
+                        <img src="https://icons.llama.fi/ethereum.png" width="14" height="14" style="border-radius:50%"> ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
+                    </a>
+                    <a href="https://berascan.com/token/${dolomiteAddr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#D4A843'" onmouseout="this.style.borderColor='var(--border-default)'">
+                        <img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%"> ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
+                    </a>
+                </div>`;
+        }
+
+        // Redraw DOLO charts on resize
+        let dolo_resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(dolo_resizeTimer);
+            dolo_resizeTimer = setTimeout(() => {
+                if (dolo_cachedData && currentView === 'dolo') {
+                    dolo_renderTvlChart(dolo_cachedData);
+                    dolo_renderTokenDonut(dolo_cachedData);
+                }
             }, 300);
         });
 
