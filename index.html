@@ -2332,6 +2332,31 @@
         .anim-d4 {
             animation-delay: 0.2s;
         }
+
+        /* DOLO range buttons */
+        .dolo-range-btn {
+            padding: 4px 10px;
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dolo-range-btn:hover {
+            border-color: var(--accent-indigo);
+            color: var(--text-primary);
+        }
+
+        .dolo-range-btn.active {
+            background: var(--accent-indigo);
+            border-color: var(--accent-indigo);
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -2810,12 +2835,16 @@
                     <div class="metric-value" style="color:var(--accent-green)" id="dolo-tvl">—</div>
                 </div>
                 <div class="metric-cell">
-                    <div class="metric-label">Total Supply</div>
+                    <div class="metric-label">Supply Liquidity</div>
                     <div class="metric-value" id="dolo-supply">—</div>
                 </div>
                 <div class="metric-cell">
                     <div class="metric-label">Total Borrowed</div>
                     <div class="metric-value" style="color:var(--accent-amber)" id="dolo-borrowed">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">FDV</div>
+                    <div class="metric-value" id="dolo-fdv">—</div>
                 </div>
             </div>
 
@@ -2845,9 +2874,21 @@
 
             <!-- TVL History Chart -->
             <div class="card anim anim-d3" style="margin-top:24px">
-                <div class="card-header">
-                    <h3>TVL History (90 days)</h3>
-                    <span class="metric-sub" id="dolo-tvl-range"></span>
+                <div class="card-header"
+                    style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+                    <h3>TVL History</h3>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <div id="dolo-tvl-range-btns" style="display:flex;gap:4px">
+                            <button onclick="dolo_setRange(1)" class="dolo-range-btn" data-days="1">1D</button>
+                            <button onclick="dolo_setRange(7)" class="dolo-range-btn" data-days="7">7D</button>
+                            <button onclick="dolo_setRange(30)" class="dolo-range-btn" data-days="30">30D</button>
+                            <button onclick="dolo_setRange(90)" class="dolo-range-btn" data-days="90">90D</button>
+                            <button onclick="dolo_setRange(180)" class="dolo-range-btn" data-days="180">180D</button>
+                            <button onclick="dolo_setRange(360)" class="dolo-range-btn active"
+                                data-days="360">1Y</button>
+                        </div>
+                        <span class="metric-sub" id="dolo-tvl-range"></span>
+                    </div>
                 </div>
                 <div style="padding:16px;position:relative">
                     <canvas id="dolo-tvl-chart" height="220" style="width:100%"></canvas>
@@ -4547,7 +4588,29 @@
         // ===== DOLO TOKEN NAMESPACE =====
         let dolo_cachedData = null;
         let dolo_tvlPoints = [];
+        let dolo_allTvlPoints = [];
+        let dolo_currentRange = 360;
         let dolo_refreshTimer = null;
+
+        function dolo_applyRange(days) {
+            dolo_currentRange = days;
+            dolo_tvlPoints = dolo_allTvlPoints.slice(-days);
+            // Update date range label
+            if (dolo_tvlPoints.length > 0) {
+                const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                document.getElementById('dolo-tvl-range').textContent = fmt(dolo_tvlPoints[0].date) + ' — ' + fmt(dolo_tvlPoints[dolo_tvlPoints.length - 1].date);
+            }
+        }
+
+        function dolo_setRange(days) {
+            if (days === dolo_currentRange) return;
+            dolo_applyRange(days);
+            // Toggle active button
+            document.querySelectorAll('.dolo-range-btn').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.days) === days);
+            });
+            dolo_renderTvlChart(dolo_cachedData);
+        }
 
         const DOLO_CHAIN_COLORS = {
             'Ethereum': '#627EEA', 'Berachain': '#D4A843', 'Arbitrum': '#28A0F0',
@@ -4599,21 +4662,27 @@
 
                 document.getElementById('dolo-tvl').textContent = dolo_fmt(totalTvl);
 
-                // Total Supply from CoinGecko
-                const totalSupply = cgCoin?.market_data?.total_supply || 0;
-                const fmtSupply = totalSupply >= 1e9 ? (totalSupply / 1e9).toFixed(2) + 'B' : totalSupply >= 1e6 ? (totalSupply / 1e6).toFixed(2) + 'M' : totalSupply.toLocaleString();
-                document.getElementById('dolo-supply').textContent = fmtSupply + ' DOLO';
+                // Total Supply Liquidity (TVL + Borrowed = total deposits)
+                const totalBorrowed = tvl['borrowed'] || 0;
+                const supplyLiquidity = totalTvl + totalBorrowed;
+                document.getElementById('dolo-supply').textContent = dolo_fmt(supplyLiquidity);
 
                 // Total Borrowed from DeFiLlama
-                const totalBorrowed = tvl['borrowed'] || 0;
                 document.getElementById('dolo-borrowed').textContent = dolo_fmt(totalBorrowed);
+
+                // FDV (Fully Diluted Valuation) = price × max supply
+                const maxSupply = cgCoin?.market_data?.max_supply || cgCoin?.market_data?.total_supply || 1e9;
+                const fdv = price * maxSupply;
+                document.getElementById('dolo-fdv').textContent = dolo_fmt(fdv);
 
                 // --- TVL by Chain bars ---
                 dolo_renderChainBars(chainTvls, totalTvl, tvl);
 
-                // --- TVL History ---
+                // --- TVL History (store ALL points, default to 360 days) ---
                 const tvlHist = llRes.tvl || [];
-                dolo_tvlPoints = tvlHist.slice(-90).map(p => ({ date: new Date(p.date * 1000), tvl: p.totalLiquidityUSD }));
+                dolo_allTvlPoints = tvlHist.map(p => ({ date: new Date(p.date * 1000), tvl: p.totalLiquidityUSD }));
+                dolo_currentRange = 360;
+                dolo_applyRange(360);
                 dolo_renderTvlChart(dolo_cachedData);
 
                 // --- Token Composition ---
@@ -4888,12 +4957,15 @@
 
             const linksEl = document.getElementById('dolo-links');
             const linkData = [
-                { label: '🌐 Website', url: ll.url },
-                { label: '🐦 Twitter', url: ll.twitter ? 'https://twitter.com/' + ll.twitter : null },
-                { label: '💻 GitHub', url: ll.openSource ? ll.github?.[0] : null },
-                { label: '🔒 Audits', url: ll.audits ? ll.audit_links?.[0] : null },
+                { label: '🌐 Website', url: ll.url, icon: null },
+                { label: 'Twitter', url: ll.twitter ? 'https://twitter.com/' + ll.twitter : null, icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
+                { label: '💻 GitHub', url: ll.openSource ? ll.github?.[0] : null, icon: null },
+                { label: '🔒 Audits', url: ll.audits ? ll.audit_links?.[0] : null, icon: null },
             ].filter(l => l.url);
-            linksEl.innerHTML = linkData.map(l => `<a href="${l.url}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:13px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='var(--accent-indigo)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-default)';this.style.color='var(--text-secondary)'">${l.label}</a>`).join('');
+            linksEl.innerHTML = linkData.map(l => {
+                const content = l.icon ? l.icon + ' ' + l.label : l.label;
+                return `<a href="${l.url}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:13px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='var(--accent-indigo)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-default)';this.style.color='var(--text-secondary)'">${content}</a>`;
+            }).join('');
 
             // Contract addresses
             const contractsEl = document.getElementById('dolo-contracts');
@@ -4901,10 +4973,10 @@
             contractsEl.innerHTML = `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500">Contract Address (DOLO)</div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px">
                     <a href="https://etherscan.io/token/${dolomiteAddr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#627EEA'" onmouseout="this.style.borderColor='var(--border-default)'">
-                        <img src="https://icons.llama.fi/ethereum.png" width="14" height="14" style="border-radius:50%"> ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
+                        <img src="https://icons.llama.fi/ethereum.png" width="14" height="14" style="border-radius:50%"> ETH: ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
                     </a>
                     <a href="https://berascan.com/token/${dolomiteAddr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#D4A843'" onmouseout="this.style.borderColor='var(--border-default)'">
-                        <img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%"> ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
+                        <img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%"> BERA: ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
                     </a>
                 </div>`;
         }
