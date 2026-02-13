@@ -5033,16 +5033,8 @@
                 return h.balance;
             }
 
-            // Toggle ETH/BERA column visibility + refilter
+            // Toggle ETH/BERA — just re-render, never hide columns
             function dolo_toggleChainColumns() {
-                const showEth = document.getElementById('dolo-filter-eth')?.checked ?? true;
-                const showBera = document.getElementById('dolo-filter-bera')?.checked ?? true;
-                // Hide/show col width + td cells — th headers with checkboxes always stay visible
-                document.querySelectorAll('col.dolo-col-eth').forEach(el => el.style.width = showEth ? '20%' : '0px');
-                document.querySelectorAll('col.dolo-col-bera').forEach(el => el.style.width = showBera ? '20%' : '0px');
-                document.querySelectorAll('.dolo-td-eth').forEach(el => el.style.display = showEth ? '' : 'none');
-                document.querySelectorAll('.dolo-td-bera').forEach(el => el.style.display = showBera ? '' : 'none');
-                // Also apply holder filters (for sorting/filtering)
                 dolo_applyHolderFilters();
             }
 
@@ -5078,8 +5070,15 @@
                     const ethBal = h.balance_eth || 0;
                     const beraBal = h.balance_bera || 0;
 
-                    const ethDisplay = showEth ? '' : 'display:none';
-                    const beraDisplay = showBera ? '' : 'display:none';
+                    // ETH cell: show value if checked, empty dash if unchecked
+                    const ethCell = showEth
+                        ? (ethBal > 0 ? `<a href="${ethUrl}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent-green);text-decoration:none" title="View on Etherscan: ${ethBal.toLocaleString('en-US')} DOLO">${dolo_fmtBal(ethBal)}</a>` : '<span style="opacity:0.3">—</span>')
+                        : '<span style="opacity:0.15">—</span>';
+
+                    // BERA cell: show value if checked, empty dash if unchecked
+                    const beraCell = showBera
+                        ? (beraBal > 0 ? `<a href="${beraUrl}" target="_blank" onclick="event.stopPropagation()" style="color:#f59e0b;text-decoration:none" title="View on Berascan: ${beraBal.toLocaleString('en-US')} DOLO">${dolo_fmtBal(beraBal)}</a>` : '<span style="opacity:0.3">—</span>')
+                        : '<span style="opacity:0.15">—</span>';
 
                     return `<tr class="${isWhale ? 'whale-row' : ''}" style="cursor:pointer" onclick="window.open('${dbUrl}','_blank')">
                         <td class="c-rank">
@@ -5093,12 +5092,8 @@
                                 <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
                             </span>
                         </td>
-                        <td class="dolo-td-eth c-dolo" style="text-align:right;${ethDisplay}">
-                            ${ethBal > 0 ? `<a href="${ethUrl}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent-green);text-decoration:none" title="View on Etherscan: ${ethBal.toLocaleString('en-US')} DOLO">${dolo_fmtBal(ethBal)}</a>` : '<span style="opacity:0.3">—</span>'}
-                        </td>
-                        <td class="dolo-td-bera c-dolo" style="text-align:right;${beraDisplay}">
-                            ${beraBal > 0 ? `<a href="${beraUrl}" target="_blank" onclick="event.stopPropagation()" style="color:#f59e0b;text-decoration:none" title="View on Berascan: ${beraBal.toLocaleString('en-US')} DOLO">${dolo_fmtBal(beraBal)}</a>` : '<span style="opacity:0.3">—</span>'}
-                        </td>
+                        <td class="c-dolo" style="text-align:right">${ethCell}</td>
+                        <td class="c-dolo" style="text-align:right">${beraCell}</td>
                         <td class="c-dolo" style="text-align:right" title="${balExact} DOLO">${dolo_fmtBal(dispBal)}<span class="supply-pct">(${supplyPct}%)</span></td>
                     </tr>`;
                 }).join('');
