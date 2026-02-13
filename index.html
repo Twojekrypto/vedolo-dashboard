@@ -2372,15 +2372,15 @@
                 <div class="nav-tabs">
                     <button class="nav-tab active" id="tab-vedolo" onclick="switchView('vedolo')">
                         <img src="vedolo-logo.svg" alt="veDOLO">
-                        veDOLO Holders
+                        veDOLO
                     </button>
                     <button class="nav-tab" id="tab-odolo" onclick="switchView('odolo')">
                         <img src="odolo-logo-official.svg" alt="oDOLO">
-                        oDOLO Stats
+                        oDOLO
                     </button>
                     <button class="nav-tab" id="tab-dolo" onclick="switchView('dolo')">
                         <img src="https://icons.llama.fi/dolomite.jpg" alt="DOLO" style="border-radius:50%">
-                        DOLO Token
+                        DOLO
                     </button>
                 </div>
             </nav>
@@ -2838,6 +2838,10 @@
                     <div class="metric-label">24h Volume</div>
                     <div class="metric-value" id="dolo-vol">—</div>
                 </div>
+                <div class="metric-cell">
+                    <div class="metric-label">Circulating Supply</div>
+                    <div class="metric-value" id="dolo-circ-supply">—</div>
+                </div>
             </div>
 
             <!-- DOLO ANALYTICS -->
@@ -2845,10 +2849,10 @@
                 <!-- TVL by Chain -->
                 <div class="card">
                     <div class="card-header" style="flex-direction:column;align-items:stretch">
-                        <h3>TVL by Chain</h3>
+                        <h3>Total TVL</h3>
                         <div id="dolo-chain-summary" style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap"></div>
                     </div>
-                    <div id="dolo-chain-bars" style="padding:20px"></div>
+                    <div id="dolo-chain-bars" style="padding:8px 0 12px 0"></div>
                 </div>
 
                 <!-- Token Composition Donut -->
@@ -2857,9 +2861,14 @@
                         <h3>Token Composition</h3>
                     </div>
                     <div style="display:flex;flex-direction:column;align-items:center;padding:20px">
-                        <canvas id="dolo-token-donut" width="260" height="260"></canvas>
+                        <div id="dolo-donut-wrap" style="position:relative;width:260px;height:260px;flex-shrink:0">
+                            <canvas id="dolo-token-donut" style="width:260px;height:260px"></canvas>
+                            <div id="dolo-donut-center"
+                                style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+                            </div>
+                        </div>
                         <div id="dolo-token-legend"
-                            style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center">
+                            style="margin-top:16px;width:100%;display:flex;flex-direction:column;gap:2px">
                         </div>
                     </div>
                 </div>
@@ -3969,7 +3978,7 @@
             });
 
             // Update page title
-            const titles = { vedolo: 'veDOLO Holders', odolo: 'oDOLO Stats', dolo: 'DOLO Token' };
+            const titles = { vedolo: 'veDOLO', odolo: 'oDOLO', dolo: 'DOLO' };
             document.title = (titles[view] || 'Dashboard') + ' — Berachain Dashboard';
 
             // Lazy load oDOLO data on first switch
@@ -4606,7 +4615,18 @@
 
         const DOLO_CHAIN_COLORS = {
             'Ethereum': '#627EEA', 'Berachain': '#D4A843', 'Arbitrum': '#28A0F0',
-            'Botanix': '#4CAF50', 'Mantle': '#000', 'X Layer': '#8B5CF6', 'BoB': '#FF6B00'
+            'Botanix': '#4CAF50', 'Mantle': '#000', 'X Layer': '#8B5CF6', 'BoB': '#FF6B00',
+            'Polygon zkEVM': '#7B3FE4'
+        };
+        const DOLO_CHAIN_LOGOS = {
+            'Ethereum': 'https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg',
+            'Arbitrum': 'https://icons.llamao.fi/icons/chains/rsz_arbitrum.jpg',
+            'Berachain': 'https://icons.llamao.fi/icons/chains/rsz_berachain.jpg',
+            'Botanix': 'https://icons.llamao.fi/icons/chains/rsz_botanix.jpg',
+            'Mantle': 'https://icons.llamao.fi/icons/chains/rsz_mantle.jpg',
+            'X Layer': 'https://icons.llamao.fi/icons/chains/rsz_x%20layer.jpg',
+            'BoB': 'https://icons.llamao.fi/icons/chains/rsz_bob.jpg',
+            'Polygon zkEVM': 'https://icons.llamao.fi/icons/chains/rsz_polygon%20zkevm.jpg'
         };
         const DOLO_TOKEN_COLORS = ['#6366f1', '#22d3ee', '#34d399', '#fbbf24', '#fb7185', '#fb923c', '#a78bfa', '#f472b6', '#38bdf8', '#4ade80'];
 
@@ -4619,10 +4639,11 @@
 
         async function dolo_init() {
             try {
+                const px = (u) => '/api/proxy?url=' + encodeURIComponent(u);
                 const [cgRes, llRes, cgCoin] = await Promise.all([
-                    fetch('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true').then(r => r.json()),
-                    fetch('https://api.llama.fi/protocol/dolomite').then(r => r.json()),
-                    fetch('https://api.coingecko.com/api/v3/coins/dolomite?localization=false&tickers=false&community_data=false&developer_data=false').then(r => r.json()).catch(() => null)
+                    fetch(px('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true')).then(r => r.json()),
+                    fetch(px('https://api.llama.fi/protocol/dolomite')).then(r => r.json()),
+                    fetch(px('https://api.coingecko.com/api/v3/coins/dolomite?localization=false&tickers=false&community_data=false&developer_data=false')).then(r => r.json()).catch(() => null)
                 ]);
 
                 const cg = cgRes.dolomite || {};
@@ -4663,6 +4684,11 @@
                 const fdv = price * maxSupply;
                 document.getElementById('dolo-fdv').textContent = dolo_fmt(fdv);
 
+                // Circulating Supply
+                const circSupply = cgCoin?.market_data?.circulating_supply || 0;
+                const circEl = document.getElementById('dolo-circ-supply');
+                if (circEl) circEl.textContent = circSupply > 0 ? (circSupply >= 1e9 ? (circSupply / 1e9).toFixed(2) + 'B' : circSupply >= 1e6 ? (circSupply / 1e6).toFixed(2) + 'M' : circSupply >= 1e3 ? (circSupply / 1e3).toFixed(1) + 'K' : circSupply.toFixed(0)) : '—';
+
                 // --- TVL by Chain bars ---
                 dolo_renderChainBars(chainTvls, totalTvl, tvl, totalBorrowed, supplyLiquidity);
 
@@ -4692,7 +4718,7 @@
         async function dolo_refreshPrice() {
             if (currentView !== 'dolo') return;
             try {
-                const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_24hr_change=true').then(r => r.json());
+                const r = await fetch('/api/proxy?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_24hr_change=true')).then(r => r.json());
                 const d = r.dolomite || {};
                 if (d.usd) {
                     document.getElementById('dolo-price').textContent = '$' + d.usd.toFixed(4);
@@ -4708,9 +4734,9 @@
             const summaryEl = document.getElementById('dolo-chain-summary');
             if (summaryEl) {
                 summaryEl.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:6px;font-size:13px"><span style="color:var(--text-muted)">TVL</span><span style="color:var(--accent-green);font-weight:600">${dolo_fmt(total)}</span></div>
-                    <div style="display:flex;align-items:center;gap:6px;font-size:13px"><span style="color:var(--text-muted)">Supply Liquidity</span><span style="font-weight:600;color:var(--text-primary)">${dolo_fmt(supplyLiquidity)}</span></div>
-                    <div style="display:flex;align-items:center;gap:6px;font-size:13px"><span style="color:var(--text-muted)">Borrowed</span><span style="color:var(--accent-amber);font-weight:600">${dolo_fmt(totalBorrowed)}</span></div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:15px"><span style="color:var(--text-muted)">TVL</span><span style="color:var(--accent-green);font-weight:600">${dolo_fmt(total)}</span></div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:15px"><span style="color:var(--text-muted)">Supply Liquidity</span><span style="font-weight:600;color:var(--text-primary)">${dolo_fmt(supplyLiquidity)}</span></div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:15px"><span style="color:var(--text-muted)">Borrowed</span><span style="color:var(--accent-amber);font-weight:600">${dolo_fmt(totalBorrowed)}</span></div>
                 `;
             }
             const container = document.getElementById('dolo-chain-bars');
@@ -4718,17 +4744,23 @@
                 const pct = ((c.tvl / total) * 100).toFixed(1);
                 const color = DOLO_CHAIN_COLORS[c.chain] || '#6366f1';
                 const borrowed = allTvl[c.chain + '-borrowed'] || 0;
-                const borrowedLine = borrowed > 0
-                    ? `<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px"><span style="color:var(--text-muted)">Borrowed</span><span style="color:var(--accent-amber)">${dolo_fmt(borrowed)}</span></div>`
-                    : '';
-                return `<div style="margin-bottom:14px;cursor:default;transition:transform 0.2s;transform:translateY(0)" class="dolo-chain-row" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px">
-                        <span style="color:var(--text-primary);font-weight:500">${c.chain}</span>
-                        <span style="color:var(--text-secondary)">${dolo_fmt(c.tvl)} <span style="color:var(--text-muted);font-size:11px">(${pct}%)</span></span>
+                const supply = c.tvl + borrowed;
+                const logo = DOLO_CHAIN_LOGOS[c.chain] || '';
+                const logoImg = logo ? `<img src="${logo}" alt="${c.chain}" style="width:22px;height:22px;border-radius:50%;flex-shrink:0;object-fit:cover">` : `<span style="width:22px;height:22px;border-radius:50%;background:${color};flex-shrink:0"></span>`;
+                return `<div style="margin-bottom:14px;cursor:default;padding:9px 4px;border-radius:10px;transition:all 0.25s ease" class="dolo-chain-row"
+                    onmouseenter="this.style.background='rgba(99,102,241,0.1)';this.style.transform='translateY(-2px)';this.querySelector('.chain-bar-wrap').style.height='10px';this.querySelectorAll('.chain-name-text').forEach(e=>{e.style.fontSize='16px'});this.querySelectorAll('.chain-stat-text').forEach(e=>{e.style.fontSize='15.5px'})"
+                    onmouseleave="this.style.background='transparent';this.style.transform='translateY(0)';this.querySelector('.chain-bar-wrap').style.height='8px';this.querySelectorAll('.chain-name-text').forEach(e=>{e.style.fontSize='14px'});this.querySelectorAll('.chain-stat-text').forEach(e=>{e.style.fontSize='13.5px'})">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                        <span class="chain-name-text" style="display:flex;align-items:center;gap:8px;color:var(--text-primary);font-weight:600;font-size:14px;transition:font-size 0.2s">${logoImg} ${c.chain}</span>
+                        <span style="display:flex;align-items:center;gap:4px"><span class="chain-name-text" style="color:var(--accent-green);font-weight:600;font-size:14px;transition:font-size 0.2s">${dolo_fmt(c.tvl)}</span> <span style="color:var(--text-muted);font-size:11px">(${pct}%)</span></span>
                     </div>
-                    <div style="height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden;position:relative">
+                    <div class="chain-bar-wrap" style="height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden;position:relative;transition:height 0.25s ease">
                         <div class="dolo-bar-fill" style="height:100%;width:0%;background:${color};border-radius:4px;transition:width 1s cubic-bezier(0.4,0,0.2,1)" data-width="${pct}%"></div>
-                    </div>${borrowedLine}
+                    </div>
+                    <div style="display:flex;gap:14px;margin-top:6px">
+                        <span class="chain-stat-text" style="font-size:13.5px;transition:font-size 0.2s"><span style="color:var(--text-muted)">Supply</span> <span style="color:#fff">${dolo_fmt(supply)}</span></span>
+                        ${borrowed > 0 ? `<span class="chain-stat-text" style="font-size:13.5px;transition:font-size 0.2s"><span style="color:var(--text-muted)">Borrowed</span> <span style="color:var(--accent-amber)">${dolo_fmt(borrowed)}</span></span>` : ''}
+                    </div>
                 </div>`;
             };
 
@@ -4892,15 +4924,8 @@
         }
 
         function dolo_renderTokenDonut(data) {
-            const canvas = document.getElementById('dolo-token-donut');
-            if (!canvas || !data.ll) return;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = 260 * dpr;
-            canvas.height = 260 * dpr;
-            canvas.style.width = '260px';
-            canvas.style.height = '260px';
-            const ctx = canvas.getContext('2d');
-            ctx.scale(dpr, dpr);
+            const wrap = document.getElementById('dolo-donut-wrap');
+            if (!wrap || !data.ll) return;
 
             // Get token breakdown from tokensInUsd if available
             let tokens = [];
@@ -4928,68 +4953,80 @@
             const total = tokens.reduce((s, t) => s + t.value, 0);
             if (!total) return;
 
-            const cx = 130, cy = 130, r = 110, innerR = 70;
+            const size = 260, cx = 130, cy = 130, r = 110, innerR = 70;
             let angle = -Math.PI / 2;
             const sliceData = [];
+            const pathElems = [];
 
             tokens.forEach((t, i) => {
                 const sweep = (t.value / total) * Math.PI * 2;
                 const color = DOLO_TOKEN_COLORS[i % DOLO_TOKEN_COLORS.length];
-                ctx.beginPath();
-                ctx.arc(cx, cy, r, angle, angle + sweep);
-                ctx.arc(cx, cy, innerR, angle + sweep, angle, true);
-                ctx.closePath();
-                ctx.fillStyle = color;
-                ctx.fill();
+                const x1 = cx + r * Math.cos(angle);
+                const y1 = cy + r * Math.sin(angle);
+                const x2 = cx + r * Math.cos(angle + sweep);
+                const y2 = cy + r * Math.sin(angle + sweep);
+                const ix1 = cx + innerR * Math.cos(angle + sweep);
+                const iy1 = cy + innerR * Math.sin(angle + sweep);
+                const ix2 = cx + innerR * Math.cos(angle);
+                const iy2 = cy + innerR * Math.sin(angle);
+                const large = sweep > Math.PI ? 1 : 0;
+                const d = `M${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} L${ix1},${iy1} A${innerR},${innerR} 0 ${large} 0 ${ix2},${iy2} Z`;
+                pathElems.push({ d, color, i });
                 sliceData.push({ name: t.name, value: t.value, pct: ((t.value / total) * 100).toFixed(1), color, startAngle: angle, endAngle: angle + sweep });
                 angle += sweep;
             });
 
-            // Center text — draw as HTML overlay for smooth updates
-            let centerOverlay = document.getElementById('dolo-donut-center');
-            if (!centerOverlay) {
-                centerOverlay = document.createElement('div');
-                centerOverlay.id = 'dolo-donut-center';
-                centerOverlay.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;transition:opacity 0.15s';
-                canvas.parentElement.style.position = 'relative';
-                canvas.parentElement.appendChild(centerOverlay);
-            }
-            centerOverlay.innerHTML = `<div style="font-weight:600;font-size:16px;color:#f0f0f6">${dolo_fmt(total)}</div><div style="font-size:11px;color:#555770;margin-top:2px">Total Value</div>`;
+            // Remove old canvas if present
+            const oldCanvas = document.getElementById('dolo-token-donut');
+            if (oldCanvas) oldCanvas.remove();
 
-            // Legend as a clean table
+            // Remove old SVG if present
+            const oldSvg = wrap.querySelector('svg');
+            if (oldSvg) oldSvg.remove();
+
+            // Create SVG programmatically
+            const ns = 'http://www.w3.org/2000/svg';
+            const svg = document.createElementNS(ns, 'svg');
+            svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+            svg.setAttribute('width', size);
+            svg.setAttribute('height', size);
+            svg.style.cssText = 'display:block;width:260px;height:260px';
+            svg.id = 'dolo-token-svg';
+
+            pathElems.forEach(p => {
+                const path = document.createElementNS(ns, 'path');
+                path.setAttribute('d', p.d);
+                path.setAttribute('fill', p.color);
+                path.setAttribute('data-idx', p.i);
+                path.style.cursor = 'pointer';
+                path.style.transition = 'opacity 0.15s, transform 0.15s';
+                path.style.transformOrigin = `${cx}px ${cy}px`;
+                path.addEventListener('mouseenter', () => dolo_highlightSlice(p.i));
+                path.addEventListener('mouseleave', () => dolo_highlightSlice(-1));
+                svg.appendChild(path);
+            });
+
+            wrap.insertBefore(svg, wrap.firstChild);
+
+            // Center text
+            const centerOverlay = document.getElementById('dolo-donut-center');
+            if (centerOverlay) {
+                centerOverlay.innerHTML = `<div style="font-weight:600;font-size:16px;color:#f0f0f6">${dolo_fmt(total)}</div><div style="font-size:11px;color:#555770;margin-top:2px">Total Value</div>`;
+            }
+
+            // Legend
             const legend = document.getElementById('dolo-token-legend');
-            legend.innerHTML = sliceData.map((s, i) => `<div data-idx="${i}" class="dolo-legend-item" style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:default;padding:4px 8px;border-radius:6px;transition:all 0.15s"
+            legend.innerHTML = sliceData.map((s, i) => `<div data-idx="${i}" class="dolo-legend-item" style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:default;padding:4px 8px;border-radius:6px;transition:all 0.2s"
                 onmouseover="dolo_highlightSlice(${i})" onmouseout="dolo_highlightSlice(-1)">
                 <span style="width:10px;height:10px;border-radius:3px;background:${s.color};flex-shrink:0"></span>
-                <span style="flex:1;color:var(--text-secondary)">${s.name}</span>
-                <span style="color:var(--text-muted);font-weight:500">${s.pct}%</span>
-                <span style="color:var(--text-secondary);min-width:60px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px">${dolo_fmt(s.value)}</span>
+                <span class="legend-text" style="flex:1;color:var(--text-secondary);transition:all 0.15s">${s.name}</span>
+                <span class="legend-text" style="color:var(--text-muted);font-weight:500;transition:all 0.15s">${s.pct}%</span>
+                <span class="legend-text" style="color:var(--text-secondary);min-width:60px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;transition:all 0.15s">${dolo_fmt(s.value)}</span>
             </div>`).join('');
 
             // Store slice data for highlight
             dolo_donutSlices = sliceData;
             dolo_donutTotal = total;
-
-            // Interactive hover on donut — lightweight: only highlight canvas ring + update center
-            canvas.onmousemove = function (e) {
-                const cRect = canvas.getBoundingClientRect();
-                const mx = (e.clientX - cRect.left) * (260 / cRect.width);
-                const my = (e.clientY - cRect.top) * (260 / cRect.height);
-                const dx = mx - cx, dy = my - cy;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < innerR || dist > r) { canvas.style.cursor = 'default'; dolo_highlightSlice(-1); return; }
-                let a = Math.atan2(dy, dx);
-                if (a < -Math.PI / 2) a += Math.PI * 2;
-                const hitIdx = sliceData.findIndex(s => a >= s.startAngle && a < s.endAngle);
-                if (hitIdx >= 0) {
-                    canvas.style.cursor = 'pointer';
-                    dolo_highlightSlice(hitIdx);
-                } else {
-                    canvas.style.cursor = 'default';
-                    dolo_highlightSlice(-1);
-                }
-            };
-            canvas.onmouseleave = () => dolo_highlightSlice(-1);
         }
 
         let dolo_donutSlices = [];
@@ -5002,17 +5039,25 @@
 
             // Highlight legend rows
             document.querySelectorAll('.dolo-legend-item').forEach((el, i) => {
+                const texts = el.querySelectorAll('.legend-text');
                 if (i === idx) {
                     el.style.background = 'rgba(99,102,241,0.12)';
                     el.style.transform = 'translateY(-1px)';
+                    el.style.opacity = '1';
+                    el.style.fontSize = '14px';
+                    texts.forEach(t => t.style.color = '#fff');
                 } else if (idx >= 0) {
                     el.style.background = 'transparent';
                     el.style.transform = 'translateY(0)';
-                    el.style.opacity = '0.5';
+                    el.style.opacity = '0.4';
+                    el.style.fontSize = '12px';
+                    texts.forEach(t => t.style.color = '');
                 } else {
                     el.style.background = 'transparent';
                     el.style.transform = 'translateY(0)';
                     el.style.opacity = '1';
+                    el.style.fontSize = '12px';
+                    texts.forEach(t => t.style.color = '');
                 }
             });
 
@@ -5027,31 +5072,21 @@
                 }
             }
 
-            // Re-render donut with highlight (expand hovered slice, fade others)
-            const canvas = document.getElementById('dolo-token-donut');
-            if (!canvas || !dolo_donutSlices.length) return;
-            const dpr = window.devicePixelRatio || 1;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            ctx.scale(dpr, dpr);
-            const cx = 130, cy = 130, r = 110, innerR = 70;
-
-            dolo_donutSlices.forEach((s, i) => {
-                const expanded = (i === idx) ? 4 : 0;
-                const midAngle = (s.startAngle + s.endAngle) / 2;
-                const ox = expanded * Math.cos(midAngle);
-                const oy = expanded * Math.sin(midAngle);
-                ctx.beginPath();
-                ctx.arc(cx + ox, cy + oy, r, s.startAngle, s.endAngle);
-                ctx.arc(cx + ox, cy + oy, innerR, s.endAngle, s.startAngle, true);
-                ctx.closePath();
-                ctx.fillStyle = s.color;
-                ctx.globalAlpha = (idx >= 0 && i !== idx) ? 0.35 : 1;
-                ctx.fill();
+            // Highlight SVG segments (no re-rendering needed!)
+            const svg = document.getElementById('dolo-token-svg');
+            if (!svg) return;
+            svg.querySelectorAll('path').forEach((path, i) => {
+                if (i === idx) {
+                    path.style.opacity = '1';
+                    path.style.transform = 'scale(1.04)';
+                } else if (idx >= 0) {
+                    path.style.opacity = '0.35';
+                    path.style.transform = 'scale(1)';
+                } else {
+                    path.style.opacity = '1';
+                    path.style.transform = 'scale(1)';
+                }
             });
-            ctx.globalAlpha = 1;
-            ctx.restore();
         }
 
         function dolo_renderProtocolInfo(ll) {
