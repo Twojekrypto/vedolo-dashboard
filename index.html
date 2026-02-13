@@ -4639,7 +4639,8 @@
 
         async function dolo_init() {
             try {
-                const px = (u) => '/api/proxy?url=' + encodeURIComponent(u);
+                const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+                const px = (u) => isLocal ? '/api/proxy?url=' + encodeURIComponent(u) : 'https://corsproxy.io/?' + encodeURIComponent(u);
                 const [cgRes, llRes, cgCoin] = await Promise.all([
                     fetch(px('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true')).then(r => r.json()),
                     fetch(px('https://api.llama.fi/protocol/dolomite')).then(r => r.json()),
@@ -4718,7 +4719,9 @@
         async function dolo_refreshPrice() {
             if (currentView !== 'dolo') return;
             try {
-                const r = await fetch('/api/proxy?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_24hr_change=true')).then(r => r.json());
+                const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+                const pxUrl = (u) => isLocal ? '/api/proxy?url=' + encodeURIComponent(u) : 'https://corsproxy.io/?' + encodeURIComponent(u);
+                const r = await fetch(pxUrl('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_24hr_change=true')).then(r => r.json());
                 const d = r.dolomite || {};
                 if (d.usd) {
                     document.getElementById('dolo-price').textContent = '$' + d.usd.toFixed(4);
