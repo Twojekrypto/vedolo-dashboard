@@ -4779,19 +4779,27 @@
                 const totalPages = Math.ceil(total / EXERCISER_PER_PAGE);
                 const el = document.getElementById('exerciser-pagination');
                 if (!el || totalPages <= 1) { if (el) el.innerHTML = ''; return; }
-                let html = '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
-                html += `<button class="pg-btn" ${exerciserPage <= 1 ? 'disabled' : ''} onclick="exerciserPage=1;renderExercisersTable()">«</button>`;
-                html += `<button class="pg-btn" ${exerciserPage <= 1 ? 'disabled' : ''} onclick="exerciserPage--;renderExercisersTable()">‹</button>`;
-                const start = Math.max(1, exerciserPage - 2);
-                const end = Math.min(totalPages, exerciserPage + 2);
-                for (let p = start; p <= end; p++) {
-                    html += `<button class="pg-btn ${p === exerciserPage ? 'active' : ''}" onclick="exerciserPage=${p};renderExercisersTable()">${p}</button>`;
+
+                function exPageRange(c, t) {
+                    if (t <= 7) return Array.from({ length: t }, (_, i) => i + 1);
+                    if (c <= 4) return [1, 2, 3, 4, 5, '...', t];
+                    if (c >= t - 3) return [1, '...', t - 4, t - 3, t - 2, t - 1, t];
+                    return [1, '...', c - 1, c, c + 1, '...', t];
                 }
-                html += `<button class="pg-btn" ${exerciserPage >= totalPages ? 'disabled' : ''} onclick="exerciserPage++;renderExercisersTable()">›</button>`;
-                html += `<button class="pg-btn" ${exerciserPage >= totalPages ? 'disabled' : ''} onclick="exerciserPage=${totalPages};renderExercisersTable()">»</button>`;
-                html += `<span style="font-size:12px;color:var(--text-muted);margin-left:8px">Page ${exerciserPage} of ${totalPages}</span>`;
-                html += '</div>';
-                el.innerHTML = html;
+
+                let h = `<button class="pg-btn" onclick="exerciserPage=1;renderExercisersTable()" ${exerciserPage === 1 ? 'disabled' : ''}>«</button>`;
+                h += `<button class="pg-btn" onclick="exerciserPage--;renderExercisersTable()" ${exerciserPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+                exPageRange(exerciserPage, totalPages).forEach(p => {
+                    h += p === '...'
+                        ? `<span class="pg-info">…</span>`
+                        : `<button class="pg-btn ${p === exerciserPage ? 'active' : ''}" onclick="exerciserPage=${p};renderExercisersTable()">${p}</button>`;
+                });
+
+                h += `<button class="pg-btn" onclick="exerciserPage++;renderExercisersTable()" ${exerciserPage === totalPages ? 'disabled' : ''}>›</button>`;
+                h += `<button class="pg-btn" onclick="exerciserPage=${totalPages};renderExercisersTable()" ${exerciserPage === totalPages ? 'disabled' : ''}>»</button>`;
+                h += `<span class="pg-info">${exerciserPage} / ${totalPages}</span>`;
+                el.innerHTML = h;
             }
 
             function openExerciserModal(addr, rank) {
