@@ -947,35 +947,28 @@
 
         /* Column specific */
         .c-rank {
-            width: 40px;
+            width: 28px;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
             color: var(--text-muted);
             text-align: center;
-            padding-right: 0 !important;
-        }
-
-        /* DOLO table: push rank + address close together */
-        #dolo-holders-table .c-rank {
             padding: 10px 0 10px 2px !important;
-            width: 28px;
-            text-align: center;
         }
 
-        #dolo-holders-table .c-rank .rank-cell-inner {
+        .c-rank .rank-cell-inner {
             justify-content: center;
         }
 
-        #dolo-holders-table .c-addr {
+        .c-addr {
             padding-left: 2px !important;
         }
 
-        #dolo-holders-table thead th:first-child {
+        thead th:first-child {
             padding: 11px 0 11px 2px !important;
             width: 28px;
         }
 
-        #dolo-holders-table thead th:nth-child(2) {
+        thead th:nth-child(2) {
             padding-left: 2px !important;
         }
 
@@ -2674,12 +2667,12 @@
                 <div class="table-scroll">
                     <table style="table-layout:fixed;width:100%">
                         <colgroup>
-                            <col style="width:40px">
-                            <col style="width:25%">
-                            <col style="width:15%">
-                            <col style="width:20%">
-                            <col style="width:20%">
-                            <col style="width:20%">
+                            <col style="width:28px">
+                            <col style="width:calc((100% - 28px) * 0.25)">
+                            <col style="width:calc((100% - 28px) * 0.15)">
+                            <col style="width:calc((100% - 28px) * 0.20)">
+                            <col style="width:calc((100% - 28px) * 0.20)">
+                            <col style="width:calc((100% - 28px) * 0.20)">
                         </colgroup>
                         <thead>
                             <tr>
@@ -2952,12 +2945,12 @@
                 <div class="table-scroll">
                     <table id="exercisers-table" style="table-layout:fixed;width:100%">
                         <colgroup>
-                            <col style="width:40px">
-                            <col style="width:25%">
-                            <col style="width:20%">
-                            <col style="width:15%">
-                            <col style="width:20%">
-                            <col style="width:20%">
+                            <col style="width:28px">
+                            <col style="width:calc((100% - 28px) * 0.25)">
+                            <col style="width:calc((100% - 28px) * 0.20)">
+                            <col style="width:calc((100% - 28px) * 0.15)">
+                            <col style="width:calc((100% - 28px) * 0.20)">
+                            <col style="width:calc((100% - 28px) * 0.20)">
                         </colgroup>
                         <thead>
                             <tr>
