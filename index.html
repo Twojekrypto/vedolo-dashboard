@@ -4971,7 +4971,7 @@
                 ctx.scale(dpr, dpr);
                 const W = rect.width, H = 40;
                 // Use same padding as main chart
-                const padL = 60, padR = 10;
+                const padL = 60, padR = 0;
                 const plotW = W - padL - padR;
                 ctx.clearRect(0, 0, W, H);
 
@@ -5019,7 +5019,7 @@
                 if (!overlay) return;
                 const W = overlay.offsetWidth;
                 // Brush selection only operates within the padded plot area
-                const padL = 60, padR = 10;
+                const padL = 60, padR = 0;
                 const plotW = W - padL - padR;
                 const left = padL + dolo_brushStart * plotW;
                 const right = padL + dolo_brushEnd * plotW;
@@ -5154,7 +5154,7 @@
                 document.addEventListener('mousemove', e => {
                     if (!mode) return;
                     const W = getOverlayW();
-                    const padL = 60, padR = 10;
+                    const padL = 60, padR = 0;
                     const plotW = W - padL - padR;
                     const dx = (e.clientX - startX) / plotW;
                     const minWidth = 0.03; // minimum 3% selection
