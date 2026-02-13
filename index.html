@@ -5024,8 +5024,12 @@
                 const left = padL + dolo_brushStart * plotW;
                 const right = padL + dolo_brushEnd * plotW;
 
-                document.getElementById('dolo-brush-dim-left').style.width = left + 'px';
-                document.getElementById('dolo-brush-dim-right').style.width = (W - right) + 'px';
+                const dimL = document.getElementById('dolo-brush-dim-left');
+                dimL.style.left = padL + 'px';
+                dimL.style.width = (left - padL) + 'px';
+                const dimR = document.getElementById('dolo-brush-dim-right');
+                dimR.style.left = right + 'px';
+                dimR.style.width = (W - padR - right) + 'px';
                 const win = document.getElementById('dolo-brush-window');
                 win.style.left = left + 'px';
                 win.style.width = (right - left) + 'px';
