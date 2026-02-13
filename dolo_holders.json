@@ -1,0 +1,38 @@
+{
+  "contract": "0x0F81001eF0A83ecCE5ccebf63EB302c70a39a654",
+  "timestamp": "2026-02-13T17:00:00",
+  "stats": {
+    "total_holders": 25,
+    "eth_holders": 15,
+    "bera_holders": 20,
+    "both_chains": 10,
+    "total_supply": 460470000
+  },
+  "holders": [
+    {"address":"0xA1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8A9B0","balance":52000000,"balance_eth":30000000,"balance_bera":22000000,"chains":["eth","bera"],"rank":1},
+    {"address":"0x1234567890ABCDEF1234567890ABCDEF12345678","balance":38000000,"balance_eth":38000000,"balance_bera":0,"chains":["eth"],"rank":2},
+    {"address":"0xBEEFCAFEDEAD0001BEEF0002CAFE0003DEAD0004","balance":25500000,"balance_eth":0,"balance_bera":25500000,"chains":["bera"],"rank":3},
+    {"address":"0xAAAABBBBCCCCDDDD1111222233334444AAAABBBB","balance":18700000,"balance_eth":10700000,"balance_bera":8000000,"chains":["eth","bera"],"rank":4},
+    {"address":"0x5555666677778888AAAA9999BBBBCCCCDDDDEEEE","balance":12400000,"balance_eth":12400000,"balance_bera":0,"chains":["eth"],"rank":5},
+    {"address":"0xFEDCBA9876543210FEDCBA9876543210FEDCBA98","balance":9800000,"balance_eth":0,"balance_bera":9800000,"chains":["bera"],"rank":6},
+    {"address":"0x1111AAAA2222BBBB3333CCCC4444DDDD5555EEEE","balance":7200000,"balance_eth":4200000,"balance_bera":3000000,"chains":["eth","bera"],"rank":7},
+    {"address":"0x6666777788889999AAAABBBBCCCCDDDDEEEEFFFF","balance":5100000,"balance_eth":5100000,"balance_bera":0,"chains":["eth"],"rank":8},
+    {"address":"0xDEADBEEF00000001DEADBEEF00000002DEADBEEF","balance":4300000,"balance_eth":0,"balance_bera":4300000,"chains":["bera"],"rank":9},
+    {"address":"0xCAFEBABE11111111CAFEBABE22222222CAFEBABE","balance":3700000,"balance_eth":1700000,"balance_bera":2000000,"chains":["eth","bera"],"rank":10},
+    {"address":"0x0000111122223333444455556666777788889999","balance":2900000,"balance_eth":2900000,"balance_bera":0,"chains":["eth"],"rank":11},
+    {"address":"0xAAAA0000BBBB1111CCCC2222DDDD3333EEEE4444","balance":2400000,"balance_eth":0,"balance_bera":2400000,"chains":["bera"],"rank":12},
+    {"address":"0x9999AAAA8888BBBB7777CCCC6666DDDD5555EEEE","balance":1800000,"balance_eth":900000,"balance_bera":900000,"chains":["eth","bera"],"rank":13},
+    {"address":"0x4444FFFF3333AAAA2222BBBB1111CCCC0000DDDD","balance":1500000,"balance_eth":1500000,"balance_bera":0,"chains":["eth"],"rank":14},
+    {"address":"0xBBBB0000AAAA1111CCCC2222DDDD3333EEEE4444","balance":1200000,"balance_eth":0,"balance_bera":1200000,"chains":["bera"],"rank":15},
+    {"address":"0x7777888899990000AAAA1111BBBB2222CCCC3333","balance":950000,"balance_eth":500000,"balance_bera":450000,"chains":["eth","bera"],"rank":16},
+    {"address":"0xDDDD0000EEEE1111FFFF2222000033334444AAAA","balance":780000,"balance_eth":780000,"balance_bera":0,"chains":["eth"],"rank":17},
+    {"address":"0x1111000022220000333300004444000055550000","balance":620000,"balance_eth":0,"balance_bera":620000,"chains":["bera"],"rank":18},
+    {"address":"0xAAAA1111BBBB2222CCCC3333DDDD4444EEEE5555","balance":510000,"balance_eth":300000,"balance_bera":210000,"chains":["eth","bera"],"rank":19},
+    {"address":"0x0000AAAA1111BBBB2222CCCC3333DDDD4444EEEE","balance":420000,"balance_eth":420000,"balance_bera":0,"chains":["eth"],"rank":20},
+    {"address":"0xEEEE0000DDDD1111CCCC2222BBBB3333AAAA4444","balance":350000,"balance_eth":0,"balance_bera":350000,"chains":["bera"],"rank":21},
+    {"address":"0xFFFF0000EEEE1111DDDD2222CCCC3333BBBB4444","balance":280000,"balance_eth":140000,"balance_bera":140000,"chains":["eth","bera"],"rank":22},
+    {"address":"0x2222000033330000444400005555000066660000","balance":190000,"balance_eth":190000,"balance_bera":0,"chains":["eth"],"rank":23},
+    {"address":"0x8888000099990000AAAA0000BBBB0000CCCC0000","balance":120000,"balance_eth":0,"balance_bera":120000,"chains":["bera"],"rank":24},
+    {"address":"0x3333AAAA4444BBBB5555CCCC6666DDDD7777EEEE","balance":85000,"balance_eth":42000,"balance_bera":43000,"chains":["eth","bera"],"rank":25}
+  ]
+}
