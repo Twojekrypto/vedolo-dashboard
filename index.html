@@ -2881,19 +2881,22 @@
                     <h3>TVL History</h3>
                     <div style="display:flex;align-items:center;gap:6px">
                         <div id="dolo-tvl-range-btns" style="display:flex;gap:4px">
-                            <button onclick="dolo_setRange(1)" class="dolo-range-btn" data-days="1">1D</button>
                             <button onclick="dolo_setRange(7)" class="dolo-range-btn" data-days="7">7D</button>
                             <button onclick="dolo_setRange(30)" class="dolo-range-btn" data-days="30">30D</button>
                             <button onclick="dolo_setRange(90)" class="dolo-range-btn" data-days="90">90D</button>
                             <button onclick="dolo_setRange(180)" class="dolo-range-btn" data-days="180">180D</button>
                             <button onclick="dolo_setRange(360)" class="dolo-range-btn active"
                                 data-days="360">1Y</button>
+                            <button onclick="dolo_resetZoom()" class="dolo-range-btn" id="dolo-reset-zoom-btn"
+                                style="display:none;background:rgba(239,68,68,0.15);color:#ef4444;border-color:rgba(239,68,68,0.3)">Reset</button>
                         </div>
-                        <span class="metric-sub" id="dolo-tvl-range"></span>
                     </div>
                 </div>
                 <div style="padding:16px;position:relative">
-                    <canvas id="dolo-tvl-chart" height="220" style="width:100%"></canvas>
+                    <canvas id="dolo-tvl-chart" height="220" style="width:100%;cursor:crosshair"></canvas>
+                    <div id="dolo-tvl-selection"
+                        style="display:none;position:absolute;top:0;height:100%;background:rgba(99,102,241,0.15);border-left:1px solid rgba(99,102,241,0.5);border-right:1px solid rgba(99,102,241,0.5);pointer-events:none;z-index:5">
+                    </div>
                     <div id="dolo-tvl-tooltip"
                         style="display:none;position:absolute;background:var(--bg-card);border:1px solid var(--border-default);border-radius:8px;padding:8px 12px;pointer-events:none;font-size:12px;z-index:10;box-shadow:var(--shadow-elevated)">
                     </div>
@@ -4602,11 +4605,6 @@
         function dolo_applyRange(days) {
             dolo_currentRange = days;
             dolo_tvlPoints = dolo_allTvlPoints.slice(-days);
-            // Update date range label
-            if (dolo_tvlPoints.length > 0) {
-                const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                document.getElementById('dolo-tvl-range').textContent = fmt(dolo_tvlPoints[0].date) + ' — ' + fmt(dolo_tvlPoints[dolo_tvlPoints.length - 1].date);
-            }
         }
 
         function dolo_setRange(days) {
@@ -4615,6 +4613,16 @@
             // Toggle active button
             document.querySelectorAll('.dolo-range-btn').forEach(btn => {
                 btn.classList.toggle('active', parseInt(btn.dataset.days) === days);
+            });
+            document.getElementById('dolo-reset-zoom-btn').style.display = 'none';
+            dolo_renderTvlChart(dolo_cachedData);
+        }
+
+        function dolo_resetZoom() {
+            dolo_applyRange(dolo_currentRange);
+            document.getElementById('dolo-reset-zoom-btn').style.display = 'none';
+            document.querySelectorAll('.dolo-range-btn').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.days) === dolo_currentRange);
             });
             dolo_renderTvlChart(dolo_cachedData);
         }
@@ -4893,27 +4901,42 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Date range label
-            if (dolo_tvlPoints.length > 1) {
-                const first = dolo_tvlPoints[0].date.toLocaleDateString('en', { month: 'short', day: 'numeric' });
-                const last = dolo_tvlPoints[dolo_tvlPoints.length - 1].date.toLocaleDateString('en', { month: 'short', day: 'numeric' });
-                document.getElementById('dolo-tvl-range').textContent = first + ' — ' + last;
+            // --- Drag-to-zoom + hover tooltip ---
+            let dragStart = null;
+            const selDiv = document.getElementById('dolo-tvl-selection');
+
+            function getIdx(e) {
+                const cRect = canvas.getBoundingClientRect();
+                const mx = e.clientX - cRect.left;
+                return Math.round(((mx - pad.left) / cw) * (dolo_tvlPoints.length - 1));
             }
 
-            // Interactive tooltip on hover
+            canvas.onmousedown = function (e) {
+                dragStart = e.clientX - canvas.getBoundingClientRect().left;
+                selDiv.style.display = 'none';
+            };
+
             canvas.onmousemove = function (e) {
                 const cRect = canvas.getBoundingClientRect();
                 const mx = e.clientX - cRect.left;
+
+                // Show selection box while dragging
+                if (dragStart !== null && Math.abs(mx - dragStart) > 5) {
+                    const left = Math.min(dragStart, mx);
+                    const width = Math.abs(mx - dragStart);
+                    selDiv.style.display = 'block';
+                    selDiv.style.left = left + 'px';
+                    selDiv.style.width = width + 'px';
+                    dolo_hideTvlTooltip();
+                    return;
+                }
+
+                // Hover tooltip (only when not dragging)
                 const idx = Math.round(((mx - pad.left) / cw) * (dolo_tvlPoints.length - 1));
                 if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); return; }
                 const pt = dolo_tvlPoints[idx];
                 const x = pad.left + (cw * idx / (dolo_tvlPoints.length - 1));
                 const y = pad.top + ch - (ch * (pt.tvl - minV) / range);
-
-                // Draw crosshair dot
-                const ctx2 = canvas.getContext('2d');
-                dolo_renderTvlChart.__redraw = false;
-                // Just show tooltip div
                 const tip = document.getElementById('dolo-tvl-tooltip');
                 tip.style.display = 'block';
                 tip.innerHTML = `<div style="color:var(--text-primary);font-weight:600">${dolo_fmt(pt.tvl)}</div><div style="color:var(--text-muted);font-size:11px">${pt.date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}</div>`;
@@ -4924,7 +4947,33 @@
                 tip.style.left = left + 'px';
                 tip.style.top = (y - 60) + 'px';
             };
-            canvas.onmouseleave = dolo_hideTvlTooltip;
+
+            canvas.onmouseup = function (e) {
+                if (dragStart === null) return;
+                const mx = e.clientX - canvas.getBoundingClientRect().left;
+                selDiv.style.display = 'none';
+                if (Math.abs(mx - dragStart) < 10) { dragStart = null; return; } // too small
+                const idxA = Math.round(((dragStart - pad.left) / cw) * (dolo_tvlPoints.length - 1));
+                const idxB = Math.round(((mx - pad.left) / cw) * (dolo_tvlPoints.length - 1));
+                const startIdx = Math.max(0, Math.min(idxA, idxB));
+                const endIdx = Math.min(dolo_tvlPoints.length - 1, Math.max(idxA, idxB));
+                dragStart = null;
+                if (endIdx - startIdx < 2) return; // need at least 3 points
+                // Zoom into selection
+                dolo_tvlPoints = dolo_tvlPoints.slice(startIdx, endIdx + 1);
+                dolo_renderTvlChart(dolo_cachedData);
+                // Show reset button, deactivate range buttons
+                document.getElementById('dolo-reset-zoom-btn').style.display = '';
+                document.querySelectorAll('.dolo-range-btn').forEach(btn => {
+                    if (btn.id !== 'dolo-reset-zoom-btn') btn.classList.remove('active');
+                });
+            };
+
+            canvas.onmouseleave = function () {
+                dragStart = null;
+                selDiv.style.display = 'none';
+                dolo_hideTvlTooltip();
+            };
         }
 
         function dolo_hideTvlTooltip() {
