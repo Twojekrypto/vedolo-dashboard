@@ -2947,17 +2947,7 @@
 
             <footer class="site-footer anim anim-d4">
                 Generated <span id="footer-date"></span> · Data from <a href="https://berascan.com"
-                    target="_blank">BeraScan</a> ·
-                Contract <a href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4" target="_blank"
-                    style="display:inline-flex;align-items:center;gap:4px"><img src="vedolo-logo.svg" alt=""
-                        style="width:14px;height:14px">veDOLO</a> · <a
-                    href="https://berascan.com/token/0x02E513b5B54eE216Bf836ceb471507488fC89543" target="_blank"
-                    style="display:inline-flex;align-items:center;gap:4px"><img src="odolo-logo-official.svg" alt=""
-                        style="width:14px;height:14px">oDOLO</a> ·
-                <a href="https://berascan.com/token/0x0F81001eF0A83ecCE5ccebf63EB302c70a39a654" target="_blank"
-                    style="display:inline-flex;align-items:center;gap:4px"><img
-                        src="https://icons.llama.fi/dolomite.jpg" alt=""
-                        style="width:14px;height:14px;border-radius:50%">DOLO</a>
+                    target="_blank">BeraScan</a>
             </footer>
         </div>
 
@@ -4985,9 +4975,9 @@
                 const plotW = W - padL - padR;
                 ctx.clearRect(0, 0, W, H);
 
-                // Background
+                // Background - only fill within plot area
                 ctx.fillStyle = 'rgba(30,30,50,0.6)';
-                ctx.fillRect(0, 0, W, H);
+                ctx.fillRect(padL, 0, plotW, H);
 
                 // Draw mini line within padded area
                 const vals = allPts.map(p => p.tvl);
@@ -5369,6 +5359,14 @@
                 });
             }
 
+            function copyAddr(addr, btn) {
+                navigator.clipboard.writeText(addr);
+                const origHTML = btn.innerHTML;
+                btn.innerHTML = '✓';
+                btn.style.color = 'var(--accent-green)';
+                setTimeout(() => { btn.innerHTML = origHTML; btn.style.color = 'var(--text-muted)'; }, 1500);
+            }
+
             function dolo_renderProtocolInfo(ll) {
 
                 const linksEl = document.getElementById('dolo-links');
@@ -5391,14 +5389,13 @@
                 const DOLO_ADDR = '0x0F81001eF0A83ecCE5ccebf63EB302c70a39a654';
                 const ODOLO_ADDR = '0x02E513b5B54eE216Bf836ceb471507488fC89543';
                 const VEDOLO_ADDR = '0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4';
-                const BERA_ICON = '<img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0">';
-                const COPY_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+                const BERA_ICON = `<img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0">`;
 
-                function addrPill(addr, chain, chainIcon, explorer, hoverColor) {
+                function addrPill(addr, chain, chainIcon, explorer) {
                     const short = addr.slice(0, 6) + '…' + addr.slice(-4);
                     return `<div style="display:inline-flex;align-items:center;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border-default)">
                         <a href="${explorer}/token/${addr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg-input);color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s;border-right:1px solid var(--border-default)" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">${chainIcon} ${chain}: ${short}</a>
-                        <button onclick="navigator.clipboard.writeText('${addr}');this.innerHTML='✓';this.style.color='var(--accent-green)';setTimeout(()=>{this.innerHTML='${COPY_SVG.replace(/'/g, "\\'")}';this.style.color='var(--text-muted)'},1500)" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:100%;background:var(--bg-input);border:none;cursor:pointer;color:var(--text-muted);transition:all .2s;padding:6px" title="Copy address" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">${COPY_SVG}</button>
+                        <button onclick="copyAddr('${addr}',this)" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:100%;background:var(--bg-input);border:none;cursor:pointer;color:var(--text-muted);transition:all .2s;padding:6px" title="Copy ${addr}" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
                     </div>`;
                 }
 
@@ -5407,20 +5404,20 @@
                         <div>
                             <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="https://icons.llama.fi/dolomite.jpg" alt="" style="width:14px;height:14px;border-radius:50%">DOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
-                                ${addrPill(DOLO_ADDR, 'ETH', ETH_SVG, 'https://etherscan.io', '#627EEA')}
-                                ${addrPill(DOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com', '#D4A843')}
+                                ${addrPill(DOLO_ADDR, 'ETH', ETH_SVG, 'https://etherscan.io')}
+                                ${addrPill(DOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
                             </div>
                         </div>
                         <div>
                             <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="odolo-logo-official.svg" alt="" style="width:14px;height:14px">oDOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
-                                ${addrPill(ODOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com', '#D4A843')}
+                                ${addrPill(ODOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
                             </div>
                         </div>
                         <div>
                             <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="vedolo-logo.svg" alt="" style="width:14px;height:14px">veDOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
-                                ${addrPill(VEDOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com', '#D4A843')}
+                                ${addrPill(VEDOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
                             </div>
                         </div>
                     </div>`;
