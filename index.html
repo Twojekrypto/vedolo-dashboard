@@ -2607,7 +2607,15 @@
                 </div>
 
                 <div class="table-scroll">
-                    <table>
+                    <table style="table-layout:fixed;width:100%">
+                        <colgroup>
+                            <col style="width:50px">
+                            <col style="width:25%">
+                            <col style="width:15%">
+                            <col style="width:20%">
+                            <col style="width:20%">
+                            <col style="width:20%">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th class="c-rank sorted" data-sort="rank" onclick="sortTable('rank')">
@@ -2903,6 +2911,7 @@
                         <tbody id="exercisers-tbody"></tbody>
                     </table>
                 </div>
+                <div class="table-footer" id="exerciser-pagination"></div>
             </div>
 
         </div><!-- /view-odolo -->
@@ -3046,12 +3055,13 @@
                     </div>
 
                     <div class="table-scroll">
-                        <table style="table-layout:fixed;width:100%">
+                        <table style="table-layout:fixed;width:100%" id="dolo-holders-table">
                             <colgroup>
-                                <col style="width:60px">
-                                <col>
-                                <col style="width:90px">
-                                <col style="width:180px">
+                                <col style="width:50px">
+                                <col style="width:30%">
+                                <col style="width:20%" class="dolo-col-eth">
+                                <col style="width:20%" class="dolo-col-bera">
+                                <col style="width:20%">
                             </colgroup>
                             <thead>
                                 <tr>
@@ -3061,29 +3071,36 @@
                                     <th data-sort="dolo-address" onclick="dolo_sortHolders('address')">
                                         Address <span class="arrow">⇅</span>
                                     </th>
-                                    <th style="min-width:90px">
-                                        <div style="display:flex;align-items:center;gap:8px;justify-content:center">
+                                    <th class="dolo-col-eth" style="text-align:right">
+                                        <div style="display:flex;align-items:center;gap:4px;justify-content:flex-end">
                                             <label
                                                 style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;user-select:none;opacity:0.9"
-                                                title="Show Ethereum holders">
+                                                title="Show ETH balance">
                                                 <input type="checkbox" id="dolo-filter-eth" checked
-                                                    onchange="dolo_applyHolderFilters()"
+                                                    onchange="dolo_toggleChainColumns()"
                                                     style="accent-color:#687de3;cursor:pointer;width:13px;height:13px">
                                                 <img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg"
                                                     width="14" height="14" style="border-radius:50%" alt="ETH">
                                             </label>
+                                            <span style="font-size:12px;opacity:0.7">ETH</span>
+                                        </div>
+                                    </th>
+                                    <th class="dolo-col-bera" style="text-align:right">
+                                        <div style="display:flex;align-items:center;gap:4px;justify-content:flex-end">
                                             <label
                                                 style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;user-select:none;opacity:0.9"
-                                                title="Show Berachain holders">
+                                                title="Show BERA balance">
                                                 <input type="checkbox" id="dolo-filter-bera" checked
-                                                    onchange="dolo_applyHolderFilters()"
+                                                    onchange="dolo_toggleChainColumns()"
                                                     style="accent-color:#f59e0b;cursor:pointer;width:13px;height:13px">
                                                 <img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg"
                                                     width="14" height="14" style="border-radius:50%" alt="BERA">
                                             </label>
+                                            <span style="font-size:12px;opacity:0.7">BERA</span>
                                         </div>
                                     </th>
-                                    <th data-sort="dolo-balance" onclick="dolo_sortHolders('balance')">
+                                    <th data-sort="dolo-balance" onclick="dolo_sortHolders('balance')"
+                                        style="text-align:right">
                                         <span id="dolo-balance-header">Balance</span> <span class="arrow">⇅</span>
                                     </th>
                                 </tr>
@@ -3245,7 +3262,7 @@
             // ===== DATA =====
             let HOLDER_DATA = [];
             const STATS = { total_minted: 23391, total_burned: 8606, active_nfts: 14785, unique_holders: 10979, total_locked_dolo: 0 };
-            const PER_PAGE = 50;
+            const PER_PAGE = 25;
             let currentPage = 1;
             let filteredData = [];
             let sortField = 'rank';
@@ -4604,6 +4621,8 @@
             let exerciserSortAsc = true;
             let exerciserSearchTerm = '';
             let currentExerciserAddr = '';
+            let exerciserPage = 1;
+            const EXERCISER_PER_PAGE = 25;
 
             async function loadExercisers() {
                 try {
@@ -4655,9 +4674,15 @@
 
                 document.getElementById('exerciser-count').textContent = data.length + ' exercisers';
 
+                // Paginate
+                const totalPages = Math.ceil(data.length / EXERCISER_PER_PAGE);
+                if (exerciserPage > totalPages) exerciserPage = totalPages || 1;
+                const start = (exerciserPage - 1) * EXERCISER_PER_PAGE;
+                const pageData = data.slice(start, start + EXERCISER_PER_PAGE);
+
                 let html = '';
-                data.forEach((e, i) => {
-                    const rank = i + 1;
+                pageData.forEach((e, i) => {
+                    const rank = start + i + 1;
                     const isWhale = rank <= 10;
                     const rc = rank <= 3 ? 'rank-' + rank : '';
                     const avgPrice = getExerciserAvgPrice(e);
@@ -4679,6 +4704,28 @@
                     html += '</tr>';
                 });
                 tbody.innerHTML = html;
+
+                // Render pagination
+                renderExercisersPagination(data.length);
+            }
+
+            function renderExercisersPagination(total) {
+                const totalPages = Math.ceil(total / EXERCISER_PER_PAGE);
+                const el = document.getElementById('exerciser-pagination');
+                if (!el || totalPages <= 1) { if (el) el.innerHTML = ''; return; }
+                let html = '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
+                html += `<button class="pg-btn" ${exerciserPage <= 1 ? 'disabled' : ''} onclick="exerciserPage=1;renderExercisersTable()">«</button>`;
+                html += `<button class="pg-btn" ${exerciserPage <= 1 ? 'disabled' : ''} onclick="exerciserPage--;renderExercisersTable()">‹</button>`;
+                const start = Math.max(1, exerciserPage - 2);
+                const end = Math.min(totalPages, exerciserPage + 2);
+                for (let p = start; p <= end; p++) {
+                    html += `<button class="pg-btn ${p === exerciserPage ? 'active' : ''}" onclick="exerciserPage=${p};renderExercisersTable()">${p}</button>`;
+                }
+                html += `<button class="pg-btn" ${exerciserPage >= totalPages ? 'disabled' : ''} onclick="exerciserPage++;renderExercisersTable()">›</button>`;
+                html += `<button class="pg-btn" ${exerciserPage >= totalPages ? 'disabled' : ''} onclick="exerciserPage=${totalPages};renderExercisersTable()">»</button>`;
+                html += `<span style="font-size:12px;color:var(--text-muted);margin-left:8px">Page ${exerciserPage} of ${totalPages}</span>`;
+                html += '</div>';
+                el.innerHTML = html;
             }
 
             function openExerciserModal(addr, rank) {
@@ -4944,7 +4991,7 @@
             let dolo_holderPage = 1;
             let dolo_holderSortField = 'rank';
             let dolo_holderSortAsc = true;
-            const DOLO_HOLDER_PER_PAGE = 50;
+            const DOLO_HOLDER_PER_PAGE = 25;
 
             const ETH_CHAIN_ICON = `<img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="ETH">`;
             const BERA_CHAIN_ICON = `<img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="BERA">`;
@@ -4966,7 +5013,7 @@
                 } catch (e) {
                     console.warn('dolo_holders.json not available:', e.message);
                     document.getElementById('dolo-holder-tbody').innerHTML =
-                        '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place dolo_holders.json in the same directory.<br><code style="font-size:11px;opacity:0.7">python3 generate_dolo_holders.py</code></td></tr>';
+                        '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place dolo_holders.json in the same directory.<br><code style="font-size:11px;opacity:0.7">python3 generate_dolo_holders.py</code></td></tr>';
                 }
             }
 
@@ -4984,6 +5031,19 @@
                 if (showEth && !showBera) return h.balance_eth || 0;
                 if (!showEth && showBera) return h.balance_bera || 0;
                 return h.balance;
+            }
+
+            // Toggle ETH/BERA column visibility + refilter
+            function dolo_toggleChainColumns() {
+                const showEth = document.getElementById('dolo-filter-eth')?.checked ?? true;
+                const showBera = document.getElementById('dolo-filter-bera')?.checked ?? true;
+                // Hide/show col width + td cells — th headers with checkboxes always stay visible
+                document.querySelectorAll('col.dolo-col-eth').forEach(el => el.style.width = showEth ? '20%' : '0px');
+                document.querySelectorAll('col.dolo-col-bera').forEach(el => el.style.width = showBera ? '20%' : '0px');
+                document.querySelectorAll('.dolo-td-eth').forEach(el => el.style.display = showEth ? '' : 'none');
+                document.querySelectorAll('.dolo-td-bera').forEach(el => el.style.display = showBera ? '' : 'none');
+                // Also apply holder filters (for sorting/filtering)
+                dolo_applyHolderFilters();
             }
 
             function dolo_renderHoldersTable() {
@@ -5011,17 +5071,15 @@
                     const supplyPct = ((dispBal / totalSupply) * 100).toFixed(2);
                     const balExact = dispBal.toLocaleString('en-US', { maximumFractionDigits: 2 });
 
-                    // Chain icons
-                    let chainHtml = '';
-                    if (h.chains && h.chains.includes('eth') && h.chains.includes('bera')) {
-                        chainHtml = `<span style="display:inline-flex;gap:3px;align-items:center">${ETH_CHAIN_ICON}${BERA_CHAIN_ICON}</span>`;
-                    } else if (h.chains && h.chains.includes('eth')) {
-                        chainHtml = ETH_CHAIN_ICON;
-                    } else if (h.chains && h.chains.includes('bera')) {
-                        chainHtml = BERA_CHAIN_ICON;
-                    }
-
                     const dbUrl = `https://debank.com/profile/${h.address}`;
+                    const ethUrl = `https://etherscan.io/address/${h.address}`;
+                    const beraUrl = `https://berascan.com/address/${h.address}`;
+
+                    const ethBal = h.balance_eth || 0;
+                    const beraBal = h.balance_bera || 0;
+
+                    const ethDisplay = showEth ? '' : 'display:none';
+                    const beraDisplay = showBera ? '' : 'display:none';
 
                     return `<tr class="${isWhale ? 'whale-row' : ''}" style="cursor:pointer" onclick="window.open('${dbUrl}','_blank')">
                         <td class="c-rank">
@@ -5035,8 +5093,13 @@
                                 <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
                             </span>
                         </td>
-                        <td style="text-align:center">${chainHtml}</td>
-                        <td class="c-dolo" title="${balExact} DOLO">${dolo_fmtBal(dispBal)}<span class="supply-pct">(${supplyPct}%)</span></td>
+                        <td class="dolo-td-eth c-dolo" style="text-align:right;${ethDisplay}">
+                            ${ethBal > 0 ? `<a href="${ethUrl}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent-green);text-decoration:none" title="View on Etherscan: ${ethBal.toLocaleString('en-US')} DOLO">${dolo_fmtBal(ethBal)}</a>` : '<span style="opacity:0.3">—</span>'}
+                        </td>
+                        <td class="dolo-td-bera c-dolo" style="text-align:right;${beraDisplay}">
+                            ${beraBal > 0 ? `<a href="${beraUrl}" target="_blank" onclick="event.stopPropagation()" style="color:#f59e0b;text-decoration:none" title="View on Berascan: ${beraBal.toLocaleString('en-US')} DOLO">${dolo_fmtBal(beraBal)}</a>` : '<span style="opacity:0.3">—</span>'}
+                        </td>
+                        <td class="c-dolo" style="text-align:right" title="${balExact} DOLO">${dolo_fmtBal(dispBal)}<span class="supply-pct">(${supplyPct}%)</span></td>
                     </tr>`;
                 }).join('');
 
@@ -5767,7 +5830,7 @@
                 function addrPill(addr, chain, chainIcon, explorer) {
                     const short = addr.slice(0, 6) + '…' + addr.slice(-4);
                     return `<div style="display:inline-flex;align-items:center;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border-default)">
-                        <a href="${explorer}/token/${addr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg-input);color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s;border-right:1px solid var(--border-default)" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">${chainIcon} ${chain}: ${short}</a>
+                        <a href="${explorer}/token/${addr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg-input);color:var(--text-primary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s;border-right:1px solid var(--border-default)" onmouseover="this.style.color='#22d3ee'" onmouseout="this.style.color='var(--text-primary)'">${chainIcon} ${chain}: ${short}</a>
                         <button onclick="copyAddr('${addr}',this)" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:100%;background:var(--bg-input);border:none;cursor:pointer;color:var(--text-muted);transition:all .2s;padding:6px" title="Copy ${addr}" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
                     </div>`;
                 }
@@ -5775,20 +5838,20 @@
                 contractsEl.innerHTML = `
                     <div style="display:flex;flex-direction:column;gap:14px">
                         <div>
-                            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="dolo-logo.svg" alt="" style="width:14px;height:14px">DOLO</div>
+                            <div style="font-size:13px;color:var(--text-primary);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:5px"><img src="dolo-logo.svg" alt="" style="width:14px;height:14px">DOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
                                 ${addrPill(DOLO_ADDR, 'ETH', ETH_SVG, 'https://etherscan.io')}
                                 ${addrPill(DOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
                             </div>
                         </div>
                         <div>
-                            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="odolo-logo-official.svg" alt="" style="width:14px;height:14px">oDOLO</div>
+                            <div style="font-size:13px;color:var(--text-primary);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:5px"><img src="odolo-logo-official.svg" alt="" style="width:14px;height:14px">oDOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
                                 ${addrPill(ODOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
                             </div>
                         </div>
                         <div>
-                            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="vedolo-logo.svg" alt="" style="width:14px;height:14px">veDOLO</div>
+                            <div style="font-size:13px;color:var(--text-primary);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:5px"><img src="vedolo-logo.svg" alt="" style="width:14px;height:14px">veDOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
                                 ${addrPill(VEDOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
                             </div>

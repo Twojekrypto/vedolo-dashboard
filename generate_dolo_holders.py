@@ -15,7 +15,7 @@ ZERO = "0x0000000000000000000000000000000000000000"
 
 CHAINS = {
     "eth": {"chain_id": 1, "name": "Ethereum", "env_key": "ETHERSCAN_API_KEY"},
-    "bera": {"chain_id": 80094, "name": "Berachain", "env_key": "BERASCAN_API_KEY"},
+    "bera": {"chain_id": 80094, "name": "Berachain", "env_key": "ETHERSCAN_API_KEY"},
 }
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
