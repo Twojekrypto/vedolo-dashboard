@@ -4963,6 +4963,9 @@
 
             async function dolo_init() {
                 try {
+                    // Start loading holders immediately (parallel with API calls)
+                    dolo_loadHolders();
+
                     const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
                     const px = (u) => isLocal ? '/api/proxy?url=' + encodeURIComponent(u) : 'https://corsproxy.io/?' + encodeURIComponent(u);
                     const [cgRes, llRes, cgCoin] = await Promise.all([
@@ -5030,8 +5033,7 @@
                     // --- Protocol Info ---
                     dolo_renderProtocolInfo(llRes);
 
-                    // --- DOLO Holders Table (loaded from JSON) ---
-                    dolo_loadHolders();
+                    // --- DOLO Holders Table (already started loading in parallel above) ---
 
                     // Auto-refresh price every 60s
                     if (dolo_refreshTimer) clearInterval(dolo_refreshTimer);
@@ -5072,7 +5074,7 @@
 
             async function dolo_loadHolders() {
                 try {
-                    const resp = await fetch('dolo_holders.json?t=' + Date.now());
+                    const resp = await fetch('dolo_holders.json');
                     if (!resp.ok) throw new Error('Not found');
                     const data = await resp.json();
                     dolo_holderData = data.holders || [];
