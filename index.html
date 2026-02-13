@@ -3026,18 +3026,6 @@
                     </div>
                 </div>
 
-                <!-- Protocol Info -->
-                <div class="card anim anim-d4" style="margin-top:24px">
-                    <div class="card-header">
-                        <h3>Protocol Info</h3>
-                    </div>
-                    <div id="dolo-protocol-info">
-                        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-start" id="dolo-links">
-                        </div>
-                        <div style="margin-top:16px;text-align:left" id="dolo-contracts"></div>
-                    </div>
-                </div>
-
                 <!-- DOLO Holders Table -->
                 <div class="card anim anim-d4" style="margin-top:24px" id="dolo-holders-card">
                     <div class="card-header">
@@ -3045,7 +3033,7 @@
                                 BERA</span></h3>
                     </div>
 
-                    <div class="table-toolbar">
+                    <div class="table-toolbar" style="padding-left:0">
                         <div class="search-input-wrapper">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3098,6 +3086,18 @@
                         </table>
                     </div>
                     <div class="table-footer" id="dolo-holder-pagination"></div>
+                </div>
+
+                <!-- Protocol Info -->
+                <div class="card anim anim-d4" style="margin-top:24px">
+                    <div class="card-header">
+                        <h3>Protocol Info</h3>
+                    </div>
+                    <div id="dolo-protocol-info">
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-start" id="dolo-links">
+                        </div>
+                        <div style="margin-top:16px;text-align:left" id="dolo-contracts"></div>
+                    </div>
                 </div>
 
             </div><!-- /view-dolo -->
@@ -5756,7 +5756,7 @@
                 const DOLO_ADDR = '0x0F81001eF0A83ecCE5ccebf63EB302c70a39a654';
                 const ODOLO_ADDR = '0x02E513b5B54eE216Bf836ceb471507488fC89543';
                 const VEDOLO_ADDR = '0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4';
-                const BERA_ICON = `<img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0">`;
+                const BERA_ICON = `<img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0">`;
 
                 function addrPill(addr, chain, chainIcon, explorer) {
                     const short = addr.slice(0, 6) + '…' + addr.slice(-4);
@@ -5769,7 +5769,7 @@
                 contractsEl.innerHTML = `
                     <div style="display:flex;flex-direction:column;gap:14px">
                         <div>
-                            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="https://icons.llama.fi/dolomite.jpg" alt="" style="width:14px;height:14px;border-radius:50%">DOLO</div>
+                            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px"><img src="dolo-logo.svg" alt="" style="width:14px;height:14px">DOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
                                 ${addrPill(DOLO_ADDR, 'ETH', ETH_SVG, 'https://etherscan.io')}
                                 ${addrPill(DOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
