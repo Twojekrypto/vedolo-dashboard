@@ -957,7 +957,7 @@
 
         /* DOLO table: push rank + address close together */
         #dolo-holders-table .c-rank {
-            padding: 10px 0 10px 8px !important;
+            padding: 10px 0 10px 2px !important;
             width: 28px;
             text-align: center;
         }
@@ -967,16 +967,16 @@
         }
 
         #dolo-holders-table .c-addr {
-            padding-left: 6px !important;
+            padding-left: 2px !important;
         }
 
         #dolo-holders-table thead th:first-child {
-            padding: 11px 0 11px 8px !important;
+            padding: 11px 0 11px 2px !important;
             width: 28px;
         }
 
         #dolo-holders-table thead th:nth-child(2) {
-            padding-left: 6px !important;
+            padding-left: 2px !important;
         }
 
         .rank-cell-inner {
@@ -3131,10 +3131,10 @@
                         <table style="table-layout:fixed;width:100%" id="dolo-holders-table">
                             <colgroup>
                                 <col style="width:28px">
-                                <col style="width:30%">
-                                <col style="width:20%" class="dolo-col-eth">
-                                <col style="width:20%" class="dolo-col-bera">
-                                <col style="width:20%">
+                                <col style="width:calc((100% - 28px) * 0.34)">
+                                <col style="width:calc((100% - 28px) * 0.22)" class="dolo-col-eth">
+                                <col style="width:calc((100% - 28px) * 0.22)" class="dolo-col-bera">
+                                <col style="width:calc((100% - 28px) * 0.22)">
                             </colgroup>
                             <thead>
                                 <tr>
