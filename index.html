@@ -2827,12 +2827,8 @@
                     <div class="metric-value" id="dolo-mcap">—</div>
                 </div>
                 <div class="metric-cell">
-                    <div class="metric-label">24h Volume</div>
-                    <div class="metric-value" id="dolo-vol">—</div>
-                </div>
-                <div class="metric-cell">
-                    <div class="metric-label">Total TVL</div>
-                    <div class="metric-value" style="color:var(--accent-green)" id="dolo-tvl">—</div>
+                    <div class="metric-label">FDV</div>
+                    <div class="metric-value" id="dolo-fdv">—</div>
                 </div>
                 <div class="metric-cell">
                     <div class="metric-label">Supply Liquidity</div>
@@ -2843,8 +2839,12 @@
                     <div class="metric-value" style="color:var(--accent-amber)" id="dolo-borrowed">—</div>
                 </div>
                 <div class="metric-cell">
-                    <div class="metric-label">FDV</div>
-                    <div class="metric-value" id="dolo-fdv">—</div>
+                    <div class="metric-label">Total TVL</div>
+                    <div class="metric-value" style="color:var(--accent-green)" id="dolo-tvl">—</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-label">24h Volume</div>
+                    <div class="metric-value" id="dolo-vol">—</div>
                 </div>
             </div>
 
@@ -4717,14 +4717,14 @@
 
         function dolo_renderChainBars(chains, total, allTvl) {
             const container = document.getElementById('dolo-chain-bars');
-            container.innerHTML = chains.map(c => {
+            const renderRow = (c, i) => {
                 const pct = ((c.tvl / total) * 100).toFixed(1);
                 const color = DOLO_CHAIN_COLORS[c.chain] || '#6366f1';
                 const borrowed = allTvl[c.chain + '-borrowed'] || 0;
                 const borrowedLine = borrowed > 0
                     ? `<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px"><span style="color:var(--text-muted)">Borrowed</span><span style="color:var(--accent-amber)">${dolo_fmt(borrowed)}</span></div>`
                     : '';
-                return `<div style="margin-bottom:14px;cursor:default" class="dolo-chain-row">
+                return `<div style="margin-bottom:14px;cursor:default;transition:transform 0.2s;transform:translateY(0)" class="dolo-chain-row" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
                     <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px">
                         <span style="color:var(--text-primary);font-weight:500">${c.chain}</span>
                         <span style="color:var(--text-secondary)">${dolo_fmt(c.tvl)} <span style="color:var(--text-muted);font-size:11px">(${pct}%)</span></span>
@@ -4733,13 +4733,50 @@
                         <div class="dolo-bar-fill" style="height:100%;width:0%;background:${color};border-radius:4px;transition:width 1s cubic-bezier(0.4,0,0.2,1)" data-width="${pct}%"></div>
                     </div>${borrowedLine}
                 </div>`;
-            }).join('');
+            };
+
+            const top3 = chains.slice(0, 3).map((c, i) => renderRow(c, i)).join('');
+            const rest = chains.slice(3);
+            let expandHtml = '';
+            if (rest.length > 0) {
+                expandHtml = `<div id="dolo-chains-expand" style="overflow:hidden;max-height:0;transition:max-height 0.4s ease">
+                    ${rest.map((c, i) => renderRow(c, i + 3)).join('')}
+                </div>
+                <button id="dolo-chains-toggle" onclick="dolo_toggleChains()" style="display:flex;align-items:center;gap:4px;width:100%;padding:8px;margin-top:4px;background:transparent;border:1px solid var(--border-default);border-radius:8px;color:var(--text-muted);font-size:12px;cursor:pointer;justify-content:center;transition:all 0.2s;font-family:'Inter',sans-serif" onmouseover="this.style.borderColor='var(--accent-indigo)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-default)';this.style.color='var(--text-muted)'">
+                    <span>Show ${rest.length} more chains</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>`;
+            }
+            container.innerHTML = top3 + expandHtml;
+
             // Animate bars in
             requestAnimationFrame(() => {
                 container.querySelectorAll('.dolo-bar-fill').forEach(el => {
                     el.style.width = el.dataset.width;
                 });
             });
+        }
+
+        let dolo_chainsExpanded = false;
+        function dolo_toggleChains() {
+            dolo_chainsExpanded = !dolo_chainsExpanded;
+            const panel = document.getElementById('dolo-chains-expand');
+            const btn = document.getElementById('dolo-chains-toggle');
+            if (dolo_chainsExpanded) {
+                panel.style.maxHeight = panel.scrollHeight + 'px';
+                btn.querySelector('span').textContent = 'Show less';
+                btn.querySelector('svg').style.transform = 'rotate(180deg)';
+                // Animate newly visible bars
+                requestAnimationFrame(() => {
+                    panel.querySelectorAll('.dolo-bar-fill').forEach(el => {
+                        el.style.width = el.dataset.width;
+                    });
+                });
+            } else {
+                panel.style.maxHeight = '0';
+                btn.querySelector('span').textContent = 'Show more chains';
+                btn.querySelector('svg').style.transform = 'rotate(0)';
+            }
         }
 
         function dolo_renderTvlChart(data) {
@@ -4925,11 +4962,16 @@
 
             // Legend
             const legend = document.getElementById('dolo-token-legend');
-            legend.innerHTML = sliceData.map(s => `<div style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:default" title="${s.name}: ${dolo_fmt(s.value)}">
+            legend.innerHTML = sliceData.map((s, i) => `<div data-idx="${i}" style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:default;padding:3px 6px;border-radius:6px;transition:all 0.2s;transform:translateY(0)" class="dolo-legend-item" title="${s.name}: ${dolo_fmt(s.value)}"
+                onmouseover="dolo_highlightSlice(${i})" onmouseout="dolo_highlightSlice(-1)">
                 <span style="width:10px;height:10px;border-radius:3px;background:${s.color};flex-shrink:0"></span>
                 <span style="color:var(--text-secondary)">${s.name}</span>
                 <span style="color:var(--text-muted)">${s.pct}%</span>
             </div>`).join('');
+
+            // Store slice data for re-rendering on highlight
+            dolo_donutSlices = sliceData;
+            dolo_donutTotal = total;
 
             // Interactive hover on donut
             canvas.onmousemove = function (e) {
@@ -4938,45 +4980,118 @@
                 const my = (e.clientY - cRect.top) * (260 / cRect.height);
                 const dx = mx - cx, dy = my - cy;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < innerR || dist > r) { canvas.style.cursor = 'default'; canvas.title = ''; return; }
+                if (dist < innerR || dist > r) { canvas.style.cursor = 'default'; dolo_highlightSlice(-1); return; }
                 let a = Math.atan2(dy, dx);
                 if (a < -Math.PI / 2) a += Math.PI * 2;
-                const hit = sliceData.find(s => a >= s.startAngle && a < s.endAngle);
-                if (hit) {
+                const hitIdx = sliceData.findIndex(s => a >= s.startAngle && a < s.endAngle);
+                if (hitIdx >= 0) {
                     canvas.style.cursor = 'pointer';
-                    canvas.title = `${hit.name}: ${dolo_fmt(hit.value)} (${hit.pct}%)`;
+                    dolo_highlightSlice(hitIdx);
                 } else {
                     canvas.style.cursor = 'default';
-                    canvas.title = '';
+                    dolo_highlightSlice(-1);
                 }
             };
+            canvas.onmouseleave = () => dolo_highlightSlice(-1);
+        }
+
+        let dolo_donutSlices = [];
+        let dolo_donutTotal = 0;
+        let dolo_highlightedIdx = -1;
+
+        function dolo_highlightSlice(idx) {
+            if (idx === dolo_highlightedIdx) return;
+            dolo_highlightedIdx = idx;
+
+            // Highlight legend
+            document.querySelectorAll('.dolo-legend-item').forEach((el, i) => {
+                if (i === idx) {
+                    el.style.background = 'rgba(99,102,241,0.1)';
+                    el.style.transform = 'translateY(-1px)';
+                } else {
+                    el.style.background = 'transparent';
+                    el.style.transform = 'translateY(0)';
+                }
+            });
+
+            // Re-render donut with highlighted slice
+            const canvas = document.getElementById('dolo-token-donut');
+            if (!canvas || !dolo_donutSlices.length) return;
+            const dpr = window.devicePixelRatio || 1;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.scale(dpr, dpr);
+            const cx = 130, cy = 130, r = 110, innerR = 70;
+
+            dolo_donutSlices.forEach((s, i) => {
+                const expanded = (i === idx) ? 4 : 0;
+                const midAngle = (s.startAngle + s.endAngle) / 2;
+                const ox = expanded * Math.cos(midAngle);
+                const oy = expanded * Math.sin(midAngle);
+                ctx.beginPath();
+                ctx.arc(cx + ox, cy + oy, r, s.startAngle, s.endAngle);
+                ctx.arc(cx + ox, cy + oy, innerR, s.endAngle, s.startAngle, true);
+                ctx.closePath();
+                ctx.fillStyle = s.color;
+                ctx.globalAlpha = (idx >= 0 && i !== idx) ? 0.4 : 1;
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+
+            // Center text
+            if (idx >= 0 && dolo_donutSlices[idx]) {
+                const hit = dolo_donutSlices[idx];
+                ctx.fillStyle = '#f0f0f6';
+                ctx.font = '600 14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(hit.name, cx, cy - 8);
+                ctx.font = '600 16px Inter';
+                ctx.fillText(dolo_fmt(hit.value), cx, cy + 10);
+                ctx.font = '11px Inter';
+                ctx.fillStyle = '#555770';
+                ctx.fillText(hit.pct + '%', cx, cy + 26);
+            } else {
+                ctx.fillStyle = '#f0f0f6';
+                ctx.font = '600 16px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(dolo_fmt(dolo_donutTotal), cx, cy - 2);
+                ctx.font = '11px Inter';
+                ctx.fillStyle = '#555770';
+                ctx.fillText('Total Value', cx, cy + 16);
+            }
+            ctx.restore();
         }
 
         function dolo_renderProtocolInfo(ll) {
             document.getElementById('dolo-description').textContent = ll.description || 'Dolomite is a decentralized money market protocol.';
 
             const linksEl = document.getElementById('dolo-links');
+            const ETH_SVG = '<svg width="14" height="14" viewBox="0 0 256 417" fill="none" style="flex-shrink:0"><path d="M127.961 0l-2.795 9.5v275.668l2.795 2.79 127.962-75.638z" fill="#687de3"/><path d="M127.962 0L0 212.32l127.962 75.639V154.158z" fill="#8a9fef"/><path d="M127.961 312.187l-1.575 1.92v98.199l1.575 4.601 128.038-180.32z" fill="#687de3"/><path d="M127.962 416.905v-104.72L0 236.585z" fill="#8a9fef"/></svg>';
+            const X_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
+            const GLOBE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>';
+            const GITHUB_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
+            const AUDIT_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+
             const linkData = [
-                { label: '🌐 Website', url: ll.url, icon: null },
-                { label: 'Twitter', url: ll.twitter ? 'https://twitter.com/' + ll.twitter : null, icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
-                { label: '💻 GitHub', url: ll.openSource ? ll.github?.[0] : null, icon: null },
-                { label: '🔒 Audits', url: ll.audits ? ll.audit_links?.[0] : null, icon: null },
+                { content: GLOBE_SVG, url: ll.url, tip: 'Website' },
+                { content: X_SVG, url: ll.twitter ? 'https://twitter.com/' + ll.twitter : null, tip: 'Twitter' },
+                { content: GITHUB_SVG, url: ll.openSource ? ll.github?.[0] : null, tip: 'GitHub' },
+                { content: AUDIT_SVG, url: ll.audits ? ll.audit_links?.[0] : null, tip: 'Audits' },
             ].filter(l => l.url);
-            linksEl.innerHTML = linkData.map(l => {
-                const content = l.icon ? l.icon + ' ' + l.label : l.label;
-                return `<a href="${l.url}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:13px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='var(--accent-indigo)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-default)';this.style.color='var(--text-secondary)'">${content}</a>`;
-            }).join('');
+            linksEl.innerHTML = linkData.map(l => `<a href="${l.url}" target="_blank" title="${l.tip}" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='var(--accent-indigo)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-default)';this.style.color='var(--text-secondary)'">${l.content}</a>`).join('');
 
             // Contract addresses
             const contractsEl = document.getElementById('dolo-contracts');
             const dolomiteAddr = '0x0f81001ef0a83ecce5ccebf63eb302c70a39a654';
+            const BERA_SVG = '<img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%">';
             contractsEl.innerHTML = `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500">Contract Address (DOLO)</div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px">
                     <a href="https://etherscan.io/token/${dolomiteAddr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#627EEA'" onmouseout="this.style.borderColor='var(--border-default)'">
-                        <img src="https://icons.llama.fi/ethereum.png" width="14" height="14" style="border-radius:50%"> ETH: ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
+                        ${ETH_SVG} ETH: ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
                     </a>
                     <a href="https://berascan.com/token/${dolomiteAddr}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:'JetBrains Mono',monospace;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#D4A843'" onmouseout="this.style.borderColor='var(--border-default)'">
-                        <img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%"> BERA: ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
+                        ${BERA_SVG} BERA: ${dolomiteAddr.slice(0, 6)}…${dolomiteAddr.slice(-4)}
                     </a>
                 </div>`;
         }
