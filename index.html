@@ -2370,24 +2370,24 @@
             </div>
             <nav class="header-nav-bar">
                 <div class="nav-tabs">
-                    <button class="nav-tab active" id="tab-vedolo" onclick="switchView('vedolo')">
-                        <img src="vedolo-logo.svg" alt="veDOLO">
-                        veDOLO
+                    <button class="nav-tab active" id="tab-dolo" onclick="switchView('dolo')">
+                        <img src="https://icons.llama.fi/dolomite.jpg" alt="DOLO" style="border-radius:50%">
+                        DOLO
                     </button>
                     <button class="nav-tab" id="tab-odolo" onclick="switchView('odolo')">
                         <img src="odolo-logo-official.svg" alt="oDOLO">
                         oDOLO
                     </button>
-                    <button class="nav-tab" id="tab-dolo" onclick="switchView('dolo')">
-                        <img src="https://icons.llama.fi/dolomite.jpg" alt="DOLO" style="border-radius:50%">
-                        DOLO
+                    <button class="nav-tab" id="tab-vedolo" onclick="switchView('vedolo')">
+                        <img src="vedolo-logo.svg" alt="veDOLO">
+                        veDOLO
                     </button>
                 </div>
             </nav>
         </header>
 
         <!-- veDOLO VIEW -->
-        <div id="view-vedolo" class="view-section active">
+        <div id="view-vedolo" class="view-section">
 
             <!-- METRICS -->
             <div class="metrics-strip anim anim-d1">
@@ -2813,7 +2813,7 @@
         </div><!-- /view-odolo -->
 
         <!-- DOLO TOKEN VIEW -->
-        <div id="view-dolo" class="view-section">
+        <div id="view-dolo" class="view-section active">
 
             <!-- DOLO METRICS -->
             <div class="metrics-strip anim anim-d1">
@@ -2918,7 +2918,8 @@
                 target="_blank">BeraScan</a> ·
             Contract <a href="https://berascan.com/token/0xCB86B75EE6133d179a12D550b09FB3cdB1e141D4"
                 target="_blank">veDOLO</a> · <a
-                href="https://berascan.com/token/0x02E513b5B54eE216Bf836ceb471507488fC89543" target="_blank">oDOLO</a>
+                href="https://berascan.com/token/0x02E513b5B54eE216Bf836ceb471507488fC89543" target="_blank">oDOLO</a> ·
+            <a href="https://berascan.com/token/0x0F81001eF0A83ecCE5ccebf63EB302c70a39a654" target="_blank">DOLO</a>
         </footer>
     </div>
 
@@ -3963,7 +3964,7 @@
         }
 
         // ===== TAB SWITCHING =====
-        let currentView = 'vedolo';
+        let currentView = 'dolo';
         let odoloLoaded = false;
         let doloLoaded = false;
 
@@ -5137,6 +5138,9 @@
         });
 
         loadData();
+        // DOLO is the default view, init it immediately
+        doloLoaded = true;
+        dolo_init();
     </script>
     <div class="expiry-tooltip" id="expiry-tooltip"></div>
 </body>
