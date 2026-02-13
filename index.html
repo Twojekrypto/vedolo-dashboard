@@ -955,6 +955,30 @@
             padding-right: 0 !important;
         }
 
+        /* DOLO table: push rank + address to far left */
+        #dolo-holders-table .c-rank {
+            padding-left: 4px !important;
+            padding-right: 0 !important;
+            width: 36px;
+            text-align: left;
+        }
+
+        #dolo-holders-table .c-rank .rank-cell-inner {
+            justify-content: flex-start;
+        }
+
+        #dolo-holders-table .c-addr {
+            padding-left: 2px !important;
+        }
+
+        #dolo-holders-table thead th:first-child {
+            padding-left: 4px !important;
+        }
+
+        #dolo-holders-table thead th:nth-child(2) {
+            padding-left: 2px !important;
+        }
+
         .rank-cell-inner {
             display: flex;
             align-items: center;
