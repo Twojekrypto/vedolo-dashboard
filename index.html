@@ -3027,6 +3027,55 @@
                     </div>
                 </div>
 
+                <!-- DOLO Holders Table -->
+                <div class="card anim anim-d4" style="margin-top:24px" id="dolo-holders-card">
+                    <div class="card-header">
+                        <h3>DOLO Holders <span style="font-size:14px;color:var(--text-muted);font-weight:400">ETH +
+                                BERA</span></h3>
+                    </div>
+
+                    <div class="table-toolbar">
+                        <div class="search-input-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="dolo-holder-search" placeholder="Search address 0x…">
+                        </div>
+                        <select class="filter-dropdown" id="dolo-holder-chain-filter">
+                            <option value="all">All Chains</option>
+                            <option value="eth">Ethereum</option>
+                            <option value="bera">Berachain</option>
+                            <option value="both">Both Chains</option>
+                        </select>
+                        <div class="toolbar-count" id="dolo-holder-results-count"></div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="c-rank sorted" data-sort="dolo-rank" onclick="dolo_sortHolders('rank')">
+                                        # <span class="arrow">▲</span>
+                                    </th>
+                                    <th data-sort="dolo-address" onclick="dolo_sortHolders('address')">
+                                        Address <span class="arrow">⇅</span>
+                                    </th>
+                                    <th data-sort="dolo-chains" onclick="dolo_sortHolders('chains')">
+                                        Chain <span class="arrow">⇅</span>
+                                    </th>
+                                    <th data-sort="dolo-balance" onclick="dolo_sortHolders('balance')">
+                                        Balance <span class="arrow">⇅</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="dolo-holder-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="table-footer" id="dolo-holder-pagination"></div>
+                </div>
+
             </div><!-- /view-dolo -->
 
             <footer class="site-footer anim anim-d4">
@@ -4830,6 +4879,9 @@
                     // --- Protocol Info ---
                     dolo_renderProtocolInfo(llRes);
 
+                    // --- DOLO Holders Table (loaded from JSON) ---
+                    dolo_loadHolders();
+
                     // Auto-refresh price every 60s
                     if (dolo_refreshTimer) clearInterval(dolo_refreshTimer);
                     dolo_refreshTimer = setInterval(dolo_refreshPrice, 60000);
@@ -4854,6 +4906,184 @@
                         document.getElementById('dolo-change').innerHTML = `<span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;background:${ch >= 0 ? 'rgba(52,211,153,0.15)' : 'rgba(251,113,133,0.15)'};color:${ch >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)'}">${sign}${ch.toFixed(2)}% 24h</span>`;
                     }
                 } catch (e) { /* silent */ }
+            }
+
+            // ===== DOLO HOLDERS TABLE =====
+            let dolo_holderData = [];
+            let dolo_holderFiltered = [];
+            let dolo_holderPage = 1;
+            let dolo_holderSortField = 'rank';
+            let dolo_holderSortAsc = true;
+            const DOLO_HOLDER_PER_PAGE = 50;
+
+            const ETH_CHAIN_ICON = `<img src="https://icons.llama.fi/ethereum.png" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="ETH">`;
+            const BERA_CHAIN_ICON = `<img src="https://icons.llama.fi/berachain.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="BERA">`;
+
+            async function dolo_loadHolders() {
+                try {
+                    const resp = await fetch('dolo_holders.json?t=' + Date.now());
+                    if (!resp.ok) throw new Error('Not found');
+                    const data = await resp.json();
+                    dolo_holderData = data.holders || [];
+                    dolo_holderFiltered = [...dolo_holderData];
+                    dolo_renderHoldersTable();
+                    dolo_renderHoldersPagination();
+
+                    document.getElementById('dolo-holder-search').addEventListener('input',
+                        debounce(dolo_applyHolderFilters, 200));
+                    document.getElementById('dolo-holder-chain-filter').addEventListener('change',
+                        dolo_applyHolderFilters);
+
+                    document.getElementById('dolo-holders-card').style.display = '';
+                } catch (e) {
+                    console.warn('dolo_holders.json not available:', e.message);
+                    document.getElementById('dolo-holder-tbody').innerHTML =
+                        '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">⚠️ Place dolo_holders.json in the same directory.<br><code style="font-size:11px;opacity:0.7">python3 generate_dolo_holders.py</code></td></tr>';
+                }
+            }
+
+            function dolo_fmtBal(n) {
+                if (!n) return '0';
+                if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+                if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+                if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+                return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+            }
+
+            function dolo_renderHoldersTable() {
+                const tbody = document.getElementById('dolo-holder-tbody');
+                const start = (dolo_holderPage - 1) * DOLO_HOLDER_PER_PAGE;
+                const page = dolo_holderFiltered.slice(start, start + DOLO_HOLDER_PER_PAGE);
+                const totalSupply = dolo_holderData.reduce((s, h) => s + h.balance, 0) || 1;
+
+                tbody.innerHTML = page.map(h => {
+                    const rc = h.rank <= 3 ? `rank-${h.rank}` : '';
+                    const isWhale = h.rank <= 10;
+                    const supplyPct = ((h.balance / totalSupply) * 100).toFixed(2);
+                    const balExact = h.balance.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+                    // Chain icons
+                    let chainHtml = '';
+                    if (h.chains && h.chains.includes('eth') && h.chains.includes('bera')) {
+                        chainHtml = `<span style="display:inline-flex;gap:3px;align-items:center">${ETH_CHAIN_ICON}${BERA_CHAIN_ICON}</span>`;
+                    } else if (h.chains && h.chains.includes('eth')) {
+                        chainHtml = ETH_CHAIN_ICON;
+                    } else if (h.chains && h.chains.includes('bera')) {
+                        chainHtml = BERA_CHAIN_ICON;
+                    }
+
+                    // DeBank chain param
+                    const dbChain = (h.chains && h.chains.includes('bera')) ? 'bera' : 'eth';
+
+                    return `<tr class="${isWhale ? 'whale-row' : ''}">
+                        <td class="c-rank">
+                            <div class="rank-cell-inner">
+                                ${rc ? `<span class="rank-medal ${rc}">${h.rank}</span>` : `<span class="rank-plain">${h.rank}</span>`}
+                            </div>
+                        </td>
+                        <td class="c-addr">
+                            <span style="display:inline-flex;align-items:center;gap:4px">
+                                <a href="https://debank.com/profile/${h.address}" target="_blank" style="color:var(--accent-indigo);text-decoration:none" title="${h.address}">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>
+                                <a href="https://debank.com/profile/${h.address}?chain=${dbChain}" target="_blank" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
+                            </span>
+                        </td>
+                        <td style="text-align:center">${chainHtml}</td>
+                        <td class="c-dolo" title="${balExact} DOLO">${dolo_fmtBal(h.balance)}<span class="supply-pct">(${supplyPct}%)</span></td>
+                    </tr>`;
+                }).join('');
+
+                document.getElementById('dolo-holder-results-count').textContent =
+                    `${dolo_holderFiltered.length.toLocaleString('en-US')} results`;
+            }
+
+            function dolo_renderHoldersPagination() {
+                const total = Math.ceil(dolo_holderFiltered.length / DOLO_HOLDER_PER_PAGE);
+                const el = document.getElementById('dolo-holder-pagination');
+                if (total <= 1) { el.innerHTML = ''; return; }
+
+                let h = `<button class="pg-btn" onclick="dolo_goHolderPage(1)" ${dolo_holderPage === 1 ? 'disabled' : ''}>«</button>`;
+                h += `<button class="pg-btn" onclick="dolo_goHolderPage(${dolo_holderPage - 1})" ${dolo_holderPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+                dolo_holderPageRange(dolo_holderPage, total).forEach(p => {
+                    h += p === '...'
+                        ? `<span class="pg-info">…</span>`
+                        : `<button class="pg-btn ${p === dolo_holderPage ? 'active' : ''}" onclick="dolo_goHolderPage(${p})">${p}</button>`;
+                });
+
+                h += `<button class="pg-btn" onclick="dolo_goHolderPage(${dolo_holderPage + 1})" ${dolo_holderPage === total ? 'disabled' : ''}>›</button>`;
+                h += `<button class="pg-btn" onclick="dolo_goHolderPage(${total})" ${dolo_holderPage === total ? 'disabled' : ''}>»</button>`;
+                h += `<span class="pg-info">${dolo_holderPage} / ${total}</span>`;
+                el.innerHTML = h;
+            }
+
+            function dolo_holderPageRange(c, t) {
+                if (t <= 7) return Array.from({ length: t }, (_, i) => i + 1);
+                if (c <= 4) return [1, 2, 3, 4, 5, '...', t];
+                if (c >= t - 3) return [1, '...', t - 4, t - 3, t - 2, t - 1, t];
+                return [1, '...', c - 1, c, c + 1, '...', t];
+            }
+
+            function dolo_goHolderPage(p) {
+                const t = Math.ceil(dolo_holderFiltered.length / DOLO_HOLDER_PER_PAGE);
+                dolo_holderPage = Math.max(1, Math.min(p, t));
+                dolo_renderHoldersTable();
+                dolo_renderHoldersPagination();
+                const card = document.getElementById('dolo-holders-card');
+                if (card) card.querySelector('.table-scroll').scrollTop = 0;
+            }
+
+            function dolo_sortHolders(field) {
+                const card = document.getElementById('dolo-holders-card');
+                card.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted'));
+                if (dolo_holderSortField === field) {
+                    dolo_holderSortAsc = !dolo_holderSortAsc;
+                } else {
+                    dolo_holderSortField = field;
+                    dolo_holderSortAsc = field === 'rank';
+                }
+
+                const th = card.querySelector(`th[data-sort="dolo-${field}"]`);
+                if (th) {
+                    th.classList.add('sorted');
+                    th.querySelector('.arrow').textContent = dolo_holderSortAsc ? '▲' : '▼';
+                }
+
+                const key = field === 'chains' ? (h => h.chains.length) : (h => h[field]);
+                dolo_holderFiltered.sort((a, b) => {
+                    let va = key(a), vb = key(b);
+                    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+                    return va < vb ? (dolo_holderSortAsc ? -1 : 1) : va > vb ? (dolo_holderSortAsc ? 1 : -1) : 0;
+                });
+
+                dolo_holderPage = 1;
+                dolo_renderHoldersTable();
+                dolo_renderHoldersPagination();
+            }
+
+            function dolo_applyHolderFilters() {
+                const q = document.getElementById('dolo-holder-search').value.toLowerCase().trim();
+                const cf = document.getElementById('dolo-holder-chain-filter').value;
+
+                dolo_holderFiltered = dolo_holderData.filter(h => {
+                    if (q && !h.address.toLowerCase().includes(q)) return false;
+                    if (cf === 'eth' && !(h.chains && h.chains.includes('eth'))) return false;
+                    if (cf === 'bera' && !(h.chains && h.chains.includes('bera'))) return false;
+                    if (cf === 'both' && !(h.chains && h.chains.length === 2)) return false;
+                    return true;
+                });
+
+                if (dolo_holderSortField !== 'rank') {
+                    const key = dolo_holderSortField === 'chains' ? (h => h.chains.length) : (h => h[dolo_holderSortField]);
+                    dolo_holderFiltered.sort((a, b) => {
+                        let va = key(a), vb = key(b);
+                        if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+                        return va < vb ? (dolo_holderSortAsc ? -1 : 1) : va > vb ? (dolo_holderSortAsc ? 1 : -1) : 0;
+                    });
+                }
+
+                dolo_holderPage = 1;
+                dolo_renderHoldersTable();
+                dolo_renderHoldersPagination();
             }
 
             function dolo_renderChainBars(chains, total, allTvl, totalBorrowed, supplyLiquidity) {
