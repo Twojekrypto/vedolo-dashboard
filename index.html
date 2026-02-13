@@ -3901,23 +3901,14 @@
                 let h = `<button class="pg-btn" onclick="goPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
                 h += `<button class="pg-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
 
-                pageRange(currentPage, total).forEach(p => {
-                    h += p === '...'
-                        ? `<span class="pg-info">…</span>`
-                        : `<button class="pg-btn ${p === currentPage ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
-                });
+                for (let p = Math.max(1, currentPage - 1); p <= Math.min(total, currentPage + 1); p++) {
+                    h += `<button class="pg-btn ${p === currentPage ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
+                }
 
                 h += `<button class="pg-btn" onclick="goPage(${currentPage + 1})" ${currentPage === total ? 'disabled' : ''}>›</button>`;
                 h += `<button class="pg-btn" onclick="goPage(${total})" ${currentPage === total ? 'disabled' : ''}>»</button>`;
                 h += `<span class="pg-info">${currentPage} / ${total}</span>`;
                 el.innerHTML = h;
-            }
-
-            function pageRange(c, t) {
-                if (t <= 7) return Array.from({ length: t }, (_, i) => i + 1);
-                if (c <= 4) return [1, 2, 3, 4, 5, '...', t];
-                if (c >= t - 3) return [1, '...', t - 4, t - 3, t - 2, t - 1, t];
-                return [1, '...', c - 1, c, c + 1, '...', t];
             }
 
             function goPage(p) {
@@ -4780,21 +4771,12 @@
                 const el = document.getElementById('exerciser-pagination');
                 if (!el || totalPages <= 1) { if (el) el.innerHTML = ''; return; }
 
-                function exPageRange(c, t) {
-                    if (t <= 7) return Array.from({ length: t }, (_, i) => i + 1);
-                    if (c <= 4) return [1, 2, 3, 4, 5, '...', t];
-                    if (c >= t - 3) return [1, '...', t - 4, t - 3, t - 2, t - 1, t];
-                    return [1, '...', c - 1, c, c + 1, '...', t];
-                }
-
                 let h = `<button class="pg-btn" onclick="exerciserPage=1;renderExercisersTable()" ${exerciserPage === 1 ? 'disabled' : ''}>«</button>`;
                 h += `<button class="pg-btn" onclick="exerciserPage--;renderExercisersTable()" ${exerciserPage === 1 ? 'disabled' : ''}>‹</button>`;
 
-                exPageRange(exerciserPage, totalPages).forEach(p => {
-                    h += p === '...'
-                        ? `<span class="pg-info">…</span>`
-                        : `<button class="pg-btn ${p === exerciserPage ? 'active' : ''}" onclick="exerciserPage=${p};renderExercisersTable()">${p}</button>`;
-                });
+                for (let p = Math.max(1, exerciserPage - 1); p <= Math.min(totalPages, exerciserPage + 1); p++) {
+                    h += `<button class="pg-btn ${p === exerciserPage ? 'active' : ''}" onclick="exerciserPage=${p};renderExercisersTable()">${p}</button>`;
+                }
 
                 h += `<button class="pg-btn" onclick="exerciserPage++;renderExercisersTable()" ${exerciserPage === totalPages ? 'disabled' : ''}>›</button>`;
                 h += `<button class="pg-btn" onclick="exerciserPage=${totalPages};renderExercisersTable()" ${exerciserPage === totalPages ? 'disabled' : ''}>»</button>`;
@@ -5186,23 +5168,14 @@
                 let h = `<button class="pg-btn" onclick="dolo_goHolderPage(1)" ${dolo_holderPage === 1 ? 'disabled' : ''}>«</button>`;
                 h += `<button class="pg-btn" onclick="dolo_goHolderPage(${dolo_holderPage - 1})" ${dolo_holderPage === 1 ? 'disabled' : ''}>‹</button>`;
 
-                dolo_holderPageRange(dolo_holderPage, total).forEach(p => {
-                    h += p === '...'
-                        ? `<span class="pg-info">…</span>`
-                        : `<button class="pg-btn ${p === dolo_holderPage ? 'active' : ''}" onclick="dolo_goHolderPage(${p})">${p}</button>`;
-                });
+                for (let p = Math.max(1, dolo_holderPage - 1); p <= Math.min(total, dolo_holderPage + 1); p++) {
+                    h += `<button class="pg-btn ${p === dolo_holderPage ? 'active' : ''}" onclick="dolo_goHolderPage(${p})">${p}</button>`;
+                }
 
                 h += `<button class="pg-btn" onclick="dolo_goHolderPage(${dolo_holderPage + 1})" ${dolo_holderPage === total ? 'disabled' : ''}>›</button>`;
                 h += `<button class="pg-btn" onclick="dolo_goHolderPage(${total})" ${dolo_holderPage === total ? 'disabled' : ''}>»</button>`;
                 h += `<span class="pg-info">${dolo_holderPage} / ${total}</span>`;
                 el.innerHTML = h;
-            }
-
-            function dolo_holderPageRange(c, t) {
-                if (t <= 7) return Array.from({ length: t }, (_, i) => i + 1);
-                if (c <= 4) return [1, 2, 3, 4, 5, '...', t];
-                if (c >= t - 3) return [1, '...', t - 4, t - 3, t - 2, t - 1, t];
-                return [1, '...', c - 1, c, c + 1, '...', t];
             }
 
             function dolo_goHolderPage(p) {
