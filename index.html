@@ -2904,33 +2904,29 @@
                 </div>
                 <!-- Brush Navigator -->
                 <div style="padding:0 16px 16px;position:relative;user-select:none" id="dolo-brush-wrap">
-                    <div style="margin-left:60px;margin-right:10px;position:relative">
-                        <canvas id="dolo-brush-canvas" height="40" style="width:100%;border-radius:6px"></canvas>
-                        <div id="dolo-brush-overlay" style="position:absolute;top:0;left:0;right:0;height:40px">
-                            <!-- Dim left -->
-                            <div id="dolo-brush-dim-left"
-                                style="position:absolute;top:0;bottom:0;left:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:6px 0 0 6px">
-                            </div>
-                            <!-- Selected window -->
-                            <div id="dolo-brush-window"
-                                style="position:absolute;top:0;bottom:0;border:2px solid rgba(99,102,241,0.7);border-radius:4px;cursor:grab;background:transparent">
-                                <div id="dolo-brush-handle-left"
-                                    style="position:absolute;left:-5px;top:0;bottom:0;width:10px;cursor:ew-resize;display:flex;align-items:center;justify-content:center">
-                                    <div
-                                        style="width:3px;height:16px;border-radius:2px;background:rgba(99,102,241,0.9)">
-                                    </div>
-                                </div>
-                                <div id="dolo-brush-handle-right"
-                                    style="position:absolute;right:-5px;top:0;bottom:0;width:10px;cursor:ew-resize;display:flex;align-items:center;justify-content:center">
-                                    <div
-                                        style="width:3px;height:16px;border-radius:2px;background:rgba(99,102,241,0.9)">
-                                    </div>
+                    <canvas id="dolo-brush-canvas" height="40" style="width:100%;border-radius:6px"></canvas>
+                    <div id="dolo-brush-overlay" style="position:absolute;top:0;left:16px;right:16px;height:40px">
+                        <!-- Dim left -->
+                        <div id="dolo-brush-dim-left"
+                            style="position:absolute;top:0;bottom:0;left:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:6px 0 0 6px">
+                        </div>
+                        <!-- Selected window -->
+                        <div id="dolo-brush-window"
+                            style="position:absolute;top:0;bottom:0;border:2px solid rgba(99,102,241,0.7);border-radius:4px;cursor:grab;background:transparent">
+                            <div id="dolo-brush-handle-left"
+                                style="position:absolute;left:-5px;top:0;bottom:0;width:10px;cursor:ew-resize;display:flex;align-items:center;justify-content:center">
+                                <div style="width:3px;height:16px;border-radius:2px;background:rgba(99,102,241,0.9)">
                                 </div>
                             </div>
-                            <!-- Dim right -->
-                            <div id="dolo-brush-dim-right"
-                                style="position:absolute;top:0;bottom:0;right:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:0 6px 6px 0">
+                            <div id="dolo-brush-handle-right"
+                                style="position:absolute;right:-5px;top:0;bottom:0;width:10px;cursor:ew-resize;display:flex;align-items:center;justify-content:center">
+                                <div style="width:3px;height:16px;border-radius:2px;background:rgba(99,102,241,0.9)">
+                                </div>
                             </div>
+                        </div>
+                        <!-- Dim right -->
+                        <div id="dolo-brush-dim-right"
+                            style="position:absolute;top:0;bottom:0;right:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:0 6px 6px 0">
                         </div>
                     </div>
                 </div>
@@ -4984,37 +4980,40 @@
                 const ctx = brushCanvas.getContext('2d');
                 ctx.scale(dpr, dpr);
                 const W = rect.width, H = 40;
+                // Use same padding as main chart
+                const padL = 60, padR = 10;
+                const plotW = W - padL - padR;
                 ctx.clearRect(0, 0, W, H);
 
                 // Background
                 ctx.fillStyle = 'rgba(30,30,50,0.6)';
                 ctx.fillRect(0, 0, W, H);
 
-                // Draw mini line
+                // Draw mini line within padded area
                 const vals = allPts.map(p => p.tvl);
                 const minV = Math.min(...vals) * 0.95;
                 const maxV = Math.max(...vals) * 1.02;
                 const range = maxV - minV || 1;
-                const pad = 4;
+                const vPad = 4;
 
                 // Gradient fill
-                const grad = ctx.createLinearGradient(0, pad, 0, H - pad);
+                const grad = ctx.createLinearGradient(0, vPad, 0, H - vPad);
                 grad.addColorStop(0, 'rgba(99,102,241,0.2)');
                 grad.addColorStop(1, 'rgba(99,102,241,0)');
                 ctx.beginPath();
                 allPts.forEach((p, i) => {
-                    const x = (W * i / (allPts.length - 1));
-                    const y = pad + (H - 2 * pad) - ((H - 2 * pad) * (p.tvl - minV) / range);
+                    const x = padL + (plotW * i / (allPts.length - 1));
+                    const y = vPad + (H - 2 * vPad) - ((H - 2 * vPad) * (p.tvl - minV) / range);
                     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
                 });
-                ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+                ctx.lineTo(padL + plotW, H); ctx.lineTo(padL, H); ctx.closePath();
                 ctx.fillStyle = grad; ctx.fill();
 
                 // Line
                 ctx.beginPath();
                 allPts.forEach((p, i) => {
-                    const x = (W * i / (allPts.length - 1));
-                    const y = pad + (H - 2 * pad) - ((H - 2 * pad) * (p.tvl - minV) / range);
+                    const x = padL + (plotW * i / (allPts.length - 1));
+                    const y = vPad + (H - 2 * vPad) - ((H - 2 * vPad) * (p.tvl - minV) / range);
                     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
                 });
                 ctx.strokeStyle = 'rgba(99,102,241,0.5)';
@@ -5029,8 +5028,11 @@
                 const overlay = document.getElementById('dolo-brush-overlay');
                 if (!overlay) return;
                 const W = overlay.offsetWidth;
-                const left = dolo_brushStart * W;
-                const right = dolo_brushEnd * W;
+                // Brush selection only operates within the padded plot area
+                const padL = 60, padR = 10;
+                const plotW = W - padL - padR;
+                const left = padL + dolo_brushStart * plotW;
+                const right = padL + dolo_brushEnd * plotW;
 
                 document.getElementById('dolo-brush-dim-left').style.width = left + 'px';
                 document.getElementById('dolo-brush-dim-right').style.width = (W - right) + 'px';
@@ -5158,7 +5160,9 @@
                 document.addEventListener('mousemove', e => {
                     if (!mode) return;
                     const W = getOverlayW();
-                    const dx = (e.clientX - startX) / W;
+                    const padL = 60, padR = 10;
+                    const plotW = W - padL - padR;
+                    const dx = (e.clientX - startX) / plotW;
                     const minWidth = 0.03; // minimum 3% selection
 
                     if (mode === 'left') {
