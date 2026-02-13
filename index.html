@@ -4643,7 +4643,7 @@
                 const px = (u) => isLocal ? '/api/proxy?url=' + encodeURIComponent(u) : 'https://corsproxy.io/?' + encodeURIComponent(u);
                 const [cgRes, llRes, cgCoin] = await Promise.all([
                     fetch(px('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true')).then(r => r.json()),
-                    fetch(px('https://api.llama.fi/protocol/dolomite')).then(r => r.json()),
+                    fetch('https://api.llama.fi/protocol/dolomite').then(r => r.json()),
                     fetch(px('https://api.coingecko.com/api/v3/coins/dolomite?localization=false&tickers=false&community_data=false&developer_data=false')).then(r => r.json()).catch(() => null)
                 ]);
 
