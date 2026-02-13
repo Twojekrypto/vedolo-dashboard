@@ -2810,12 +2810,12 @@
                     <div class="metric-value" style="color:var(--accent-green)" id="dolo-tvl">—</div>
                 </div>
                 <div class="metric-cell">
-                    <div class="metric-label">Active Chains</div>
-                    <div class="metric-value" id="dolo-chains">—</div>
+                    <div class="metric-label">Total Supply</div>
+                    <div class="metric-value" id="dolo-supply">—</div>
                 </div>
                 <div class="metric-cell">
-                    <div class="metric-label">Category</div>
-                    <div class="metric-value" id="dolo-category">—</div>
+                    <div class="metric-label">Total Borrowed</div>
+                    <div class="metric-value" style="color:var(--accent-amber)" id="dolo-borrowed">—</div>
                 </div>
             </div>
 
@@ -4564,13 +4564,14 @@
 
         async function dolo_init() {
             try {
-                const [cgRes, llRes] = await Promise.all([
+                const [cgRes, llRes, cgCoin] = await Promise.all([
                     fetch('https://api.coingecko.com/api/v3/simple/price?ids=dolomite&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true').then(r => r.json()),
-                    fetch('https://api.llama.fi/protocol/dolomite').then(r => r.json())
+                    fetch('https://api.llama.fi/protocol/dolomite').then(r => r.json()),
+                    fetch('https://api.coingecko.com/api/v3/coins/dolomite?localization=false&tickers=false&community_data=false&developer_data=false').then(r => r.json()).catch(() => null)
                 ]);
 
                 const cg = cgRes.dolomite || {};
-                dolo_cachedData = { cg, ll: llRes };
+                dolo_cachedData = { cg, ll: llRes, cgCoin };
 
                 // --- Metrics ---
                 const price = cg.usd || 0;
@@ -4597,11 +4598,18 @@
                 chainTvls.sort((a, b) => b.tvl - a.tvl);
 
                 document.getElementById('dolo-tvl').textContent = dolo_fmt(totalTvl);
-                document.getElementById('dolo-chains').textContent = chainTvls.length;
-                document.getElementById('dolo-category').textContent = llRes.category || 'Lending';
+
+                // Total Supply from CoinGecko
+                const totalSupply = cgCoin?.market_data?.total_supply || 0;
+                const fmtSupply = totalSupply >= 1e9 ? (totalSupply / 1e9).toFixed(2) + 'B' : totalSupply >= 1e6 ? (totalSupply / 1e6).toFixed(2) + 'M' : totalSupply.toLocaleString();
+                document.getElementById('dolo-supply').textContent = fmtSupply + ' DOLO';
+
+                // Total Borrowed from DeFiLlama
+                const totalBorrowed = tvl['borrowed'] || 0;
+                document.getElementById('dolo-borrowed').textContent = dolo_fmt(totalBorrowed);
 
                 // --- TVL by Chain bars ---
-                dolo_renderChainBars(chainTvls, totalTvl);
+                dolo_renderChainBars(chainTvls, totalTvl, tvl);
 
                 // --- TVL History ---
                 const tvlHist = llRes.tvl || [];
@@ -4638,11 +4646,15 @@
             } catch (e) { /* silent */ }
         }
 
-        function dolo_renderChainBars(chains, total) {
+        function dolo_renderChainBars(chains, total, allTvl) {
             const container = document.getElementById('dolo-chain-bars');
             container.innerHTML = chains.map(c => {
                 const pct = ((c.tvl / total) * 100).toFixed(1);
                 const color = DOLO_CHAIN_COLORS[c.chain] || '#6366f1';
+                const borrowed = allTvl[c.chain + '-borrowed'] || 0;
+                const borrowedLine = borrowed > 0
+                    ? `<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px"><span style="color:var(--text-muted)">Borrowed</span><span style="color:var(--accent-amber)">${dolo_fmt(borrowed)}</span></div>`
+                    : '';
                 return `<div style="margin-bottom:14px;cursor:default" class="dolo-chain-row">
                     <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px">
                         <span style="color:var(--text-primary);font-weight:500">${c.chain}</span>
@@ -4650,7 +4662,7 @@
                     </div>
                     <div style="height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden;position:relative">
                         <div class="dolo-bar-fill" style="height:100%;width:0%;background:${color};border-radius:4px;transition:width 1s cubic-bezier(0.4,0,0.2,1)" data-width="${pct}%"></div>
-                    </div>
+                    </div>${borrowedLine}
                 </div>`;
             }).join('');
             // Animate bars in
