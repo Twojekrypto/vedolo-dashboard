@@ -1112,6 +1112,7 @@
             padding: 14px 20px;
             border-top: 1px solid var(--border-subtle);
             background: var(--bg-surface);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
         }
 
         .pg-btn {
@@ -2398,6 +2399,20 @@
             color: #fff;
         }
 
+        /* Brush handle hover effects */
+        #dolo-brush-handle-left:hover,
+        #dolo-brush-handle-right:hover {
+            background: rgba(99, 102, 241, 0.15) !important;
+        }
+
+        #dolo-brush-window:hover {
+            background: rgba(99, 102, 241, 0.08) !important;
+        }
+
+        #dolo-brush-window:active {
+            cursor: grabbing !important;
+        }
+
         /* ===== MOBILE RESPONSIVENESS — DOLO TAB & GLOBAL ===== */
         @media (max-width: 768px) {
 
@@ -2524,7 +2539,7 @@
             <nav class="header-nav-bar">
                 <div class="nav-tabs">
                     <button class="nav-tab active" id="tab-dolo" onclick="switchView('dolo')">
-                        <img src="https://icons.llama.fi/dolomite.jpg" alt="DOLO" style="border-radius:50%">
+                        <img src="dolo-logo.svg" alt="DOLO">
                         DOLO
                     </button>
                     <button class="nav-tab" id="tab-odolo" onclick="switchView('odolo')">
@@ -3073,30 +3088,45 @@
                     </div>
                 </div>
                 <!-- Brush Navigator -->
+                <div id="dolo-brush-date-label"
+                    style="padding:4px 16px 0;text-align:center;font-size:11px;color:var(--text-muted);min-height:18px">
+                </div>
                 <div style="padding:0 2px 16px 16px;position:relative;user-select:none" id="dolo-brush-wrap">
-                    <canvas id="dolo-brush-canvas" height="40" style="width:100%;border-radius:6px"></canvas>
-                    <div id="dolo-brush-overlay" style="position:absolute;top:0;left:16px;right:2px;height:40px">
+                    <canvas id="dolo-brush-canvas" height="56" style="width:100%;border-radius:8px"></canvas>
+                    <div id="dolo-brush-overlay" style="position:absolute;top:0;left:16px;right:2px;height:56px">
                         <!-- Dim left -->
                         <div id="dolo-brush-dim-left"
-                            style="position:absolute;top:0;bottom:0;left:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:6px 0 0 6px">
+                            style="position:absolute;top:0;bottom:0;left:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:8px 0 0 8px">
                         </div>
                         <!-- Selected window -->
                         <div id="dolo-brush-window"
-                            style="position:absolute;top:0;bottom:0;border:2px solid rgba(99,102,241,0.7);border-radius:4px;cursor:grab;background:transparent">
+                            style="position:absolute;top:0;bottom:0;border:2px solid rgba(99,102,241,0.8);border-radius:6px;cursor:grab;background:rgba(99,102,241,0.04);transition:background 0.15s">
                             <div id="dolo-brush-handle-left"
-                                style="position:absolute;left:-5px;top:0;bottom:0;width:10px;cursor:ew-resize;display:flex;align-items:center;justify-content:center">
-                                <div style="width:3px;height:16px;border-radius:2px;background:rgba(99,102,241,0.9)">
+                                style="position:absolute;left:-7px;top:0;bottom:0;width:14px;cursor:ew-resize;display:flex;align-items:center;justify-content:center;border-radius:4px 0 0 4px;transition:background 0.15s">
+                                <div style="display:flex;gap:2px">
+                                    <div
+                                        style="width:2px;height:20px;border-radius:2px;background:rgba(99,102,241,0.9)">
+                                    </div>
+                                    <div
+                                        style="width:2px;height:20px;border-radius:2px;background:rgba(99,102,241,0.5)">
+                                    </div>
                                 </div>
                             </div>
                             <div id="dolo-brush-handle-right"
-                                style="position:absolute;right:-5px;top:0;bottom:0;width:10px;cursor:ew-resize;display:flex;align-items:center;justify-content:center">
-                                <div style="width:3px;height:16px;border-radius:2px;background:rgba(99,102,241,0.9)">
+                                style="position:absolute;right:-7px;top:0;bottom:0;width:14px;cursor:ew-resize;display:flex;align-items:center;justify-content:center;border-radius:0 4px 4px 0;transition:background 0.15s">
+                                <div style="display:flex;gap:2px">
+                                    <div
+                                        style="width:2px;height:20px;border-radius:2px;background:rgba(99,102,241,0.5)">
+                                    </div>
+                                    <div
+                                        style="width:2px;height:20px;border-radius:2px;background:rgba(99,102,241,0.9)">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Dim right -->
                         <div id="dolo-brush-dim-right"
-                            style="position:absolute;top:0;bottom:0;right:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:0 6px 6px 0">
+                            style="position:absolute;top:0;bottom:0;right:0;background:rgba(0,0,0,0.55);pointer-events:none;border-radius:0 8px 8px 0">
                         </div>
                     </div>
                 </div>
@@ -5403,15 +5433,75 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // --- Hover tooltip only (no drag-to-zoom) ---
+                // --- Hover tooltip with crosshair + dot ---
                 canvas.onmousemove = function (e) {
                     const cRect = canvas.getBoundingClientRect();
                     const mx = e.clientX - cRect.left;
                     const idx = Math.round(((mx - pad.left) / cw) * (dolo_tvlPoints.length - 1));
-                    if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); return; }
+                    if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); dolo_renderTvlChart(dolo_cachedData); return; }
                     const pt = dolo_tvlPoints[idx];
                     const x = pad.left + (cw * idx / (dolo_tvlPoints.length - 1));
                     const y = pad.top + ch - (ch * (pt.tvl - minV) / range);
+
+                    // Redraw chart then overlay crosshair
+                    ctx.clearRect(0, 0, W, H);
+                    // Y axis
+                    ctx.fillStyle = '#555770'; ctx.font = '11px Inter'; ctx.textAlign = 'right';
+                    for (let i2 = 0; i2 <= 4; i2++) {
+                        const v2 = minV + (range * i2 / 4);
+                        const y2 = pad.top + ch - (ch * (v2 - minV) / range);
+                        ctx.fillText(dolo_fmt(v2), pad.left - 8, y2 + 4);
+                        ctx.beginPath(); ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+                        ctx.moveTo(pad.left, y2); ctx.lineTo(W - pad.right, y2); ctx.stroke();
+                    }
+                    // X axis dates
+                    ctx.textAlign = 'center';
+                    const step2 = Math.max(1, Math.floor(dolo_tvlPoints.length / 6));
+                    for (let i2 = 0; i2 < dolo_tvlPoints.length; i2 += step2) {
+                        const x2 = pad.left + (cw * i2 / (dolo_tvlPoints.length - 1));
+                        ctx.fillText(dolo_tvlPoints[i2].date.toLocaleDateString('en', { month: 'short', day: 'numeric' }), x2, H - 6);
+                    }
+                    // Gradient fill
+                    const grad2 = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+                    grad2.addColorStop(0, 'rgba(99,102,241,0.3)'); grad2.addColorStop(1, 'rgba(99,102,241,0)');
+                    ctx.beginPath();
+                    dolo_tvlPoints.forEach((p2, i2) => {
+                        const xx = pad.left + (cw * i2 / (dolo_tvlPoints.length - 1));
+                        const yy = pad.top + ch - (ch * (p2.tvl - minV) / range);
+                        i2 === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy);
+                    });
+                    ctx.lineTo(pad.left + cw, pad.top + ch); ctx.lineTo(pad.left, pad.top + ch); ctx.closePath();
+                    ctx.fillStyle = grad2; ctx.fill();
+                    // Line
+                    ctx.beginPath();
+                    dolo_tvlPoints.forEach((p2, i2) => {
+                        const xx = pad.left + (cw * i2 / (dolo_tvlPoints.length - 1));
+                        const yy = pad.top + ch - (ch * (p2.tvl - minV) / range);
+                        i2 === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy);
+                    });
+                    ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2; ctx.stroke();
+
+                    // Crosshair vertical line
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(99,102,241,0.4)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([4, 3]);
+                    ctx.moveTo(x, pad.top);
+                    ctx.lineTo(x, pad.top + ch);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Dot indicator
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#6366f1';
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(x, y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = '#fff';
+                    ctx.fill();
+
+                    // Tooltip
                     const tip = document.getElementById('dolo-tvl-tooltip');
                     tip.style.display = 'block';
                     tip.innerHTML = `<div style="color:var(--text-primary);font-weight:600">${dolo_fmt(pt.tvl)}</div><div style="color:var(--text-muted);font-size:11px">${pt.date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}</div>`;
@@ -5422,7 +5512,10 @@
                     tip.style.left = left + 'px';
                     tip.style.top = (y - 60) + 'px';
                 };
-                canvas.onmouseleave = dolo_hideTvlTooltip;
+                canvas.onmouseleave = function () {
+                    dolo_hideTvlTooltip();
+                    dolo_renderTvlChart(dolo_cachedData);
+                };
 
                 // --- Brush Navigator ---
                 dolo_renderBrush();
@@ -5436,16 +5529,17 @@
                 const brushCanvas = document.getElementById('dolo-brush-canvas');
                 if (!brushCanvas || !dolo_allTvlPoints.length) return;
 
+                const BRUSH_H = 56;
                 const allPts = dolo_allTvlPoints.slice(-dolo_currentRange);
                 const rect = brushCanvas.getBoundingClientRect();
                 const dpr = window.devicePixelRatio || 1;
                 brushCanvas.width = rect.width * dpr;
-                brushCanvas.height = 40 * dpr;
+                brushCanvas.height = BRUSH_H * dpr;
                 brushCanvas.style.width = rect.width + 'px';
-                brushCanvas.style.height = '40px';
+                brushCanvas.style.height = BRUSH_H + 'px';
                 const ctx = brushCanvas.getContext('2d');
                 ctx.scale(dpr, dpr);
-                const W = rect.width, H = 40;
+                const W = rect.width, H = BRUSH_H;
                 // Use same padding as main chart
                 const padL = 60, padR = 0;
                 const plotW = W - padL - padR;
@@ -5509,6 +5603,20 @@
                 const win = document.getElementById('dolo-brush-window');
                 win.style.left = left + 'px';
                 win.style.width = (right - left) + 'px';
+
+                // Update date range label
+                const allPts = dolo_allTvlPoints.slice(-dolo_currentRange);
+                if (allPts.length > 1) {
+                    const startIdx = Math.floor(dolo_brushStart * (allPts.length - 1));
+                    const endIdx = Math.ceil(dolo_brushEnd * (allPts.length - 1));
+                    const sDate = allPts[startIdx]?.date;
+                    const eDate = allPts[endIdx]?.date;
+                    const label = document.getElementById('dolo-brush-date-label');
+                    if (label && sDate && eDate) {
+                        const fmt = d => d.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+                        label.textContent = fmt(sDate) + '  →  ' + fmt(eDate);
+                    }
+                }
             }
 
             function dolo_brushApply() {
