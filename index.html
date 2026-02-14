@@ -1649,6 +1649,30 @@
             border-radius: 3px;
         }
 
+        .copy-addr-icon {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0.35;
+            color: #9ca3af;
+            transition: opacity 0.2s, transform 0.2s, color 0.2s;
+            vertical-align: middle;
+            position: relative;
+            top: -1px;
+        }
+
+        .copy-addr-icon:hover {
+            opacity: 1;
+            color: #ffffff;
+            transform: scale(1.4);
+        }
+
+        .copy-addr-icon.copied {
+            opacity: 1;
+            color: #34d399;
+            transform: scale(1.4);
+        }
+
         /* DOLO holder address styling */
         .dolo-holder-addr {
             color: #fff;
@@ -3989,7 +4013,7 @@
                 </div>
             </td>
             <td class="c-addr">
-                <span style="display:inline-flex;align-items:center;gap:4px"><a href="#address=${h.address}" onclick="event.preventDefault();event.stopPropagation();showProfile('${h.address}')">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>${addrLabel}<a href="https://debank.com/profile/${h.address}?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a></span>
+                <span style="display:inline-flex;align-items:center;gap:4px"><a href="#address=${h.address}" onclick="event.preventDefault();event.stopPropagation();showProfile('${h.address}')">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>${addrLabel}<span class="copy-addr-icon" onclick="event.stopPropagation();copyAddr('${h.address}',this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span><a href="https://debank.com/profile/${h.address}?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a></span>
             </td>
             <td class="c-nft">${h.nft_count}</td>
             <td class="c-dolo" title="${doloExact} DOLO">${fmtDolo(h.total_dolo || 0)}<span class="supply-pct">(${supplyPct}%)</span></td>
@@ -4167,6 +4191,18 @@
                     </div>
                 </div>`;
                 }).join('');
+            }
+
+            function copyAddr(addr, el) {
+                navigator.clipboard.writeText(addr).then(() => {
+                    el.classList.add('copied');
+                    const origSvg = el.innerHTML;
+                    el.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+                    setTimeout(() => {
+                        el.innerHTML = origSvg;
+                        el.classList.remove('copied');
+                    }, 1500);
+                });
             }
 
             function showProfile(address) {
@@ -4863,7 +4899,7 @@
                         html += '<span class="rank-plain">' + rank + '</span>';
                     }
                     html += '</div></td>';
-                    html += '<td class="c-addr"><span class="addr-link">' + exShortAddr(e.address) + '</span><a href="https://debank.com/profile/' + e.address + '?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display=\'none\'"></a></td>';
+                    html += '<td class="c-addr"><span class="addr-link">' + exShortAddr(e.address) + '</span><span class="copy-addr-icon" onclick="event.stopPropagation();copyAddr(\'' + e.address + '\',this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span><a href="https://debank.com/profile/' + e.address + '?chain=bera" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display=\'none\'"></a></td>';
                     html += '<td class="c-num">' + exFmtUsd(e.total_usdc) + '</td>';
                     html += '<td class="c-num">' + e.exercises + '</td>';
                     html += '<td class="c-num">' + exFmtLock(e.avg_lock_days) + '</td>';
@@ -5257,6 +5293,7 @@
                         <td class="c-addr">
                             <span style="display:inline-flex;align-items:center;gap:4px">
                                 <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" class="dolo-holder-addr" title="${h.address}">${h.address.slice(0, 6)}…${h.address.slice(-4)}</a>
+                                <span class="copy-addr-icon" onclick="event.stopPropagation();copyAddr('${h.address}',this)" title="Copy address"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></span>
                                 <a href="${dbUrl}" target="_blank" onclick="event.stopPropagation()" class="debank-icon" title="View on DeBank"><img src="https://debank.com/favicon.ico" width="14" height="14" onerror="this.parentElement.style.display='none'"></a>
                             </span>
                         </td>
