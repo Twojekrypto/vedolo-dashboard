@@ -878,6 +878,18 @@
             z-index: 10;
         }
 
+        thead tr {
+            border-radius: 12px 12px 0 0;
+        }
+
+        thead th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+
         thead th {
             background: var(--bg-surface);
             padding: 11px 20px;
@@ -966,6 +978,11 @@
         thead th:first-child {
             padding: 11px 0 11px 2px !important;
             width: 28px;
+            border-radius: 12px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 12px 0 0;
         }
 
         thead th:nth-child(2) {
@@ -3204,7 +3221,7 @@
                                 height="22" alt="DOLO" style="flex-shrink:0"> DOLO Holders</h3>
                     </div>
 
-                    <div class="table-toolbar" style="padding-left:0">
+                    <div class="table-toolbar">
                         <div class="search-input-wrapper">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
