@@ -2413,6 +2413,63 @@
             cursor: grabbing !important;
         }
 
+        /* Chain toggle switches (ETH/BERA columns) */
+        .chain-toggle {
+            position: relative;
+            display: inline-block;
+            width: 28px;
+            height: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .chain-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .chain-toggle-slider {
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.25s ease;
+        }
+
+        .chain-toggle-slider::before {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #555;
+            transition: all 0.25s ease;
+        }
+
+        .chain-toggle input:checked+.chain-toggle-slider.eth {
+            background: rgba(98, 126, 234, 0.35);
+        }
+
+        .chain-toggle input:checked+.chain-toggle-slider.eth::before {
+            transform: translateX(12px);
+            background: #627EEA;
+            box-shadow: 0 0 6px rgba(98, 126, 234, 0.5);
+        }
+
+        .chain-toggle input:checked+.chain-toggle-slider.bera {
+            background: rgba(212, 168, 67, 0.35);
+        }
+
+        .chain-toggle input:checked+.chain-toggle-slider.bera::before {
+            transform: translateX(12px);
+            background: #D4A843;
+            box-shadow: 0 0 6px rgba(212, 168, 67, 0.5);
+        }
+
         /* ===== MOBILE RESPONSIVENESS — DOLO TAB & GLOBAL ===== */
         @media (max-width: 768px) {
 
@@ -2656,7 +2713,11 @@
 
 
             <!-- TABLE -->
-            <div class="table-section anim anim-d3">
+            <div class="card anim anim-d3">
+                <div class="card-header">
+                    <h3 style="display:flex;align-items:center;gap:8px"><img src="vedolo-logo.svg" width="22"
+                            height="22" alt="veDOLO" style="flex-shrink:0"> veDOLO Holders</h3>
+                </div>
                 <div class="table-toolbar">
                     <div class="search-input-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -2944,7 +3005,12 @@
             </div><!-- /odolo-analytics-grid -->
 
             <!-- EXERCISERS TABLE -->
-            <div class="table-section anim anim-d3" id="exercisers-section" style="margin-top: 20px;">
+            <!-- EXERCISERS TABLE -->
+            <div class="card anim anim-d3" id="exercisers-section" style="margin-top: 20px;">
+                <div class="card-header">
+                    <h3 style="display:flex;align-items:center;gap:8px"><img src="odolo-logo-official.svg" width="22"
+                            height="22" alt="oDOLO" style="flex-shrink:0"> oDOLO Exercisers</h3>
+                </div>
                 <div class="table-toolbar">
                     <div class="search-input-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -3168,31 +3234,27 @@
                                         Address <span class="arrow">⇅</span>
                                     </th>
                                     <th class="dolo-col-eth" style="text-align:right">
-                                        <div style="display:flex;align-items:center;gap:4px;justify-content:flex-end">
-                                            <label
-                                                style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;user-select:none;opacity:0.9"
-                                                title="Show ETH balance">
+                                        <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+                                            <img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg" width="16"
+                                                height="16" style="border-radius:50%" alt="ETH">
+                                            <span style="font-size:12px;font-weight:600">ETH</span>
+                                            <label class="chain-toggle" title="Toggle ETH balance">
                                                 <input type="checkbox" id="dolo-filter-eth" checked
-                                                    onchange="dolo_toggleChainColumns()"
-                                                    style="accent-color:#687de3;cursor:pointer;width:13px;height:13px">
-                                                <img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg"
-                                                    width="14" height="14" style="border-radius:50%" alt="ETH">
+                                                    onchange="dolo_toggleChainColumns()">
+                                                <span class="chain-toggle-slider eth"></span>
                                             </label>
-                                            <span style="font-size:12px;opacity:0.7">ETH</span>
                                         </div>
                                     </th>
                                     <th class="dolo-col-bera" style="text-align:right">
-                                        <div style="display:flex;align-items:center;gap:4px;justify-content:flex-end">
-                                            <label
-                                                style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;user-select:none;opacity:0.9"
-                                                title="Show BERA balance">
+                                        <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+                                            <img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg" width="16"
+                                                height="16" style="border-radius:50%" alt="BERA">
+                                            <span style="font-size:12px;font-weight:600">BERA</span>
+                                            <label class="chain-toggle" title="Toggle BERA balance">
                                                 <input type="checkbox" id="dolo-filter-bera" checked
-                                                    onchange="dolo_toggleChainColumns()"
-                                                    style="accent-color:#f59e0b;cursor:pointer;width:13px;height:13px">
-                                                <img src="https://icons.llamao.fi/icons/chains/rsz_berachain.jpg"
-                                                    width="14" height="14" style="border-radius:50%" alt="BERA">
+                                                    onchange="dolo_toggleChainColumns()">
+                                                <span class="chain-toggle-slider bera"></span>
                                             </label>
-                                            <span style="font-size:12px;opacity:0.7">BERA</span>
                                         </div>
                                     </th>
                                     <th data-sort="dolo-balance" onclick="dolo_sortHolders('balance')"
@@ -5958,7 +6020,7 @@
             function dolo_renderProtocolInfo(ll) {
 
                 const linksEl = document.getElementById('dolo-links');
-                const ETH_SVG = '<svg width="14" height="14" viewBox="0 0 256 417" fill="none" style="flex-shrink:0"><path d="M127.961 0l-2.795 9.5v275.668l2.795 2.79 127.962-75.638z" fill="#687de3"/><path d="M127.962 0L0 212.32l127.962 75.639V154.158z" fill="#8a9fef"/><path d="M127.961 312.187l-1.575 1.92v98.199l1.575 4.601 128.038-180.32z" fill="#687de3"/><path d="M127.962 416.905v-104.72L0 236.585z" fill="#8a9fef"/></svg>';
+                const ETH_ICON = `<img src="https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg" width="14" height="14" style="border-radius:50%;flex-shrink:0" alt="ETH">`;
                 const X_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
                 const GLOBE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>';
                 const GITHUB_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
@@ -5992,7 +6054,7 @@
                         <div>
                             <div style="font-size:13px;color:var(--text-primary);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:5px"><img src="dolo-logo.svg" alt="" style="width:14px;height:14px">DOLO</div>
                             <div style="display:flex;flex-wrap:wrap;gap:8px">
-                                ${addrPill(DOLO_ADDR, 'ETH', ETH_SVG, 'https://etherscan.io')}
+                                ${addrPill(DOLO_ADDR, 'ETH', ETH_ICON, 'https://etherscan.io')}
                                 ${addrPill(DOLO_ADDR, 'BERA', BERA_ICON, 'https://berascan.com')}
                             </div>
                         </div>
