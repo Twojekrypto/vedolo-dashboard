@@ -2011,6 +2011,34 @@
             #view-odolo .metrics-strip .metric-cell:last-child:nth-child(odd) {
                 grid-column: 1 / -1;
             }
+
+            /* Horizontal scroll hint — right fade on tables */
+            .table-scroll {
+                position: relative;
+            }
+
+            .table-scroll::after {
+                content: '';
+                position: sticky;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 24px;
+                pointer-events: none;
+                background: linear-gradient(to right, transparent, rgba(10, 12, 20, 0.6));
+                z-index: 2;
+            }
+
+            /* Chain summary — stack vertically on tablets */
+            #dolo-chain-summary {
+                flex-direction: column !important;
+                gap: 4px !important;
+            }
+
+            /* TVL card header title */
+            .card-header h3 {
+                font-size: 18px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -2057,6 +2085,7 @@
                 padding: 8px 8px;
                 font-size: 10px;
                 letter-spacing: 0.3px;
+                white-space: nowrap;
             }
 
             tbody td {
@@ -2066,12 +2095,55 @@
 
             /* Force table min-width so it scrolls horizontally instead of cramping */
             .table-scroll table {
-                min-width: 650px;
+                min-width: 580px;
             }
 
             /* DOLO holders table needs more width for 5 columns */
             #dolo-holders-table {
-                min-width: 700px;
+                min-width: 620px;
+            }
+
+            /* oDOLO exercisers table — wider for 6 columns */
+            #exercisers-table {
+                min-width: 660px;
+            }
+
+            /* Tighter address display on mobile */
+            .addr-link,
+            .c-addr a {
+                font-size: 11px !important;
+            }
+
+            /* Keep address + icons on single row — prevent multi-line wrap */
+            .c-addr span[style*="inline-flex"] {
+                flex-wrap: nowrap !important;
+            }
+
+            /* Copy & DeBank icons smaller on mobile */
+            .copy-addr-icon svg {
+                width: 11px;
+                height: 11px;
+            }
+
+            .debank-icon img {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            /* Stack chain summary items vertically */
+            #dolo-chain-summary {
+                gap: 2px !important;
+                font-size: 12px;
+            }
+
+            #dolo-chain-summary>span {
+                font-size: 12px !important;
+            }
+
+            /* Protocol info — stack address pills */
+            .card div[style*="flex-wrap"] {
+                flex-direction: column !important;
+                gap: 6px !important;
             }
 
             /* Disable hover font-size effects on touch — no hover on phones */
@@ -2380,6 +2452,16 @@
                 height: 220px;
                 margin: 0 auto;
                 padding: 25px;
+            }
+
+            /* Stack flow steps into single column on phones */
+            .odolo-flow-steps {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            .odolo-flow-step {
+                padding: 14px 12px !important;
             }
         }
 
