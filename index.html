@@ -2532,6 +2532,64 @@
             cursor: grabbing !important;
         }
 
+        /* Pulsing live dot on chart */
+        @keyframes tvlPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* TVL change badge */
+        .tvl-change-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .tvl-change-badge.positive {
+            background: rgba(52, 211, 153, 0.12);
+            color: var(--accent-green);
+        }
+
+        .tvl-change-badge.negative {
+            background: rgba(251, 113, 133, 0.12);
+            color: var(--accent-rose);
+        }
+
+        /* Enhanced TVL tooltip */
+        .tvl-tooltip-enhanced {
+            position: absolute;
+            display: none;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: 10px;
+            padding: 10px 14px;
+            pointer-events: none;
+            font-size: 12px;
+            z-index: 10;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(99, 102, 241, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            min-width: 140px;
+        }
+
         /* Chain toggle switches (ETH/BERA columns) */
         .chain-toggle {
             position: relative;
@@ -3252,7 +3310,10 @@
             <div class="card anim anim-d3" style="margin-top:24px">
                 <div class="card-header"
                     style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-                    <h3>TVL History</h3>
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                        <h3 style="margin:0">TVL History</h3>
+                        <span id="dolo-tvl-change-badge" class="tvl-change-badge" style="display:none"></span>
+                    </div>
                     <div style="display:flex;align-items:center;gap:6px">
                         <div id="dolo-tvl-range-btns" style="display:flex;gap:4px">
                             <button onclick="dolo_setRange(7)" class="dolo-range-btn" data-days="7">7D</button>
@@ -3261,20 +3322,19 @@
                             <button onclick="dolo_setRange(180)" class="dolo-range-btn" data-days="180">180D</button>
                             <button onclick="dolo_setRange(360)" class="dolo-range-btn active"
                                 data-days="360">1Y</button>
+                            <button onclick="dolo_setRange(99999)" class="dolo-range-btn" data-days="99999">ALL</button>
                             <button onclick="dolo_resetZoom()" class="dolo-range-btn" id="dolo-reset-zoom-btn"
                                 style="display:none;background:rgba(239,68,68,0.15);color:#ef4444;border-color:rgba(239,68,68,0.3)">Reset</button>
                         </div>
                     </div>
                 </div>
                 <div style="padding:16px;position:relative">
-                    <canvas id="dolo-tvl-chart" height="220" style="width:100%"></canvas>
-                    <div id="dolo-tvl-tooltip"
-                        style="display:none;position:absolute;background:var(--bg-card);border:1px solid var(--border-default);border-radius:8px;padding:8px 12px;pointer-events:none;font-size:12px;z-index:10;box-shadow:var(--shadow-elevated)">
-                    </div>
+                    <canvas id="dolo-tvl-chart" height="260" style="width:100%"></canvas>
+                    <div id="dolo-tvl-tooltip" class="tvl-tooltip-enhanced"></div>
                 </div>
                 <!-- Brush Navigator -->
                 <div id="dolo-brush-date-label"
-                    style="padding:4px 16px 0;text-align:center;font-size:11px;color:var(--text-muted);min-height:18px">
+                    style="padding:4px 16px 0;text-align:center;font-size:12px;color:var(--text-secondary);min-height:18px;display:flex;align-items:center;justify-content:center;gap:6px">
                 </div>
                 <div style="padding:0 2px 16px 16px;position:relative;user-select:none" id="dolo-brush-wrap">
                     <canvas id="dolo-brush-canvas" height="56" style="width:100%;border-radius:8px"></canvas>
@@ -5117,7 +5177,31 @@
 
             function dolo_applyRange(days) {
                 dolo_currentRange = days;
-                dolo_tvlPoints = dolo_allTvlPoints.slice(-days);
+                if (days >= dolo_allTvlPoints.length) {
+                    dolo_tvlPoints = [...dolo_allTvlPoints];
+                } else {
+                    dolo_tvlPoints = dolo_allTvlPoints.slice(-days);
+                }
+                dolo_updateChangeBadge();
+            }
+
+            function dolo_updateChangeBadge() {
+                const badge = document.getElementById('dolo-tvl-change-badge');
+                if (!badge || dolo_tvlPoints.length < 2) { if (badge) badge.style.display = 'none'; return; }
+                const first = dolo_tvlPoints[0].tvl;
+                const last = dolo_tvlPoints[dolo_tvlPoints.length - 1].tvl;
+                if (!first || first === 0) { badge.style.display = 'none'; return; }
+                const pctChange = ((last - first) / first) * 100;
+                const sign = pctChange >= 0 ? '+' : '';
+                const arrow = pctChange >= 0 ? '↑' : '↓';
+                const rangeLabel = dolo_currentRange >= dolo_allTvlPoints.length ? 'ALL' :
+                    dolo_currentRange >= 360 ? '1Y' :
+                        dolo_currentRange >= 180 ? '180D' :
+                            dolo_currentRange >= 90 ? '90D' :
+                                dolo_currentRange >= 30 ? '30D' : '7D';
+                badge.className = 'tvl-change-badge ' + (pctChange >= 0 ? 'positive' : 'negative');
+                badge.textContent = `${arrow} ${sign}${pctChange.toFixed(1)}% ${rangeLabel}`;
+                badge.style.display = '';
             }
 
             function dolo_setRange(days) {
@@ -5556,18 +5640,19 @@
                 if (!canvas) return;
                 const rect = canvas.parentElement.getBoundingClientRect();
                 const dpr = window.devicePixelRatio || 1;
+                const CHART_H = 260;
                 canvas.width = rect.width * dpr;
-                canvas.height = 220 * dpr;
+                canvas.height = CHART_H * dpr;
                 canvas.style.width = rect.width + 'px';
-                canvas.style.height = '220px';
+                canvas.style.height = CHART_H + 'px';
                 const ctx = canvas.getContext('2d');
                 ctx.scale(dpr, dpr);
-                const W = rect.width, H = 220;
+                const W = rect.width, H = CHART_H;
                 ctx.clearRect(0, 0, W, H);
 
                 if (!dolo_tvlPoints.length) return;
 
-                const pad = { top: 10, right: 10, bottom: 30, left: 60 };
+                const pad = { top: 16, right: 70, bottom: 32, left: 62 };
                 const cw = W - pad.left - pad.right;
                 const ch = H - pad.top - pad.bottom;
 
@@ -5576,139 +5661,223 @@
                 const maxV = Math.max(...vals) * 1.02;
                 const range = maxV - minV || 1;
 
-                // Y axis
-                ctx.fillStyle = '#555770';
-                ctx.font = '11px Inter';
-                ctx.textAlign = 'right';
-                for (let i = 0; i <= 4; i++) {
-                    const v = minV + (range * i / 4);
-                    const y = pad.top + ch - (ch * (v - minV) / range);
-                    ctx.fillText(dolo_fmt(v), pad.left - 8, y + 4);
+                // Find min/max indices
+                let minIdx = 0, maxIdx = 0;
+                vals.forEach((v, i) => { if (v < vals[minIdx]) minIdx = i; if (v > vals[maxIdx]) maxIdx = i; });
+
+                // Helper: get xy for index
+                const getXY = (i) => ({
+                    x: pad.left + (cw * i / (dolo_tvlPoints.length - 1)),
+                    y: pad.top + ch - (ch * (dolo_tvlPoints[i].tvl - minV) / range)
+                });
+
+                // ── Draw function (used for initial render and hover redraw) ──
+                function drawChart(hoverIdx) {
+                    ctx.clearRect(0, 0, W, H);
+
+                    // Grid lines (dashed, subtle)
+                    for (let i = 0; i <= 4; i++) {
+                        const v = minV + (range * i / 4);
+                        const y = pad.top + ch - (ch * (v - minV) / range);
+                        // Y-axis labels
+                        ctx.fillStyle = '#6b6f89';
+                        ctx.font = '11px Inter';
+                        ctx.textAlign = 'right';
+                        ctx.fillText(dolo_fmt(v), pad.left - 10, y + 4);
+                        // Grid line
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+                        ctx.setLineDash([4, 4]);
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(pad.left, y);
+                        ctx.lineTo(W - pad.right, y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+
+                    // X-axis dates
+                    ctx.fillStyle = '#6b6f89';
+                    ctx.font = '11px Inter';
+                    ctx.textAlign = 'center';
+                    const step = Math.max(1, Math.floor(dolo_tvlPoints.length / 6));
+                    for (let i = 0; i < dolo_tvlPoints.length; i += step) {
+                        const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
+                        const d = dolo_tvlPoints[i].date;
+                        ctx.fillText(d.toLocaleDateString('en', { month: 'short', day: 'numeric' }), x, H - 8);
+                    }
+
+                    // Gradient fill (richer 3-stop)
+                    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+                    grad.addColorStop(0, 'rgba(99,102,241,0.40)');
+                    grad.addColorStop(0.5, 'rgba(99,102,241,0.12)');
+                    grad.addColorStop(1, 'rgba(99,102,241,0.01)');
+
+                    // Build points (bezier)
+                    const pts = dolo_tvlPoints.map((_, i) => getXY(i));
+
+                    // Fill area with bezier
                     ctx.beginPath();
-                    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-                    ctx.moveTo(pad.left, y);
-                    ctx.lineTo(W - pad.right, y);
+                    ctx.moveTo(pts[0].x, pts[0].y);
+                    for (let i = 1; i < pts.length; i++) {
+                        const prev = pts[i - 1];
+                        const cur = pts[i];
+                        const cpx = (prev.x + cur.x) / 2;
+                        ctx.quadraticCurveTo(prev.x + (cur.x - prev.x) * 0.5, prev.y, cpx, (prev.y + cur.y) / 2);
+                        if (i === pts.length - 1) ctx.quadraticCurveTo(cpx + (cur.x - cpx), (prev.y + cur.y) / 2 + (cur.y - prev.y) * 0.5, cur.x, cur.y);
+                    }
+                    ctx.lineTo(pts[pts.length - 1].x, pad.top + ch);
+                    ctx.lineTo(pts[0].x, pad.top + ch);
+                    ctx.closePath();
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+
+                    // Main line (smoothed bezier)
+                    ctx.beginPath();
+                    ctx.moveTo(pts[0].x, pts[0].y);
+                    for (let i = 1; i < pts.length; i++) {
+                        const prev = pts[i - 1];
+                        const cur = pts[i];
+                        const cpx = (prev.x + cur.x) / 2;
+                        ctx.quadraticCurveTo(prev.x + (cur.x - prev.x) * 0.5, prev.y, cpx, (prev.y + cur.y) / 2);
+                        if (i === pts.length - 1) ctx.quadraticCurveTo(cpx + (cur.x - cpx), (prev.y + cur.y) / 2 + (cur.y - prev.y) * 0.5, cur.x, cur.y);
+                    }
+                    ctx.strokeStyle = '#6366f1';
+                    ctx.lineWidth = 2.5;
+                    ctx.lineJoin = 'round';
+                    ctx.lineCap = 'round';
                     ctx.stroke();
+
+                    // ── Min / Max markers ──
+                    if (dolo_tvlPoints.length > 5) {
+                        // Don't draw min/max if they're at very edge
+                        const drawMarker = (idx, label, color, above) => {
+                            const p = getXY(idx);
+                            // Dot
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+                            ctx.fillStyle = color;
+                            ctx.fill();
+                            // Label
+                            ctx.font = '600 10px Inter';
+                            ctx.fillStyle = color;
+                            ctx.textAlign = 'center';
+                            const labelY = above ? p.y - 10 : p.y + 16;
+                            ctx.fillText(label + ' ' + dolo_fmt(dolo_tvlPoints[idx].tvl), p.x, labelY);
+                        };
+                        // Only show if min != max
+                        if (minIdx !== maxIdx) {
+                            drawMarker(maxIdx, '▲', 'rgba(52,211,153,0.85)', true);
+                            drawMarker(minIdx, '▼', 'rgba(251,113,133,0.75)', false);
+                        }
+                    }
+
+                    // ── Current value label (right side) ──
+                    const lastPt = pts[pts.length - 1];
+                    const lastVal = dolo_tvlPoints[dolo_tvlPoints.length - 1].tvl;
+                    // Background pill
+                    const labelText = dolo_fmt(lastVal);
+                    ctx.font = '600 12px Inter';
+                    const tw = ctx.measureText(labelText).width;
+                    const pillW = tw + 16;
+                    const pillH = 22;
+                    const pillX = lastPt.x + 8;
+                    const pillY = lastPt.y - pillH / 2;
+                    ctx.fillStyle = 'rgba(99,102,241,0.18)';
+                    ctx.beginPath();
+                    ctx.roundRect(pillX, pillY, pillW, pillH, 6);
+                    ctx.fill();
+                    ctx.fillStyle = '#818cf8';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(labelText, pillX + 8, pillY + 15);
+
+                    // Pulsing live dot on last point (static outer ring, inner uses animation in CSS via overlay)
+                    if (hoverIdx === undefined || hoverIdx === null) {
+                        ctx.beginPath();
+                        ctx.arc(lastPt.x, lastPt.y, 5, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(99,102,241,0.3)';
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(lastPt.x, lastPt.y, 3, 0, Math.PI * 2);
+                        ctx.fillStyle = '#6366f1';
+                        ctx.fill();
+                    }
+
+                    // ── Hover crosshair + dot ──
+                    if (hoverIdx !== undefined && hoverIdx !== null && hoverIdx >= 0 && hoverIdx < dolo_tvlPoints.length) {
+                        const hp = getXY(hoverIdx);
+
+                        // Vertical crosshair
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'rgba(99,102,241,0.35)';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([5, 3]);
+                        ctx.moveTo(hp.x, pad.top);
+                        ctx.lineTo(hp.x, pad.top + ch);
+                        ctx.stroke();
+
+                        // Horizontal crosshair
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'rgba(99,102,241,0.2)';
+                        ctx.moveTo(pad.left, hp.y);
+                        ctx.lineTo(W - pad.right, hp.y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+
+                        // Hover dot
+                        ctx.beginPath();
+                        ctx.arc(hp.x, hp.y, 6, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(99,102,241,0.25)';
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(hp.x, hp.y, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = '#6366f1';
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(hp.x, hp.y, 2, 0, Math.PI * 2);
+                        ctx.fillStyle = '#fff';
+                        ctx.fill();
+                    }
                 }
 
-                // X axis dates
-                ctx.textAlign = 'center';
-                const step = Math.max(1, Math.floor(dolo_tvlPoints.length / 6));
-                for (let i = 0; i < dolo_tvlPoints.length; i += step) {
-                    const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
-                    const d = dolo_tvlPoints[i].date;
-                    ctx.fillText(d.toLocaleDateString('en', { month: 'short', day: 'numeric' }), x, H - 6);
-                }
+                // Initial draw
+                drawChart(null);
 
-                // Gradient fill
-                const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
-                grad.addColorStop(0, 'rgba(99,102,241,0.3)');
-                grad.addColorStop(1, 'rgba(99,102,241,0)');
-                ctx.beginPath();
-                dolo_tvlPoints.forEach((p, i) => {
-                    const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
-                    const y = pad.top + ch - (ch * (p.tvl - minV) / range);
-                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-                });
-                ctx.lineTo(pad.left + cw, pad.top + ch);
-                ctx.lineTo(pad.left, pad.top + ch);
-                ctx.closePath();
-                ctx.fillStyle = grad;
-                ctx.fill();
-
-                // Line
-                ctx.beginPath();
-                dolo_tvlPoints.forEach((p, i) => {
-                    const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
-                    const y = pad.top + ch - (ch * (p.tvl - minV) / range);
-                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-                });
-                ctx.strokeStyle = '#6366f1';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // --- Hover tooltip with crosshair + dot ---
+                // ── Mouse interaction ──
                 canvas.onmousemove = function (e) {
                     const cRect = canvas.getBoundingClientRect();
                     const mx = e.clientX - cRect.left;
                     const idx = Math.round(((mx - pad.left) / cw) * (dolo_tvlPoints.length - 1));
-                    if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); dolo_renderTvlChart(dolo_cachedData); return; }
+                    if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); drawChart(null); return; }
+
+                    drawChart(idx);
+
                     const pt = dolo_tvlPoints[idx];
-                    const x = pad.left + (cw * idx / (dolo_tvlPoints.length - 1));
-                    const y = pad.top + ch - (ch * (pt.tvl - minV) / range);
+                    const hp = getXY(idx);
 
-                    // Redraw chart then overlay crosshair
-                    ctx.clearRect(0, 0, W, H);
-                    // Y axis
-                    ctx.fillStyle = '#555770'; ctx.font = '11px Inter'; ctx.textAlign = 'right';
-                    for (let i2 = 0; i2 <= 4; i2++) {
-                        const v2 = minV + (range * i2 / 4);
-                        const y2 = pad.top + ch - (ch * (v2 - minV) / range);
-                        ctx.fillText(dolo_fmt(v2), pad.left - 8, y2 + 4);
-                        ctx.beginPath(); ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-                        ctx.moveTo(pad.left, y2); ctx.lineTo(W - pad.right, y2); ctx.stroke();
-                    }
-                    // X axis dates
-                    ctx.textAlign = 'center';
-                    const step2 = Math.max(1, Math.floor(dolo_tvlPoints.length / 6));
-                    for (let i2 = 0; i2 < dolo_tvlPoints.length; i2 += step2) {
-                        const x2 = pad.left + (cw * i2 / (dolo_tvlPoints.length - 1));
-                        ctx.fillText(dolo_tvlPoints[i2].date.toLocaleDateString('en', { month: 'short', day: 'numeric' }), x2, H - 6);
-                    }
-                    // Gradient fill
-                    const grad2 = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
-                    grad2.addColorStop(0, 'rgba(99,102,241,0.3)'); grad2.addColorStop(1, 'rgba(99,102,241,0)');
-                    ctx.beginPath();
-                    dolo_tvlPoints.forEach((p2, i2) => {
-                        const xx = pad.left + (cw * i2 / (dolo_tvlPoints.length - 1));
-                        const yy = pad.top + ch - (ch * (p2.tvl - minV) / range);
-                        i2 === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy);
-                    });
-                    ctx.lineTo(pad.left + cw, pad.top + ch); ctx.lineTo(pad.left, pad.top + ch); ctx.closePath();
-                    ctx.fillStyle = grad2; ctx.fill();
-                    // Line
-                    ctx.beginPath();
-                    dolo_tvlPoints.forEach((p2, i2) => {
-                        const xx = pad.left + (cw * i2 / (dolo_tvlPoints.length - 1));
-                        const yy = pad.top + ch - (ch * (p2.tvl - minV) / range);
-                        i2 === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy);
-                    });
-                    ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2; ctx.stroke();
-
-                    // Crosshair vertical line
-                    ctx.beginPath();
-                    ctx.strokeStyle = 'rgba(99,102,241,0.4)';
-                    ctx.lineWidth = 1;
-                    ctx.setLineDash([4, 3]);
-                    ctx.moveTo(x, pad.top);
-                    ctx.lineTo(x, pad.top + ch);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-
-                    // Dot indicator
-                    ctx.beginPath();
-                    ctx.arc(x, y, 5, 0, Math.PI * 2);
-                    ctx.fillStyle = '#6366f1';
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(x, y, 3, 0, Math.PI * 2);
-                    ctx.fillStyle = '#fff';
-                    ctx.fill();
-
-                    // Tooltip
+                    // Tooltip content
                     const tip = document.getElementById('dolo-tvl-tooltip');
+                    const firstTvl = dolo_tvlPoints[0].tvl;
+                    const pctFromStart = firstTvl > 0 ? ((pt.tvl - firstTvl) / firstTvl * 100) : 0;
+                    const pctSign = pctFromStart >= 0 ? '+' : '';
+                    const pctColor = pctFromStart >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)';
                     tip.style.display = 'block';
-                    tip.innerHTML = `<div style="color:var(--text-primary);font-weight:600">${dolo_fmt(pt.tvl)}</div><div style="color:var(--text-muted);font-size:11px">${pt.date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}</div>`;
-                    const tipW = 150;
-                    let left = x - tipW / 2;
-                    if (left < 0) left = 0;
-                    if (left + tipW > W) left = W - tipW;
+                    tip.innerHTML = `<div style="font-weight:700;font-size:15px;color:#f0f0f6;letter-spacing:-0.3px">${dolo_fmt(pt.tvl)}</div>
+                        <div style="color:#8b8fa3;font-size:11px;margin-top:3px">${pt.date.toLocaleDateString('en', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                        <div style="margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:${pctColor};font-weight:600">${pctSign}${pctFromStart.toFixed(2)}% from start</div>`;
+
+                    // Position tooltip
+                    const tipW = 180;
+                    let left = hp.x - tipW / 2;
+                    if (left < 0) left = 4;
+                    if (left + tipW > W) left = W - tipW - 4;
+                    let top = hp.y - 85;
+                    if (top < 0) top = hp.y + 15;
                     tip.style.left = left + 'px';
-                    tip.style.top = (y - 60) + 'px';
+                    tip.style.top = top + 'px';
                 };
                 canvas.onmouseleave = function () {
                     dolo_hideTvlTooltip();
-                    dolo_renderTvlChart(dolo_cachedData);
+                    drawChart(null);
                 };
 
                 // --- Brush Navigator ---
@@ -5724,7 +5893,7 @@
                 if (!brushCanvas || !dolo_allTvlPoints.length) return;
 
                 const BRUSH_H = 56;
-                const allPts = dolo_allTvlPoints.slice(-dolo_currentRange);
+                const allPts = dolo_currentRange >= dolo_allTvlPoints.length ? [...dolo_allTvlPoints] : dolo_allTvlPoints.slice(-dolo_currentRange);
                 const rect = brushCanvas.getBoundingClientRect();
                 const dpr = window.devicePixelRatio || 1;
                 brushCanvas.width = rect.width * dpr;
@@ -5799,7 +5968,7 @@
                 win.style.width = (right - left) + 'px';
 
                 // Update date range label
-                const allPts = dolo_allTvlPoints.slice(-dolo_currentRange);
+                const allPts = dolo_currentRange >= dolo_allTvlPoints.length ? [...dolo_allTvlPoints] : dolo_allTvlPoints.slice(-dolo_currentRange);
                 if (allPts.length > 1) {
                     const startIdx = Math.floor(dolo_brushStart * (allPts.length - 1));
                     const endIdx = Math.ceil(dolo_brushEnd * (allPts.length - 1));
@@ -5808,94 +5977,138 @@
                     const label = document.getElementById('dolo-brush-date-label');
                     if (label && sDate && eDate) {
                         const fmt = d => d.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
-                        label.textContent = fmt(sDate) + '  →  ' + fmt(eDate);
+                        label.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0;opacity:0.6"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>${fmt(sDate)}  →  ${fmt(eDate)}</span>`;
                     }
                 }
             }
 
             function dolo_brushApply() {
-                const allPts = dolo_allTvlPoints.slice(-dolo_currentRange);
+                const allPts = dolo_currentRange >= dolo_allTvlPoints.length ? [...dolo_allTvlPoints] : dolo_allTvlPoints.slice(-dolo_currentRange);
                 const startIdx = Math.floor(dolo_brushStart * (allPts.length - 1));
                 const endIdx = Math.ceil(dolo_brushEnd * (allPts.length - 1));
                 dolo_tvlPoints = allPts.slice(startIdx, endIdx + 1);
                 if (dolo_tvlPoints.length < 2) dolo_tvlPoints = allPts;
+                dolo_updateChangeBadge();
 
-                // Re-render main chart only (not brush)
+                // Re-render main chart only (not brush) using the new polished renderer
+                // We save/restore brush state to avoid re-rendering the brush
                 const canvas = document.getElementById('dolo-tvl-chart');
                 if (!canvas) return;
                 const rect = canvas.parentElement.getBoundingClientRect();
                 const dpr = window.devicePixelRatio || 1;
+                const CHART_H = 260;
                 canvas.width = rect.width * dpr;
-                canvas.height = 220 * dpr;
+                canvas.height = CHART_H * dpr;
                 canvas.style.width = rect.width + 'px';
-                canvas.style.height = '220px';
+                canvas.style.height = CHART_H + 'px';
                 const ctx = canvas.getContext('2d');
                 ctx.scale(dpr, dpr);
-                const W = rect.width, H = 220;
+                const W = rect.width, H = CHART_H;
                 ctx.clearRect(0, 0, W, H);
 
                 if (!dolo_tvlPoints.length) return;
-                const pad = { top: 10, right: 10, bottom: 30, left: 60 };
+                const pad = { top: 16, right: 70, bottom: 32, left: 62 };
                 const cw = W - pad.left - pad.right;
                 const ch = H - pad.top - pad.bottom;
                 const vals = dolo_tvlPoints.map(p => p.tvl);
                 const minV = Math.min(...vals) * 0.95;
                 const maxV = Math.max(...vals) * 1.02;
                 const range = maxV - minV || 1;
-
-                // Y axis
-                ctx.fillStyle = '#555770'; ctx.font = '11px Inter'; ctx.textAlign = 'right';
-                for (let i = 0; i <= 4; i++) {
-                    const v = minV + (range * i / 4);
-                    const y = pad.top + ch - (ch * (v - minV) / range);
-                    ctx.fillText(dolo_fmt(v), pad.left - 8, y + 4);
-                    ctx.beginPath(); ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-                    ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
-                }
-                // X axis
-                ctx.textAlign = 'center';
-                const step = Math.max(1, Math.floor(dolo_tvlPoints.length / 6));
-                for (let i = 0; i < dolo_tvlPoints.length; i += step) {
-                    const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
-                    ctx.fillText(dolo_tvlPoints[i].date.toLocaleDateString('en', { month: 'short', day: 'numeric' }), x, H - 6);
-                }
-                // Gradient
-                const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
-                grad.addColorStop(0, 'rgba(99,102,241,0.3)'); grad.addColorStop(1, 'rgba(99,102,241,0)');
-                ctx.beginPath();
-                dolo_tvlPoints.forEach((p, i) => {
-                    const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
-                    const y = pad.top + ch - (ch * (p.tvl - minV) / range);
-                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                let minIdx = 0, maxIdx = 0;
+                vals.forEach((v, i) => { if (v < vals[minIdx]) minIdx = i; if (v > vals[maxIdx]) maxIdx = i; });
+                const getXY = (i) => ({
+                    x: pad.left + (cw * i / (dolo_tvlPoints.length - 1)),
+                    y: pad.top + ch - (ch * (dolo_tvlPoints[i].tvl - minV) / range)
                 });
-                ctx.lineTo(pad.left + cw, pad.top + ch); ctx.lineTo(pad.left, pad.top + ch); ctx.closePath();
-                ctx.fillStyle = grad; ctx.fill();
-                // Line
-                ctx.beginPath();
-                dolo_tvlPoints.forEach((p, i) => {
-                    const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
-                    const y = pad.top + ch - (ch * (p.tvl - minV) / range);
-                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-                });
-                ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2; ctx.stroke();
 
-                // Tooltip
+                // Draw using same logic as main chart
+                function drawBrushChart(hoverIdx) {
+                    ctx.clearRect(0, 0, W, H);
+                    // Grid
+                    for (let i = 0; i <= 4; i++) {
+                        const v = minV + (range * i / 4);
+                        const y = pad.top + ch - (ch * (v - minV) / range);
+                        ctx.fillStyle = '#6b6f89'; ctx.font = '11px Inter'; ctx.textAlign = 'right';
+                        ctx.fillText(dolo_fmt(v), pad.left - 10, y + 4);
+                        ctx.beginPath(); ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.setLineDash([4, 4]); ctx.lineWidth = 0.5;
+                        ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke(); ctx.setLineDash([]);
+                    }
+                    // X dates
+                    ctx.fillStyle = '#6b6f89'; ctx.font = '11px Inter'; ctx.textAlign = 'center';
+                    const step = Math.max(1, Math.floor(dolo_tvlPoints.length / 6));
+                    for (let i = 0; i < dolo_tvlPoints.length; i += step) {
+                        const x = pad.left + (cw * i / (dolo_tvlPoints.length - 1));
+                        ctx.fillText(dolo_tvlPoints[i].date.toLocaleDateString('en', { month: 'short', day: 'numeric' }), x, H - 8);
+                    }
+                    // Gradient
+                    const pts = dolo_tvlPoints.map((_, i) => getXY(i));
+                    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+                    grad.addColorStop(0, 'rgba(99,102,241,0.40)'); grad.addColorStop(0.5, 'rgba(99,102,241,0.12)'); grad.addColorStop(1, 'rgba(99,102,241,0.01)');
+                    ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+                    for (let i = 1; i < pts.length; i++) {
+                        const prev = pts[i - 1], cur = pts[i], cpx = (prev.x + cur.x) / 2;
+                        ctx.quadraticCurveTo(prev.x + (cur.x - prev.x) * 0.5, prev.y, cpx, (prev.y + cur.y) / 2);
+                        if (i === pts.length - 1) ctx.quadraticCurveTo(cpx + (cur.x - cpx), (prev.y + cur.y) / 2 + (cur.y - prev.y) * 0.5, cur.x, cur.y);
+                    }
+                    ctx.lineTo(pts[pts.length - 1].x, pad.top + ch); ctx.lineTo(pts[0].x, pad.top + ch); ctx.closePath();
+                    ctx.fillStyle = grad; ctx.fill();
+                    // Line
+                    ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+                    for (let i = 1; i < pts.length; i++) {
+                        const prev = pts[i - 1], cur = pts[i], cpx = (prev.x + cur.x) / 2;
+                        ctx.quadraticCurveTo(prev.x + (cur.x - prev.x) * 0.5, prev.y, cpx, (prev.y + cur.y) / 2);
+                        if (i === pts.length - 1) ctx.quadraticCurveTo(cpx + (cur.x - cpx), (prev.y + cur.y) / 2 + (cur.y - prev.y) * 0.5, cur.x, cur.y);
+                    }
+                    ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
+                    // Min/Max
+                    if (dolo_tvlPoints.length > 5 && minIdx !== maxIdx) {
+                        const drawM = (idx, lbl, col, above) => {
+                            const p = getXY(idx); ctx.beginPath(); ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
+                            ctx.font = '600 10px Inter'; ctx.fillStyle = col; ctx.textAlign = 'center';
+                            ctx.fillText(lbl + ' ' + dolo_fmt(dolo_tvlPoints[idx].tvl), p.x, above ? p.y - 10 : p.y + 16);
+                        };
+                        drawM(maxIdx, '▲', 'rgba(52,211,153,0.85)', true);
+                        drawM(minIdx, '▼', 'rgba(251,113,133,0.75)', false);
+                    }
+                    // Current value label
+                    const lastPt = pts[pts.length - 1]; const lastVal = dolo_tvlPoints[dolo_tvlPoints.length - 1].tvl;
+                    const labelText = dolo_fmt(lastVal); ctx.font = '600 12px Inter';
+                    const tw = ctx.measureText(labelText).width; const pillW = tw + 16, pillH = 22, pillX = lastPt.x + 8, pillY = lastPt.y - pillH / 2;
+                    ctx.fillStyle = 'rgba(99,102,241,0.18)'; ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, 6); ctx.fill();
+                    ctx.fillStyle = '#818cf8'; ctx.textAlign = 'left'; ctx.fillText(labelText, pillX + 8, pillY + 15);
+                    if (!hoverIdx && hoverIdx !== 0) { ctx.beginPath(); ctx.arc(lastPt.x, lastPt.y, 5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(99,102,241,0.3)'; ctx.fill(); ctx.beginPath(); ctx.arc(lastPt.x, lastPt.y, 3, 0, Math.PI * 2); ctx.fillStyle = '#6366f1'; ctx.fill(); }
+                    // Hover
+                    if (hoverIdx >= 0 && hoverIdx < dolo_tvlPoints.length) {
+                        const hp = getXY(hoverIdx);
+                        ctx.beginPath(); ctx.strokeStyle = 'rgba(99,102,241,0.35)'; ctx.lineWidth = 1; ctx.setLineDash([5, 3]);
+                        ctx.moveTo(hp.x, pad.top); ctx.lineTo(hp.x, pad.top + ch); ctx.stroke();
+                        ctx.beginPath(); ctx.strokeStyle = 'rgba(99,102,241,0.2)'; ctx.moveTo(pad.left, hp.y); ctx.lineTo(W - pad.right, hp.y); ctx.stroke(); ctx.setLineDash([]);
+                        ctx.beginPath(); ctx.arc(hp.x, hp.y, 6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(99,102,241,0.25)'; ctx.fill();
+                        ctx.beginPath(); ctx.arc(hp.x, hp.y, 4, 0, Math.PI * 2); ctx.fillStyle = '#6366f1'; ctx.fill();
+                        ctx.beginPath(); ctx.arc(hp.x, hp.y, 2, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+                    }
+                }
+                drawBrushChart(null);
                 canvas.onmousemove = function (e) {
-                    const cRect = canvas.getBoundingClientRect();
-                    const mx = e.clientX - cRect.left;
+                    const cRect = canvas.getBoundingClientRect(); const mx = e.clientX - cRect.left;
                     const idx = Math.round(((mx - pad.left) / cw) * (dolo_tvlPoints.length - 1));
-                    if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); return; }
-                    const pt = dolo_tvlPoints[idx];
-                    const x2 = pad.left + (cw * idx / (dolo_tvlPoints.length - 1));
-                    const y2 = pad.top + ch - (ch * (pt.tvl - minV) / range);
+                    if (idx < 0 || idx >= dolo_tvlPoints.length) { dolo_hideTvlTooltip(); drawBrushChart(null); return; }
+                    drawBrushChart(idx);
+                    const pt = dolo_tvlPoints[idx]; const hp = getXY(idx);
                     const tip = document.getElementById('dolo-tvl-tooltip');
+                    const firstTvl = dolo_tvlPoints[0].tvl;
+                    const pctFromStart = firstTvl > 0 ? ((pt.tvl - firstTvl) / firstTvl * 100) : 0;
+                    const pctSign = pctFromStart >= 0 ? '+' : ''; const pctColor = pctFromStart >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)';
                     tip.style.display = 'block';
-                    tip.innerHTML = `<div style="color:var(--text-primary);font-weight:600">${dolo_fmt(pt.tvl)}</div><div style="color:var(--text-muted);font-size:11px">${pt.date.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}</div>`;
-                    const tipW = 150; let lft = x2 - tipW / 2;
-                    if (lft < 0) lft = 0; if (lft + tipW > W) lft = W - tipW;
-                    tip.style.left = lft + 'px'; tip.style.top = (y2 - 60) + 'px';
+                    tip.innerHTML = `<div style="font-weight:700;font-size:15px;color:#f0f0f6;letter-spacing:-0.3px">${dolo_fmt(pt.tvl)}</div>
+                        <div style="color:#8b8fa3;font-size:11px;margin-top:3px">${pt.date.toLocaleDateString('en', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                        <div style="margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:${pctColor};font-weight:600">${pctSign}${pctFromStart.toFixed(2)}% from start</div>`;
+                    const tipW = 180; let left = hp.x - tipW / 2;
+                    if (left < 0) left = 4; if (left + tipW > W) left = W - tipW - 4;
+                    let top = hp.y - 85; if (top < 0) top = hp.y + 15;
+                    tip.style.left = left + 'px'; tip.style.top = top + 'px';
                 };
-                canvas.onmouseleave = dolo_hideTvlTooltip;
+                canvas.onmouseleave = function () { dolo_hideTvlTooltip(); drawBrushChart(null); };
             }
 
             // Brush interaction

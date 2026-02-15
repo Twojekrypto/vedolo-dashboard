@@ -281,55 +281,59 @@ def fetch_locked_dolo(all_token_ids):
     return cache
 
 
-def make_vote_batch_call(token_ids):
-    """Batch RPC call for balanceOfNFT(uint256) — current vote weight."""
-    s = requests.Session()
-    batch = []
-    for i, tid in enumerate(token_ids):
-        encoded = hex(tid)[2:].zfill(64)
-        batch.append({
-            "jsonrpc": "2.0",
-            "method": "eth_call",
-            "params": [{"to": VEDOLO_CONTRACT, "data": BALANCE_OF_NFT_SELECTOR + encoded}, "latest"],
-            "id": i
-        })
+def make_vote_single_call(tid, session=None):
+    """Individual RPC call for balanceOfNFT(uint256) — more reliable than batch."""
+    s = session or requests.Session()
+    encoded = hex(tid)[2:].zfill(64)
+    payload = {
+        "jsonrpc": "2.0",
+        "method": "eth_call",
+        "params": [{"to": VEDOLO_CONTRACT, "data": BALANCE_OF_NFT_SELECTOR + encoded}, "latest"],
+        "id": 1
+    }
 
-    out = {}
     for retry in range(3):
         try:
-            resp = s.post(RPC_URL, json=batch, timeout=15,
+            resp = s.post(RPC_URL, json=payload, timeout=15,
                           headers={"Content-Type": "application/json"})
             if resp.status_code == 429:
                 time.sleep(1 * (retry + 1))
                 continue
             resp.raise_for_status()
-            results = resp.json()
-            for r in results:
-                idx = r["id"]
-                tid = token_ids[idx]
-                if "result" in r and r["result"] and len(r["result"]) > 2:
-                    val = int(r["result"], 16)
-                    out[tid] = val / 1e18
-                else:
-                    out[tid] = 0.0
-            return out
+            r = resp.json()
+            if "result" in r and r["result"] and len(r["result"]) > 2:
+                val = int(r["result"], 16)
+                return val / 1e18
+            elif "error" in r:
+                time.sleep(0.3 * (retry + 1))
+                continue
+            else:
+                return 0.0
         except Exception as e:
             if retry < 2:
                 time.sleep(0.5 * (retry + 1))
+    return None  # Signal failure
 
+
+def make_vote_chunk_call(token_ids):
+    """Fetch vote weights for a small chunk of tokens using individual calls."""
+    s = requests.Session()
+    out = {}
     for tid in token_ids:
-        if tid not in out:
-            out[tid] = 0.0
+        result = make_vote_single_call(tid, session=s)
+        out[tid] = result if result is not None else 0.0
     return out
 
 
 def fetch_vote_weights(all_token_ids):
-    """Fetch current vote weights for all tokens (always fresh, not cached)."""
+    """Fetch current vote weights for all tokens (always fresh, not cached).
+    Uses individual RPC calls because drpc.org batch mode is unreliable
+    for balanceOfNFT — it intermittently returns errors in batch responses."""
     print(f"\n⚖️  Phase 3: Fetching vote weights for {len(all_token_ids):,} tokens...")
 
     vote_weights = {}
+    # Use chunks of BATCH_SIZE for threading, each chunk does individual calls
     chunks = [all_token_ids[i:i+BATCH_SIZE] for i in range(0, len(all_token_ids), BATCH_SIZE)]
-    errors = 0
     done = 0
     chunk_idx = 0
 
@@ -337,7 +341,7 @@ def fetch_vote_weights(all_token_ids):
         window = chunks[chunk_idx:chunk_idx + MAX_WORKERS]
 
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            futures = {executor.submit(make_vote_batch_call, c): ci for ci, c in enumerate(window)}
+            futures = {executor.submit(make_vote_chunk_call, c): ci for ci, c in enumerate(window)}
             for future in as_completed(futures):
                 for tid, weight in future.result().items():
                     vote_weights[tid] = weight
@@ -347,7 +351,7 @@ def fetch_vote_weights(all_token_ids):
         if chunk_idx % 50 == 0 or chunk_idx >= len(chunks):
             pct = (done / len(all_token_ids)) * 100
             print(f"  Progress: {pct:.0f}% ({done:,}/{len(all_token_ids):,})")
-        time.sleep(0.15)
+        time.sleep(0.05)
 
     print(f"  ✅ Done. {len(vote_weights):,} vote weights fetched.")
     return vote_weights
