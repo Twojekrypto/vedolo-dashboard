@@ -1,11 +1,11 @@
 {
-  "totalSupply": 157172774.99592766,
-  "inVesterBalance": 1931357.189103447,
-  "promisedTokens": 1931357.189103447,
-  "pushedTokens": 20771578.233942196,
-  "availableTokens": 18840221.04483875,
+  "totalSupply": 157171899.60596755,
+  "inVesterBalance": 1931433.269266421,
+  "promisedTokens": 1931433.269266421,
+  "pushedTokens": 20770702.84398209,
+  "availableTokens": 18839269.57471567,
   "decimals": 18,
-  "last_updated": "2026-02-21T22:23:04Z",
+  "last_updated": "2026-02-21T23:23:17Z",
   "rpc_source": "https://rpc.berachain.com/",
   "inCirculation": 136401196.76198545
 }
