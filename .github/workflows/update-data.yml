@@ -1,0 +1,54 @@
+name: Update veDOLO Data
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every hour
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests web3
+
+      - name: Restore locked DOLO cache
+        uses: actions/cache@v4
+        with:
+          path: locked_cache.json
+          key: locked-cache-v2-${{ github.run_id }}
+          restore-keys: |
+            locked-cache-v2-
+
+      - name: Run update script
+        run: python update_data.py
+        env:
+          BERASCAN_API_KEY: ${{ secrets.BERASCAN_API_KEY }}
+
+      - name: Fetch DeFi Llama data
+        run: python3 fetch_defillama.py
+
+      - name: Fetch oDOLO contract data
+        run: python3 fetch_odolo_contract.py
+
+      - name: Commit & push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add vedolo_holders.json vedolo_holders.csv dolo_price.json defillama_data.json odolo_contract_data.json
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "📊 Auto-update: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push

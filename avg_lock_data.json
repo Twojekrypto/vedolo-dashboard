@@ -1,0 +1,15 @@
+{
+  "avg_lock_days": 520.9,
+  "avg_lock_months": 17.1,
+  "avg_discount_pct": 37.0,
+  "total_exercises": 2924,
+  "valid_durations": 2924,
+  "distribution": {
+    "< 1 month": 631,
+    "1-3 months": 147,
+    "3-6 months": 36,
+    "6-12 months": 26,
+    "1-2 years": 2084
+  },
+  "last_updated": "2026-02-16T05:02:06Z"
+}

@@ -1,0 +1,13 @@
+{
+  "stats": {
+    "total_early_exits": 7825,
+    "total_normal_exits": 791,
+    "total_withdrawals": 8616,
+    "total_burn_fee_dolo": 1494970.1,
+    "total_recoup_fee_dolo": 11942184.97,
+    "total_penalty_dolo": 13437155.07,
+    "total_original_locked": 29899402.06,
+    "avg_penalty_pct": 44.94,
+    "last_updated": "2026-02-15T17:40:19Z"
+  }
+}

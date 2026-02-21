@@ -1,0 +1,47 @@
+name: Update oDOLO Data
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Daily at 3:00 UTC
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-odolo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Update exercised USD (incremental)
+        run: python3 update_exercised_usd.py
+
+      - name: Update average lock data
+        run: python3 calculate_avg_lock.py
+
+      - name: Update exercisers by address
+        run: python3 generate_exercisers.py
+
+      - name: Fetch oDOLO contract data
+        run: python3 fetch_odolo_contract.py
+
+      - name: Commit & push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add exercised_usd.json avg_lock_data.json exercisers_by_address.json odolo_contract_data.json
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "📊 oDOLO data update: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
